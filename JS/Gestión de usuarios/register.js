@@ -36,12 +36,16 @@ onAuthStateChanged(auth, (user) => {
 function registerUser(email, password, displayName, picture) {
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
-      // Subir la imagen de perfil al Storage
-      const storageRef = ref(storage, `/Users/${userCredential.user.uid}/ProfilePicture/${picture.name}`);
-      await uploadBytes(storageRef, picture);
+      let photoURL;
+      if (picture == null) {
+        photoURL = "https:firebasestorage.googleapis.com/v0/b/itinerarios-de-viaje-2db0b.firebasestorage.app/o/imgs%2FImagen%20perfil%20predeterminada.jpg?alt=media&token=2c1e55dd-3e3d-49cc-b77e-1d6c8abdf4d8"
+      } else {
+        // Subir la imagen de perfil seleccionada
+        const storageRef = ref(storage, `/Users/${userCredential.user.uid}/ProfilePicture/${picture.name}`);
+        await uploadBytes(storageRef, picture);
 
-      // Obtener la URL de la imagen subida
-      const photoURL = await getDownloadURL(storageRef);
+        photoURL = await getDownloadURL(storageRef);
+      }
 
       // Actualizar el perfil del usuario con el nombre y la foto (en el Auth)
       await updateProfile(userCredential.user, {
