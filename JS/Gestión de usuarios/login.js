@@ -42,4 +42,3 @@ document.getElementById("login-form").addEventListener("submit", function(e) {
   let password = document.getElementById("login-password").value;
   loginUser(email, password);
 });
-
