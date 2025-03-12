@@ -5,11 +5,18 @@
     <title>Mi página</title>
 </head>
 <body>
-    <form id="register-form">
-        <input type="email" id="register-email" placeholder="Correo" required>
-        <input type="password" id="register-password" placeholder="Contraseña" required>
-        <button type="submit">Registrarse</button>
-    </form>
-    <script type="module" src="../../JS/Gestión de usuarios/register.js"></script>
+<form id="register-form">
+    <input type="email" id="register-email" placeholder="Correo" required>
+    <input type="password" id="register-password" placeholder="Contraseña" required>
+    <label for="register-username">Nombre de usuario:</label>
+    <input type="text" id="register-username" required>
+
+    <label for="register-picture">Foto de perfil:</label>
+    <input type="file" id="register-picture" accept="image/*">
+
+    <button type="submit">Registrarse</button>
+</form>
+
+<script type="module" src="../../JS/Gestión de usuarios/register.js"></script>
 </body>
 </html>
