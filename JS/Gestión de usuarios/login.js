@@ -3,6 +3,7 @@ import { getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
   authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
