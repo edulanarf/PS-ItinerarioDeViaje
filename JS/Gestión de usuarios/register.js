@@ -33,6 +33,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+
 function registerUser(email, password, displayName, picture) {
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
@@ -82,3 +83,4 @@ document.getElementById("register-form").addEventListener("submit", function (e)
   registerUser(email, password, username, profilePicture);
 
 });
+

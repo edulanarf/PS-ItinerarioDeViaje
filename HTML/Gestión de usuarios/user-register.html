@@ -3,20 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi página</title>
+    <link rel ="stylesheet" href="../../css/Gestión%20de%20usuarios/register.css">
+    <link rel ="stylesheet" href="../../css/Gestión%20de%20usuarios/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<form id="register-form">
-    <input type="email" id="register-email" placeholder="Correo" required>
-    <input type="password" id="register-password" placeholder="Contraseña" required>
-    <label for="register-username">Nombre de usuario:</label>
-    <input type="text" id="register-username" required>
 
-    <label for="register-picture">Foto de perfil:</label>
-    <input type="file" id="register-picture" accept="image/*">
-
-    <button type="submit">Registrarse</button>
-</form>
+<div class="background-square">
+    <form id="register-form">
+        <label for="register-picture" id="profile-pic-label">
+            <div id="profile-pic-container">
+                <input type="file" id="register-picture" accept="image/*">
+                <img id="profile-pic" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg">
+                <span id="profile-text">Foto Perfil</span>
+            </div>
+        </label>
+        <input type="text" id="register-username" placeholder= "Nombre de usuario:"  required>
+        <input type="email" id="register-email" placeholder="Correo" required>
+        <input type="password" id="register-password" placeholder="Contraseña" required>
+        <button id="google-login" class="google-button">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
+            Registrarse con Google
+        </button>
+        <button type="submit" id="register-button">Registrarse</button>
+    </form>
+</div>
 
 <script type="module" src="../../JS/Gestión de usuarios/register.js"></script>
+<script type="module" src="../../JS/Gestión%20de%20usuarios/register-google.js"></script>
+
 </body>
 </html>
