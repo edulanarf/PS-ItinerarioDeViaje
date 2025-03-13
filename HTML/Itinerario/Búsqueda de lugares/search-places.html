@@ -4,22 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buscar Lugar y Lugares Cercanos</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key=APIKEY&libraries=places&async&defer"></script>
-  <style>
-      #map {
-          height: 500px;
-          width: 100%;
-      }
-  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/Búsqueda de lugares/search-places.css">
 </head>
 <body>
 <h1>Buscar Lugar</h1>
 
-<!-- Barra de búsqueda -->
-<input id="search-input" type="text" placeholder="Busca un lugar...">
+<div id="form-map">
+<div id = "form">
+  <input id="search-input" type="text" placeholder="Busca un lugar...">
+  <select id="select-container">
+    <option value="">Categoría</option>
+    <option value="Restaurante">Restaurante</option>
+    <option value="Cafetería">Cafeteria</option>
+    <option value="Hotel">Hotel</option>
+    <option value="Museo">Museo</option>
+    <option value="Parque">Parque</option>
+    <option value="Centro comercial">Centro comercial</option>
+    <option value="Aereopuerto">Aeropuerto</option>
+  </select>
+</div>
 <div id="map"></div>
-
-<ul id="places-list"></ul>
-<script src="../../../JS/Itinerario/Búsqueda de lugares/search-places.js"></script>
+  <ul id="places-list"></ul>
+</div>
+<script type="module" src="../../../JS/Itinerario/Búsqueda de lugares/search-places.js"></script>
 </body>
 </html>
