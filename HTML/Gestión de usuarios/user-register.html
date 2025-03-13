@@ -11,15 +11,17 @@
 
 <div class="background-square">
     <form id="register-form">
-        <label for="register-picture" id="profile-pic-label">
-            <div id="profile-pic-container">
-                <input type="file" id="register-picture" accept="image/*">
-                <img id="profile-pic" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg">
-                <span id="profile-text">Foto Perfil</span>
-            </div>
-        </label>
-        <input type="text" id="register-username" placeholder= "Nombre de usuario:"  required>
+        <div id="profile-pic-container">
+            <label for="register-picture" id="profile-pic-label"></label>
+            <input type="file" id="register-picture" accept="image/*">
+            <img id="profile-pic" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" alt="pfp">
+            <span id="profile-text">Foto Perfil</span>
+        </div>
+        <label for="register-username"></label>
+        <input type="text" id="register-username" placeholder= "Nombre de usuario:" required>
+        <label for="register-email"></label>
         <input type="email" id="register-email" placeholder="Correo" required>
+        <label for="register-password"></label>
         <input type="password" id="register-password" placeholder="Contraseña" required>
         <button id="google-login" class="google-button">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
