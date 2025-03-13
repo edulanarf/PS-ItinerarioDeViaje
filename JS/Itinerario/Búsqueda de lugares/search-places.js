@@ -53,12 +53,12 @@ const requests = {
 
       sortedResults.forEach((place) => {
         const li = document.createElement('li');
-        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
+        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 400 }) : 'https://via.placeholder.com/400';
 
 
         //Enseña la lista con una foto y nombre, omitiendo los valores N/A
         li.innerHTML = `
-        <img src="${photoUrl}" alt="${place.name}" style="width: 200px; height: auto; border-radius: 10px;">
+        <img src="${photoUrl}" alt="${place.name}" style="width: 400px; height: auto; border-radius: 10px;">
         <div> ${place.name} </div>
         Rating: ${place.rating || 'N/A'}`;
 
