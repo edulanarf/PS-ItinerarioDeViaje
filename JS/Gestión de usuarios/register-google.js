@@ -8,7 +8,7 @@ import {
 import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "",
+  apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
   authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
   projectId: "itinerarios-de-viaje-2db0b",
   storageBucket: "itinerarios-de-viaje-2db0b.firebasestorage.app",

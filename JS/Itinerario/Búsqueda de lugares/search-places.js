@@ -1,5 +1,8 @@
+import { request } from '/js/Itinerario/Búsqueda de lugares/places.js';
+
 let map, service, infowindow;
 let markers=[];
+let selectedCategory="Restaurante";
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Nueva York
@@ -13,7 +16,6 @@ infowindow = new google.maps.InfoWindow();
 
 const input = document.getElementById("search-input");
 const searchBox = new google.maps.places.SearchBox(input);
-map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
 // Este evento se dispara cuando el usuario selecciona un lugar de la barra de búsqueda
 searchBox.addListener("places_changed", () => {
@@ -39,15 +41,17 @@ infowindow.setContent(place.name);
 infowindow.open(map, marker);
 
 // Buscar lugares cercanos al lugar seleccionado (por ejemplo, restaurantes)
-const request = {
+const option = request[selectedCategory];
+
+const requests = {
   location: place.geometry.location,
-  radius: '1000',
-  type: 'restaurant', // Tipo de lugar a buscar
+  radius: option.radius,
+  type: selectedCategory,
 };
 
 
 // Realizar la búsqueda de lugares cercanos
-service.nearbySearch(request, (results, status) => {
+service.nearbySearch(requests, (results, status) => {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
     // Mostrar los resultados de los restaurantes
     const placesList = document.getElementById('places-list');
@@ -63,6 +67,15 @@ service.nearbySearch(request, (results, status) => {
 });
 }
 
+
 // Cargar el mapa al inicio
 window.onload = initMap;
+
+
+const categorySelect = document.getElementById('select-container');
+
+categorySelect.addEventListener('change', function() {
+  selectedCategory = categorySelect.value;
+  console.log("Categoría seleccionada:", selectedCategory);
+});
 
