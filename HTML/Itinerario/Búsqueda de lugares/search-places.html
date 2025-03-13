@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Lugar y Lugares Cercanos</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <style>
+      #map {
+          height: 500px;
+          width: 100%;
+      }
+  </style>
+</head>
+<body>
+<h1>Buscar Lugar</h1>
+
+<!-- Barra de búsqueda -->
+<input id="search-input" type="text" placeholder="Busca un lugar...">
+<div id="map"></div>
+
+<ul id="places-list"></ul>
+<script src="../../../JS/Itinerario/Búsqueda de lugares/search-places.js"></script>
+</body>
+</html>
