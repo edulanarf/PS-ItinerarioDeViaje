@@ -17,15 +17,12 @@ infowindow = new google.maps.InfoWindow();
 const input = document.getElementById("search-input");
 const searchBox = new google.maps.places.SearchBox(input);
 
-// Este evento se dispara cuando el usuario selecciona un lugar de la barra de búsqueda
 searchBox.addListener("places_changed", () => {
 const places = searchBox.getPlaces();
 
 if (places.length == 0) return;
 
-// Limpiamos los marcadores
 markers.forEach((marker) => marker.setMap(null));
-
 const place = places[0];
 map.setCenter(place.geometry.location);
 map.setZoom(14);
@@ -35,42 +32,45 @@ map, position: place.geometry.location,
 });
 
 markers.push(marker);
-
-// Mostrar detalles del lugar
 infowindow.setContent(place.name);
 infowindow.open(map, marker);
 
-// Buscar lugares cercanos al lugar seleccionado (por ejemplo, restaurantes)
 const option = request[selectedCategory];
 
 const requests = {
   location: place.geometry.location,
   radius: option.radius,
-  type: selectedCategory,
+  keyword: selectedCategory,
 };
 
+  service.nearbySearch(requests, (results, status) => {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      const sortedResults = results
+        .filter(place => place.rating && place.photos)
+        .sort((a, b) => b.rating - a.rating);
+      const placesList = document.getElementById('places-list');
+      placesList.innerHTML = '';
 
-// Realizar la búsqueda de lugares cercanos
-service.nearbySearch(requests, (results, status) => {
-  if (status === google.maps.places.PlacesServiceStatus.OK) {
-    // Mostrar los resultados de los restaurantes
-    const placesList = document.getElementById('places-list');
-    placesList.innerHTML = ''; // Limpiar la lista anterior
+      sortedResults.forEach((place) => {
+        const li = document.createElement('li');
+        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
 
-    results.forEach((place) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<strong>${place.name}</strong><br>Rating: ${place.rating || 'N/A'}`;
-      placesList.appendChild(li);
-    });
-  }
-});
+
+        //Enseña la lista con una foto y nombre, omitiendo los valores N/A
+        li.innerHTML = `
+        <img src="${photoUrl}" alt="${place.name}" style="width: 200px; height: auto; border-radius: 10px;">
+        <div> ${place.name} </div>
+        Rating: ${place.rating || 'N/A'}`;
+
+        placesList.appendChild(li);
+      });
+    }
+  });
 });
 }
 
 
-// Cargar el mapa al inicio
 window.onload = initMap;
-
 
 const categorySelect = document.getElementById('select-container');
 
