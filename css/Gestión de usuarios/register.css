@@ -1,4 +1,4 @@
-
+@import "../colors.css";
 
 #register-form{
     display:flex;
@@ -69,7 +69,7 @@ body{
 
 #register-button{
     margin: 15px;
-    background-color: #FFE3B3;
+    background-color: var(--beige-calido);
     cursor: pointer;
     border-color: black;
     padding: 5px 20px;
@@ -80,5 +80,5 @@ body{
 }
 
 #login-button:hover {
-    background-color: #c59964;
+    background-color: var(--naranja-suave);
 }
