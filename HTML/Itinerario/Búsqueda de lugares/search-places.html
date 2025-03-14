@@ -9,13 +9,11 @@
   <link rel="stylesheet" href="/css/Búsqueda de lugares/search-places.css">
 </head>
 <body>
-<h1>Buscar Lugar</h1>
 
 <div id="form-map">
 <div id = "form">
   <input id="search-input" type="text" placeholder="Busca un lugar...">
   <select id="select-container">
-    <option value="">Categoría</option>
     <option value="Restaurante">Restaurante</option>
     <option value="Cafetería">Cafeteria</option>
     <option value="Hotel">Hotel</option>
@@ -24,7 +22,9 @@
     <option value="Centro comercial">Centro comercial</option>
     <option value="Aeropuerto">Aeropuerto</option>
   </select>
-  <button id="reload-button">Recargar lugares</button>
+  <button id="reload-button">
+    <img src="https://icon-icons.com/icons2/3285/PNG/512/magnifying_glass_magnifier_search_icon_208236.png" alt="" class="">
+  </button>
 </div>
 <div id="map"></div>
   <ul id="places-list"></ul>

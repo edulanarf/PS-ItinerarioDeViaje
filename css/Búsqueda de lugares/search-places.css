@@ -5,6 +5,7 @@
 
 body{
     margin: 0;
+    background: #FFE3B3;
 }
 
 #search-input {
@@ -12,17 +13,19 @@ body{
     font-size: 15px;
     height: 30px;
     width: 350px;
-    border-radius: 2px;
     border: 2px;
     transition: all 0.3s ease;
     margin-left: 100px;
     font-family: 'Montserrat', sans-serif;
+    margin-top:30px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 #search-input:focus {
     outline: none;
     border-color: #9B213E;
-    box-shadow: 0 0 10px rgb(155, 33, 62); /* Agrega una sombra verde cuando está enfocado */
+    box-shadow: 0 0 10px rgb(155, 33, 62);
 }
 
 
@@ -32,16 +35,18 @@ body{
     height: 54px;
     width: 160px;
     border-radius: 2px;
-    margin-left: 5px;
-    border: none;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
+    border-left: 1px solid #bababa;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    margin-top:30px;
 }
 
 #form{
     display:flex;
     margin-bottom: 20px;
-    margin-top:20px;
 }
 
 #form-map{
@@ -60,11 +65,31 @@ body{
     margin-top:15px;
     margin-bottom: 20px;
     border-radius: 5px;
-    list-style-type: none; /* Elimina los puntos de la lista */
+    list-style-type: none;
     text-align: center;
 }
 
 #places-list li {
     margin: 30px 0;
     padding: 10px;
+}
+
+#reload-button {
+    padding: 0; /* Elimina padding adicional para que el contenido se ajuste mejor */
+    height: 54px;
+    width: 54px; /* Ajusta el tamaño del botón para que se ajuste a la imagen */
+    border: none;
+    display: flex; /* Flexbox para centrar la imagen dentro del botón */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    background-color: #E75A5A;
+    cursor: pointer;
+    border-top-right-radius: 10px; /* Curva en el borde superior derecho */
+    border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
+    margin-top:30px;
+}
+
+#reload-button img {
+    width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    height: auto; /* Mantiene la proporción de la imagen */
 }
