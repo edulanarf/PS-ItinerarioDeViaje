@@ -69,7 +69,7 @@ function fetchNearbyPlaces(location) {
 
       sortedResults.forEach((place) => {
         const li = document.createElement('li');
-        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/400';
+        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
 
         li.innerHTML = `
           <img src="${photoUrl}" alt="${place.name}" class="place-image" style="width: 200px; height: auto; border-radius: 10px;">
@@ -78,7 +78,6 @@ function fetchNearbyPlaces(location) {
 
         const imgElement = li.querySelector('.place-image');
         imgElement.addEventListener('click', () => {
-          // Mostrar más información cuando se hace clic en la imagen
           showPlaceInfo(place);
         });
 
@@ -89,7 +88,6 @@ function fetchNearbyPlaces(location) {
 }
 
 function showPlaceInfo(place) {
-  // Puedes mostrar esta información en el mapa o en una ventana de información.
   infowindow.setContent(`
     <h3>${place.name}</h3>
     <p>Rating: ${place.rating || 'N/A'}</p>
