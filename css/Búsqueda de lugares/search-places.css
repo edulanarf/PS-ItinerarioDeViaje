@@ -54,8 +54,14 @@ body{
     width: 800px;
     height: 100vh;
     background-color: #FFB072;
+    position:fixed;
+    z-index: 1;
 }
 
+#form-map-list{
+    display:flex;
+    z-index: 0;
+}
 
 
 #places-list {
