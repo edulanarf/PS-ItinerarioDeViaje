@@ -1,0 +1,110 @@
+#map {
+    width: 800px;
+    height: 400px;
+}
+
+body{
+    margin: 0;
+    background: #FFE3B3;
+}
+
+#search-input {
+    padding: 12px 20px;
+    font-size: 15px;
+    height: 30px;
+    width: 350px;
+    border: 2px;
+    transition: all 0.3s ease;
+    margin-left: 100px;
+    font-family: 'Montserrat', sans-serif;
+    margin-top:30px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #9B213E;
+    box-shadow: 0 0 10px rgb(155, 33, 62);
+}
+
+
+#select-container {
+    padding: 12px 20px;
+    font-size: 13px;
+    height: 54px;
+    width: 160px;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    border-left: 1px solid #bababa;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    margin-top:30px;
+}
+
+#form{
+    display:flex;
+    margin-bottom: 20px;
+}
+
+#form-map{
+    width: 800px;
+    z-index: 0;
+}
+
+#form-map-list{
+    display:flex;
+    width: 800px;
+    height: 100vh;
+    background-color: #FFB072;
+    flex-direction: column;
+}
+
+
+#list {
+    overflow-y: auto; /* Habilitar desplazamiento vertical */
+    background-color: #FFB072;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+#places-list {
+    list-style-type: none;
+    padding: 0;
+    font-size: 18px;
+    text-align: center;
+    flex: 1;
+}
+
+#places-list li {
+    margin: 30px 0;
+    padding: 10px;
+
+}
+
+#places-list li img{
+    cursor: pointer;
+}
+
+#reload-button {
+    padding: 0;
+    height: 54px;
+    width: 54px; /* Ajusta el tamaño del botón para que se ajuste a la imagen */
+    border: none;
+    display: flex; /* Flexbox para centrar la imagen dentro del botón */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    background-color: #E75A5A;
+    cursor: pointer;
+    border-top-right-radius: 10px; /* Curva en el borde superior derecho */
+    border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
+    margin-top:30px;
+}
+
+#reload-button img {
+    width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    height: auto; /* Mantiene la proporción de la imagen */
+}

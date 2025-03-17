@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itinerarios de Viaje</title>
+  <link rel="stylesheet" href="css/colors.css">
+  <link rel="stylesheet" href="css/navbar.css"> <!-- Nuevo archivo CSS para la barra -->
+</head>
+<body>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="#" class="login-btn" onclick="navigateTo('gestion_de_usuarios/user-login')">Iniciar Sesión</a></li>
+      <li><a href="#" class="register-btn" onclick="navigateTo('gestion_de_usuarios/user-register')">Registrarse</a></li>
+      <li><a href="#" class="search-btn" onclick="navigateTo('itinerario/busqueda_de_lugares/search-places')">Buscar Lugares</a></li>
+      <li><a href="#" class="reset-btn" onclick="navigateTo('gestion_de_usuarios/user-reset-password')">Recuperar Contraseña</a></li>
+      <li><a href="#" class="logout-btn" onclick="navigateTo('gestion_de_usuarios/user-logout')">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <div id="content">
+    <!-- Aquí se cargará dinámicamente el contenido -->
+  </div>
+
+  <script src="JS/router.js"></script>
+
+</body>
+</html>

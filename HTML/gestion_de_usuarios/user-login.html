@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi página</title>
+    <link rel="stylesheet" href="../../css/Gestión de usuarios/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-square">
+        <form id="login-form">
+            <label for="login-email"></label>
+            <input type="email" id="login-email" placeholder="Email *" required>
+            <label for="login-password"></label>
+            <input type="password" id="login-password" placeholder="Password *" required>
+            <button id="google-login" class="google-button">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
+                Iniciar sesión con Google
+            </button>
+            <a href="../../HTML/Gestión%20de%20usuarios/user-reset-password.html" id="reset-password">Olvidé mi contraseña</a>
+            <button type="submit" id="login-button">Iniciar Sesión</button>
+
+        </form>
+    </div>
+    <script type="module" src="../../JS/Gestión%20de%20usuarios/login-google.js"></script>
+    <script type="module" src="../../JS/Gestión de usuarios/login.js"></script>
+</body>
+</html>
