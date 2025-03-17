@@ -38,3 +38,5 @@ Integrantes
   + [iniciar sesión](./mockups/login.png)
   + [registrarse](./mockups/register.png)
   + [crear/modificar itinerario](./mockups/create-modify.png)
+  + [ver itinerario](./mockups/itinerary.png)
+  + [página principal](./mockups/front-page.png)
