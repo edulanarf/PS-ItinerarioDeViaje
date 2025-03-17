@@ -1,7 +1,7 @@
 function navigateTo(page) {
   // Construir la URL del archivo HTML
   let htmlPath = `HTML/${page}.html`;
-  
+
   // Construir la URL del archivo CSS correspondiente (mismo nombre de la página)
   let cssPath = `css/${page}.css`;
 
