@@ -6,14 +6,14 @@
   <title>Buscar Lugar y Lugares Cercanos</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places&async&defer"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/Búsqueda de lugares/search-places.css">
+  <link rel="stylesheet" href="/CSS/search-places/search-places.css">
 </head>
 <body>
 <div id="form-map-list">
 <div id="form-map">
 <div id = "form">
-  <input id="search-input" type="text" placeholder="Busca un lugar...">
-  <select id="select-container">
+  <label for="search-input"></label><input id="search-input" type="text" placeholder="Busca un lugar...">
+  <label for="select-container"></label><select id="select-container">
     <option value="Restaurante">Restaurante</option>
     <option value="Cafetería">Cafeteria</option>
     <option value="Hotel">Hotel</option>
@@ -35,6 +35,6 @@
   </div>
 </div>
 
-<script type="module" src="../../../JS/Itinerario/Búsqueda de lugares/search-places.js"></script>
+<script type="module" src="../../../JS/Itinerario/Búsqueda_de_lugares/search-places.js"></script>
 </body>
 </html>

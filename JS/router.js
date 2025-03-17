@@ -3,7 +3,7 @@ function navigateTo(page) {
   let htmlPath = `HTML/${page}.html`;
 
   // Construir la URL del archivo CSS correspondiente (mismo nombre de la página)
-  let cssPath = `css/${page}.css`;
+  let cssPath = `CSS/${page}.css`;
 
   // Cargar el HTML en el contenido principal
   fetch(htmlPath, { cache: "no-cache" })
@@ -17,14 +17,14 @@ function navigateTo(page) {
           document.getElementById('content').innerHTML = data;
 
           // Eliminar cualquier CSS anterior cargado dinámicamente
-          let oldCss = document.getElementById('dynamic-css');
+          let oldCss = document.getElementById('dynamic-CSS');
           if (oldCss) {
               oldCss.remove();
           }
 
           // Crear una nueva referencia al CSS de la página cargada
           let newCss = document.createElement('link');
-          newCss.id = 'dynamic-css';
+          newCss.id = 'dynamic-CSS';
           newCss.rel = 'stylesheet';
           newCss.href = cssPath;
           document.head.appendChild(newCss);
@@ -34,5 +34,5 @@ function navigateTo(page) {
 
 // Cargar una página inicial por defecto
 document.addEventListener("DOMContentLoaded", () => {
-  navigateTo('gestion_de_usuarios/user-login'); // Puedes cambiar la página de inicio aquí
+  navigateTo('user-management/user-login'); // Puedes cambiar la página de inicio aquí
 });
