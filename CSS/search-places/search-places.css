@@ -108,3 +108,18 @@ body{
     width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
     height: auto; /* Mantiene la proporción de la imagen */
 }
+
+#add-info-button{
+    padding: 5px;
+    font-size: 13px;
+    height: 30px;
+    width: 50px;
+    border: 2px;
+    margin-left: 30px;
+    margin-right: 30px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    margin-top:30px;
+
+}

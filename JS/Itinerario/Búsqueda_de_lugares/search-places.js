@@ -1,8 +1,16 @@
-import { request } from '/js/Itinerario/Búsqueda de lugares/places.js';
+import { request } from '/JS/Itinerario/Búsqueda_de_lugares/places.js';
 
 let map, service, infowindow;
 let markers = [];
 let selectedCategory = "Restaurante";
+
+//Info para el itinerario
+let placeName;
+let placePhoto;
+let placePrice;
+let placeAddress;
+let placeRating;
+let placeWebUrl;
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Nueva York
@@ -38,13 +46,25 @@ function initMap() {
     fetchNearbyPlaces(place.geometry.location);
   });
 
+  //Listener para el botón de añadir
+  //TODO
+  const addOption = document.getElementById("add-info-button");
+  addOption.addEventListener('click', function() {
+    console.log(placeName);
+    console.log(placePhoto);
+    console.log(placePrice); //0 = Gratis, 1 = Barato, 2 = Moderado, 3 = Caro, 4 = Muy Caro
+    console.log(placeAddress);
+    console.log(placeRating);
+    console.log(placeWebUrl);
+  });
+
+
   // Listener para el botón de recargar la búsqueda
   const changeOptionReload = document.getElementById("reload-button");
   changeOptionReload.addEventListener('click', function() {
     const places = searchBox.getPlaces();
     if (places.length == 0) return;
     const place = places[0];
-
     fetchNearbyPlaces(place.geometry.location);
   });
 }
@@ -93,10 +113,20 @@ function showPlaceInfo(place) {
     <p>Rating: ${place.rating || 'N/A'}</p>
     <p>${place.vicinity || 'No address available'}</p>
   `);
+  placeName = place.name;
+  placePhoto = place.photos ? place.photos[0].getUrl({ maxWidth: 300 }) : 'https://via.placeholder.com/200';
+  placePrice = place.price_level !== undefined
+    ? `💰 Precio: ${'💵'.repeat(place.price_level)}`
+    : 'Precio no disponible';
+
+  placeRating = place.rating !== undefined
+    ? `⭐ Valoración: ${place.rating} (${'⭐'.repeat(Math.round(place.rating))})`
+    : 'Valoración no disponible';
+  placeAddress = place.vicinity || 'Dirección no disponible';
+  placeWebUrl = place.website
   infowindow.setPosition(place.geometry.location);
   infowindow.open(map);
 }
-
 window.onload = initMap;
 
 // Listener para cambio de categoría

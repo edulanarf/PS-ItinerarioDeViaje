@@ -6,12 +6,10 @@ import { getAuth,
   updateProfile} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { keys } from '../../apiKeys';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+
 
 const firebaseConfig = {
-  apiKey: keys.APIKEYFIREBASE,
+  apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
   authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
   projectId: "itinerarios-de-viaje-2db0b",
   storageBucket: "itinerarios-de-viaje-2db0b.firebasestorage.app",
