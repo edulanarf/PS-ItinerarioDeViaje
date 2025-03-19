@@ -1,0 +1,172 @@
+@import "../colors.css";
+
+button {
+    cursor: pointer;
+}
+
+#navigation,#tools {
+    display: flex;
+    height: auto;
+    background-color: var(--beige-calido);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#session-navbar {
+    display: flex;
+    width: 80%;
+    height: 2rem;
+    gap: 3rem;
+}
+
+
+#us {
+    display: flex;
+    gap: 1rem;
+}
+#brand-name {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#links {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+#logout-button {
+    border: none;
+    background-color: var(--marron-medio);
+    color: white;
+    height: 100%;
+    padding: 0 2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+
+#logout-button:hover {
+    background-color: var(--marron-oscuro);
+    box-shadow: 0 0 1rem black;
+}
+
+#tools {
+    background-color: var(--naranja-quemado);
+    justify-content: start;
+    flex-direction: row;
+}
+
+#user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 30%;
+    gap: 2em;
+    flex: 1;
+}
+
+#user-pfp {
+    border-radius: 100%;
+    height: 4em;
+    width: 4em;
+}
+
+#user-name {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: var(--beige-calido);
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+#actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex: 2;
+}
+
+#next-itinerary,#previous-itinerary {
+}
+
+#search-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+}
+
+main {
+    padding: 3rem;
+    flex: 1;
+    background-color: var(--marron-medio);
+}
+
+#my-itineraries {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    max-height: 600px;
+}
+
+#preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+    background-color: var(--oro-suave);
+    flex: 1;
+}
+
+
+
+#intro {
+    height: 60%;
+    width: 100%;
+    border-radius: 2em;
+}
+
+#summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#title {
+    font-size: 4rem;
+}
+
+#description {
+    font-size: 1.5rem;
+}
+
+
+#content {
+    padding: 1rem 2rem;
+    background-color: var(--oro-suave);
+    display: flex;
+    flex: 1;
+}
+
+#side-bar {
+    width: 0.5rem;
+    border-radius: 1rem;
+    height: 100%;
+    background-color: black;
+}
+
+#list-container {
+    margin: 1rem;
+    padding: 1rem;
+    overflow: auto;
+    width: 100%;
+}

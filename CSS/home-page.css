@@ -42,6 +42,7 @@
     height: 100%;
     padding: 0 2rem;
     border-radius: 1rem;
+    cursor: pointer;
 }
 
 #logout-button:hover {
@@ -81,6 +82,7 @@ main #background-photo {
     background-color: var(--rosa-pastel);
     border-radius: 1rem;
     padding: 1rem;
+    cursor: pointer;
 }
 
 #new-itinerary:hover {

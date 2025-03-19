@@ -1,4 +1,4 @@
-import { request } from '/JS/Itinerario/search-places/places.js';
+import { request } from '/JS/itinerary/search-places/places.js';
 
 let map, service, infowindow;
 let markers = [];
