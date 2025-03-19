@@ -63,7 +63,7 @@ function initMap() {
   const changeOptionReload = document.getElementById("reload-button");
   changeOptionReload.addEventListener('click', function() {
     const places = searchBox.getPlaces();
-    if (places.length == 0) return;
+    if (places.length === 0) return;
     const place = places[0];
     fetchNearbyPlaces(place.geometry.location);
   });

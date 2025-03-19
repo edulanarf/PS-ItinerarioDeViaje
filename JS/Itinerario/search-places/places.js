@@ -1,3 +1,5 @@
+// noinspection JSNonASCIINames
+
 export const request = {
   "Restaurante": {
     radius: "5000",
