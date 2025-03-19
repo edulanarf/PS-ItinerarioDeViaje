@@ -1,4 +1,4 @@
-import { request } from '/JS/Itinerario/Búsqueda_de_lugares/places.js';
+import { request } from '/JS/Itinerario/search-places/places.js';
 
 let map, service, infowindow;
 let markers = [];
@@ -13,7 +13,7 @@ let placeRating;
 let placeWebUrl;
 
 function initMap() {
-  const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Nueva York
+  const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Las Palmas GC
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultLocation,
     zoom: 12,
@@ -28,7 +28,7 @@ function initMap() {
   // Maneja el cambio de lugar en el searchBox
   searchBox.addListener("places_changed", () => {
     const places = searchBox.getPlaces();
-    if (places.length == 0) return;
+    if (places.length === 0) return;
 
     markers.forEach((marker) => marker.setMap(null));
     const place = places[0];

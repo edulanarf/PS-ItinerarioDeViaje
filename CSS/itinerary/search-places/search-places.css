@@ -1,3 +1,5 @@
+@import "../../colors.css";
+
 #map {
     width: 800px;
     height: 400px;
@@ -15,17 +17,15 @@ body{
     width: 350px;
     border: 2px;
     transition: all 0.3s ease;
-    margin-left: 100px;
     font-family: 'Montserrat', sans-serif;
-    margin-top:30px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
 
 #search-input:focus {
     outline: none;
-    border-color: #9B213E;
-    box-shadow: 0 0 10px rgb(155, 33, 62);
+    border-color: var(--borgona-profundo);
+    box-shadow: 0 0 10px var(--rojo-oxido);
 }
 
 
@@ -37,16 +37,25 @@ body{
     border-radius: 2px;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
-    border-left: 1px solid #bababa;
+    border-left: 1px solid var(--crema-ligera);
     border-top: none;
     border-right: none;
     border-bottom: none;
-    margin-top:30px;
 }
 
 #form{
     display:flex;
-    margin-bottom: 20px;
+    align-items: flex-start;
+    margin: 2rem;
+}
+
+#form-search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 100%;
+    margin: auto;
 }
 
 #form-map{
@@ -58,14 +67,14 @@ body{
     display:flex;
     width: 800px;
     height: 100vh;
-    background-color: #FFB072;
+    background-color: var(--naranja-suave);
     flex-direction: column;
 }
 
 
 #list {
     overflow-y: auto; /* Habilitar desplazamiento vertical */
-    background-color: #FFB072;
+    background-color: var(--naranja-suave);
     padding: 20px;
     box-sizing: border-box;
 }
@@ -97,11 +106,10 @@ body{
     display: flex; /* Flexbox para centrar la imagen dentro del botón */
     align-items: center; /* Centra verticalmente */
     justify-content: center; /* Centra horizontalmente */
-    background-color: #E75A5A;
+    background-color: var(--rosa-intenso);
     cursor: pointer;
     border-top-right-radius: 10px; /* Curva en el borde superior derecho */
     border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
-    margin-top:30px;
 }
 
 #reload-button img {
@@ -110,16 +118,15 @@ body{
 }
 
 #add-info-button{
-    padding: 5px;
     font-size: 13px;
-    height: 30px;
-    width: 50px;
+    height: auto;
+    padding: 1rem;
+    background-color: var(--rojo-oscuro);
     border: 2px;
-    margin-left: 30px;
-    margin-right: 30px;
+    border-radius: 10px;
+    margin: auto;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
-    margin-top:30px;
-
+    align-items: center;
 }
