@@ -15,6 +15,7 @@
 
     --gris-claro: #fdfdfd;
 
+    --google-dark-blue: #0056b3;
     --google-blue: #007bff;
     --azul-brillante: #357ae8;
     /* Colores Marrones Adicionales */
@@ -29,4 +30,5 @@
 
     /* Texto */
     --texto-negro: #000000;
+    --carbon: #333;
 }
