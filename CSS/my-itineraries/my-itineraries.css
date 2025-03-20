@@ -148,7 +148,7 @@ button {
     display: flex; /* Flexbox para centrar la imagen dentro del botón */
     align-items: center; /* Centra verticalmente */
     justify-content: center; /* Centra horizontalmente */
-    background-color: var(--rosa-intenso);
+    background-color: var(--marron-medio);
     cursor: pointer;
     border-top-right-radius: 10px; /* Curva en el borde superior derecho */
     border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
