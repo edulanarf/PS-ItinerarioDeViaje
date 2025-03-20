@@ -35,9 +35,9 @@ Integrantes
   + 1.0 - 50 - itinerarios personalizados - 10 - itinerario + usuarios
   + 12.0 - 70 - itinerarios actualizados y notificaciones - 6 - itinerario + usuarios
 ## mockups iniciales
-  + [iniciar sesión](./mockups/login.png)
-  + [registrarse](./mockups/register.png)
-  + [crear/modificar itinerario](./mockups/create-modify.png)
-  + [ver itinerario](/mockups/itinerary.png)
-  + [mis itinerario](/mockups/my-itineraries.png)
-  + [principal](/mockups/front-page.png)
+  + [iniciar sesión](./mockups/login.png) -> [user-login](./HTML/user-management/user-login.html)
+  + [registrarse](./mockups/register.png) -> [user-register](./HTML/user-management/user-register.html)
+  + [crear/modificar itinerario](./mockups/create-modify.png) -> [create-modify](./HTML/itinerary/search-places/search-places.html)
+  + [ver itinerario](/mockups/itinerary.png) -> [itinerary](./HTML/itinerary/view/view.html) 
+  + [mis itinerario](/mockups/my-itineraries.png) -> [my](./HTML/itinerary/my-itineraries/my-itineraries.html)
+  + [principal](/mockups/front-page.png) -> [home](./HTML/home-page.html) 
