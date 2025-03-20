@@ -93,7 +93,25 @@ button {
     flex: 2;
 }
 
+#open-itinerary {
+    padding: 1rem;
+    border-radius: 2rem;
+    background-color: var(--marron-claro);
+    border-color: var(--marron-medio);
+}
+
+#open-itinerary:hover {
+    background-color: var(--marron-medio);
+    border-color: var(--marron-oscuro);
+    box-shadow: 0 0 0.5rem var(--marron-oscuro);
+}
+
 #next-itinerary,#previous-itinerary {
+    border: none;
+}
+
+#previous-itinerary img {
+    rotate: 180deg;
 }
 
 #search-actions {
@@ -102,6 +120,45 @@ button {
     justify-content: flex-start;
     flex: 1;
 }
+
+/* from search-places.css*/
+#search {
+    padding: 12px 20px;
+    font-size: 15px;
+    height: 30px;
+    width: 350px;
+    border: 2px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#search:focus {
+    outline: none;
+    border-color: var(--borgona-profundo);
+    box-shadow: 0 0 10px var(--rojo-oxido);
+}
+
+#reload-button {
+    padding: 0;
+    height: 54px;
+    width: 54px; /* Ajusta el tamaño del botón para que se ajuste a la imagen */
+    border: none;
+    display: flex; /* Flexbox para centrar la imagen dentro del botón */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    background-color: var(--rosa-intenso);
+    cursor: pointer;
+    border-top-right-radius: 10px; /* Curva en el borde superior derecho */
+    border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
+}
+
+#reload-button img {
+    width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+/* until here*/
 
 main {
     padding: 3rem;
