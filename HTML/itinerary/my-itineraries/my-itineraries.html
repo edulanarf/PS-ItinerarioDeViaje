@@ -34,12 +34,30 @@
         </div>
         <div id="actions">
             <button id="previous-itinerary">
-                <img src="../../../public/img/keyboard-right-arrow-button.png" alt="next"/>
+                <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
             <button id="open-itinerary">open this itinerary</button>
             <button id="next-itinerary">
-                <img src="../../../public/img/keyboard-right-arrow-button.png" alt="next"/>
+                <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
+            <script>
+                // Selecciona el SVG y el path dentro de él
+                const actions = document.getElementById('actions');
+                const svgs = actions.querySelectorAll('svg');
+
+                // Obtiene las dimensiones del path usando getBBox
+                svgs.forEach(function(svg) {
+                    const bbox = svg.querySelector('path').getBBox();
+                    svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
+                });
+
+                // Ajusta el viewBox del SVG para ajustarse al tamaño del path
+
+            </script>
         </div>
         <div id="search-actions">
             <label for="search"></label>
@@ -66,14 +84,10 @@
                     <li>list</li>
                     <script>
                         let list = document.getElementById("places")
-                        console.log(list)
                         let first = list.querySelector("li")
-                        console.log(first)
                         for (let i = 0; i < 30; i++) {
-                            console.log(i + "- i")
                             let clone = first.cloneNode(true)
                             clone.id = i
-                            console.log(clone)
                             list.appendChild(clone)
                         }
                     </script>

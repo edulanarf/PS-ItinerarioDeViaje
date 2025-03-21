@@ -4,6 +4,7 @@ button {
     cursor: pointer;
 }
 
+
 #navigation,#tools {
     display: flex;
     height: auto;
@@ -57,15 +58,14 @@ button {
 
 #tools {
     background-color: var(--naranja-quemado);
-    justify-content: start;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr;
 }
 
 #user {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 30%;
     gap: 2em;
     flex: 1;
 }
@@ -83,6 +83,7 @@ button {
     background-color: var(--beige-calido);
     border-radius: 1rem;
     padding: 0.5rem 1rem;
+    width: fit-content;
 }
 
 #actions {
@@ -90,7 +91,6 @@ button {
     gap: 1rem;
     align-items: center;
     justify-content: center;
-    flex: 2;
 }
 
 #open-itinerary {
@@ -108,17 +108,35 @@ button {
 
 #next-itinerary,#previous-itinerary {
     border: none;
+    height: 4em;
+    width: 4em;
+    outline: none;
+    align-items: center;
+    justify-content: center;
 }
 
-#previous-itinerary img {
+#previous-itinerary {
     rotate: 180deg;
 }
+
+#next-itinerary svg,#previous-itinerary svg{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+
+}
+
+#previous-itinerary:hover, #next-itinerary:hover svg {
+    transform: scale(1.1); /* Animación de tamaño al pasar el cursor */
+}
+
+
 
 #search-actions {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    flex: 1;
 }
 
 /* from search-places.css*/
