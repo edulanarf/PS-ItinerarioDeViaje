@@ -85,7 +85,16 @@ main {
     justify-content: center;
     width: 100%;
     height: 100%;
-    background-color: var(--naranja-suave);
+    padding: 2%;
+    background-color: var(--marron-oscuro);
+}
+
+#place-summary {
+    background-color: var(--naranja-quemado);
+    border-radius: 2em;
+    padding: 2%;
+    height: 100%;
+    width: 100%;
 }
 
 #title-contents {

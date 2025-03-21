@@ -64,63 +64,19 @@
             <div id="list-container">
                 <ul id="places">
                     <li>list</li>
-
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-                    <li>list</li>
-
+                    <script>
+                        let list = document.getElementById("places")
+                        console.log(list)
+                        let first = list.querySelector("li")
+                        console.log(first)
+                        for (let i = 0; i < 30; i++) {
+                            console.log(i + "- i")
+                            let clone = first.cloneNode(true)
+                            clone.id = i
+                            console.log(clone)
+                            list.appendChild(clone)
+                        }
+                    </script>
                 </ul>
             </div>
         </section>

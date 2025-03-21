@@ -14,6 +14,9 @@ body {
     width: 100%;
     margin: 0;
 }
+main {
+    overflow: hidden;
+}
 
 p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}
 button {  background-color: transparent;}
