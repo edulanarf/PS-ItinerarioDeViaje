@@ -6,40 +6,143 @@
   <title>Recomendación de Lugares</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places&async&defer"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/CSS/itinerary/search-places/search-places.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/CSS/colors.css">
+  <link rel="stylesheet" href="/CSS/itinerary/recommend-places/recommend-places.css">
 </head>
 <body>
-<div id="form-map-list">
-  <div id="form-map">
-    <div id = "form">
-      <ul>
-        <li>
-          <button>Añadir Destino</button>
-        </li>
-      </ul>
-      <label for="select-container"></label>
-      <select id="select-container" multiple>
-        <option value="Restaurante">Restaurante</option>
-        <option value="Cafetería">Cafeteria</option>
-        <option value="Hotel">Hotel</option>
-        <option value="Museo">Museo</option>
-        <option value="Parque">Parque</option>
-        <option value="Centro comercial">Centro comercial</option>
-        <option value="Aeropuerto">Aeropuerto</option>
-      </select>
-      <button id="reload-button">
-        Actualizar Recomendaciones
-      </button>
+<div class="container">
+  <div class="sidebar">
+    <div class="nav-tabs">
+      <a class="active" href="#new">Nuevo</a>
+      <a href="#up">Subiendo</a>
+      <a href="#popular">Popular</a>
     </div>
-    <div id="map"></div>
+    <div class="tab-content">
+      <div class="show" id="new">
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 1</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 2</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div id="up">
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 3</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 4</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div id="popular">
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 5</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+        <a class="place" href="#">
+          <div class="place-category">
+            <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div class="place-category-name">Restaurante</div>
+          </div>
+          <div class="place-info">
+            <div class="place-name">Test 6</div>
+            <div class="place-address">Calle Test Nº 7 Las Palmas de Gran Canaria</div>
+            <div class="place-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</div>
+            <div class="place-score">
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star on"></span>
+              <span class="star half"></span>
+              <span class="star"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <a class="configure-preferences" href="#">Configurar preferencias</a>
+    </div>
   </div>
-  <div id="list">
-    <ul id="places-list">
+  <div id="map">
 
-    </ul>
   </div>
 </div>
 
-<script type="module" src="../../../JS/itinerary/search-places/search-places.js"></script>
+<script type="module" src="../../../JS/itinerary/recommend-places/recommend-places.js"></script>
 </body>
 </html>

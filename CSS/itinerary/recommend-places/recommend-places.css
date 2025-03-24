@@ -1,0 +1,126 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--beige-calido);
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    max-width: 40rem;
+    background-color: var(--oro-suave);
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-tabs {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--naranja-quemado);
+    padding: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+.nav-tabs > * {
+    flex: 1;
+    background-color: var(--rojo-oscuro);
+    padding: 1rem;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+}
+.nav-tabs > .active {
+    background-color: var(--rojo-oxido);
+}
+
+.tab-content > *:not(.show) {
+    display: none;
+}
+
+.tab-content {
+    padding: 0 1rem;
+    background-color: var(--naranja-quemado);
+    margin: 1rem;
+    border-radius: 1rem;
+    flex: 1;
+    overflow-y: scroll;
+}
+
+.place {
+    display: flex;
+    gap: 1rem;
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--oro-suave);
+}
+.place-category {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.place-category-icon {
+    padding: 0.5rem;
+    font-size: 2rem;
+}
+.place-name {
+    font-weight: bold;
+    font-size: 1.4rem;
+    padding-bottom: 0.2rem;
+}
+.place-address {
+    padding-bottom: 0.1rem;
+}
+.place-description {
+    font-size: 0.9rem;
+}
+.sidebar-footer {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+.configure-preferences {
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    background-color: var(--borgona-profundo);
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+#map {
+    flex: 1;
+}
+.star {
+    font-size: x-large;
+    color: gray;
+}
+.star:last-child {
+    margin-right: 0;
+}
+.star:before {
+    content:'\2605';
+}
+.star.on {
+    color: gold;
+}
+.star.half:after {
+    content:'\2605';
+    color: gold;
+    position: absolute;
+    margin-left: -1.25rem;
+    width: 0.6rem;
+    overflow: hidden;
+}
