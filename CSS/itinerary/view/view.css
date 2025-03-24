@@ -151,8 +151,13 @@ main {
 
 .places-list-item {
     width: 100%;
+    border: 3px solid black;
+    border-radius: 5px;
+    z-index: 2;
 }
-
+.places-list-item-content, .transport-method-icon {
+    z-index: 1;
+}
 .places-list-item-content {
     display: flex;
     flex-direction: row;
@@ -166,6 +171,8 @@ main {
     height: 100%;
     width: fit-content;
     background-color: var(--marron-medio);
+    border-radius: 2px 5px 5px 2px;
+    z-index: auto;
 }
 
 .place-brief {
