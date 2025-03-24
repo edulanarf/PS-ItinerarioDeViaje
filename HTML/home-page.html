@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home-page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inspiration&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../CSS/reset-stylesheet.css">
+    <link rel="stylesheet" href="../CSS/colors.css">
+    <link rel="stylesheet" href="../CSS/home-page.css">
+</head>
+<body>
+<header id="navigation">
+    <nav id="session-navbar">
+        <div id="us">
+            <img id="logo" src="../mockups/logo.png" alt="logo"/>
+            <div id="brand-name">Itineraries</div>
+        </div>
+        <div id="links">
+            <a href="./home-page.html" >Home</a>
+            <a href="my-itineraries.html">My itineraries</a>
+        </div>
+    </nav>
+    <button id="logout-button">log out</button>
+</header>
+<main>
+    <img id="background-photo" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="back">
+    <div id="title">Discover Your Itineraries</div>
+    <div id="intro">What you want to do?</div>
+    <button id="new-itinerary">Begin your Journey</button>
+
+</main>
+</body>
+<script>
+    // Obtener el elemento de la imagen y el div
+    const img = document.getElementById('background-photo');
+    const main = document.querySelector("main");
+
+    // Obtener la URL de la imagen
+    const src = img.src;
+
+    // Aplicar la URL de la imagen como fondo al div
+    main.style.backgroundImage = `url(${src})`;
+</script>
+</html>

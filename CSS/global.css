@@ -1,0 +1,23 @@
+@import "colors.css";
+
+body {
+  background-color: var(--fondo-marron);
+  color: var(--texto-negro);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor para centralizar todas las páginas */
+.page-container {
+    background-color: var(--marron-beige); /* Fondo más claro para el contenido */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+}

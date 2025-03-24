@@ -1,0 +1,34 @@
+:root {
+    --borgona-profundo: #9B213E;
+    --rojo-oxido: #B03050;
+    --rojo-oscuro: #C9284F;
+    --rosa-intenso: #E75A5A;
+    --rojo-coral: #FF6666;
+    --rosa-pastel: #FF8888;
+
+    --naranja-quemado: #E68A4F;
+    --melocoton-vibrante: #FFA05A;
+    --naranja-suave: #FFB072;
+    --oro-suave: #FFD89C;
+    --beige-calido: #FFE3B3;
+    --crema-ligera: #FFF0D0;
+
+    --gris-claro: #fdfdfd;
+
+    --google-dark-blue: #0056b3;
+    --google-blue: #007bff;
+    --azul-brillante: #357ae8;
+    /* Colores Marrones Adicionales */
+    --marron-oscuro: #4E342E;
+    --marron-medio: #795548;
+    --marron-claro: #A1887F;
+    --marron-suave: #D7CCC8;
+    --marron-beige: #EFEBE9;
+
+    /* Fondo General Marrón */
+    --fondo-marron: #3E2723;
+
+    /* Texto */
+    --texto-negro: #000000;
+    --carbon: #333;
+}
