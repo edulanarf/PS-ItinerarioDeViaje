@@ -37,8 +37,8 @@ Integrantes
 ## first mockups => result template
   + [sign in](./mockups/login.png) => [user-login](./HTML/user-management/user-login.html)
   + [sign up](./mockups/register.png) => [user-register](./HTML/user-management/user-register.html)
-  + [create/modify itinerary](./mockups/create-modify.png) => [create-modify](./HTML/itinerary/search-places/search-places.html)
-  + [see itinerary](/mockups/itinerary.png) => [view](./HTML/itinerary/view/view.html) 
-  + [my itineraries](/mockups/my-itineraries.png) => [my-itineraries](./HTML/itinerary/my-itineraries/my-itineraries.html)
+  + [create/modify itinerary](./mockups/create-modify.png) => [create-modify](HTML/itinerary/search-places.html)
+  + [see itinerary](/mockups/itinerary.png) => [view](HTML/itinerary/view.html) 
+  + [my itineraries](/mockups/my-itineraries.png) => [my-itineraries](HTML/itinerary/my-itineraries.html)
   + [principal (after login)](/mockups/front-page.png) => [home](./HTML/home-page.html)
   + principal (no login) => [index](index.html)

@@ -19,7 +19,6 @@ function navigateTo(page) {
           // Eliminar cualquier CSS anterior cargado dinámicamente
           let oldCss = document.getElementById('dynamic-CSS');
           if (oldCss) {
-              console.log(oldCss.href, oldCss.rel)
               oldCss.remove();
           }
 
@@ -29,7 +28,6 @@ function navigateTo(page) {
           newCss.rel = 'stylesheet';
           newCss.href = cssPath;
           newCss.type = 'text/css';
-          console.log(newCss.href, newCss.rel);
           document.head.appendChild(newCss);
       })
       .catch(error => console.error(`Error al cargar la página: ${error.message}`));
