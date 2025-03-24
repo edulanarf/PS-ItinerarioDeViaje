@@ -1,10 +1,5 @@
 @import "../../colors.css";
 
-button {
-    cursor: pointer;
-}
-
-
 #navigation,#tools {
     display: flex;
     height: auto;
@@ -189,22 +184,33 @@ main {
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
     height: 100%;
+    max-height: 100%;
+    border-radius: 2rem;
 }
 
 #preview {
-    display: grid;
-    grid-auto-columns: 3fr 2fr;
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
     background-color: var(--oro-suave);
+    max-height: 100%;
 }
 
-
+#image-preview {
+    display: flex;
+    justify-content: center; /* Centra la imagen en el contenedor */
+    align-items: center;
+    padding: 0 2rem;
+    overflow: hidden; /* Asegura que no haya desbordamiento en el contenedor */
+}
 
 #intro {
-    height: 100%;
     width: 100%;
+    max-width: 380px !important; /* La imagen nunca será más ancha que su contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
     border-radius: 2em;
 }
+
 
 #summary {
     display: flex;
@@ -221,6 +227,11 @@ main {
     font-size: 1.5rem;
 }
 
+.grid-column {
+    display: grid;
+    grid-template-rows: 1fr 18fr 1fr;
+    background-color: var(--oro-suave);
+}
 
 #content {
     padding: 1rem 0;
