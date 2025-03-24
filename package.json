@@ -1,0 +1,17 @@
+{
+  "name": "itinerarios-de-viaje",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.1",
+    "vite": "^5.1.6"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"}
+}
