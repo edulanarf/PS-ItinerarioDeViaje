@@ -2,8 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { request } from '/JS/itinerary/search-places/places.js';
+import { priceLevels } from "/JS/itinerary/recommend-places/price-levels.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -17,8 +18,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-let service;
+const db = getFirestore(app,'itinerariosdeviaje');
+let map, service;
 
 window.addEventListener('load',() => {
     document.querySelectorAll('.nav-tabs > a').forEach(el => {
@@ -54,10 +55,12 @@ function loadPreferences(user) {
         cities: [{name:'Madrid',lat:40.416775,lng:-3.703790},{name:'Barcelona',lat:41.390205,lng:2.154007}],
         categories: ['Restaurante','Cafetería']
       }
-      //setDoc(preferencesRef,preferences);
+      setDoc(preferencesRef,preferences);
     }
     loadPreferencesData(preferences).then(preferencesData => {
-      updateSectionsInfo(user,preferences,preferencesData);
+      let places = preferencesData.flat();
+      console.log(places);
+      updateSectionsInfo(user,preferences,places);
     });
   })
 }
@@ -74,9 +77,17 @@ function loadPreferencesData(preferences) {
         keyword: category
       };
       promises.push(new Promise((resolve,reject)=>{
-        service.nearbySearch(requests, (results, status) => {
+        let fullResults = [];
+        let i = 1;
+        service.nearbySearch(requests, (results, status, pagination) => {
           if (status !== google.maps.places.PlacesServiceStatus.OK) return reject(status);
-          return resolve(results);
+          results = results.filter(result => result.rating >= 4).map(result => {
+            result.category = category;
+            return result;
+          });
+          fullResults = fullResults.concat(results);
+          if (pagination.hasNextPage && results.length > 0) return pagination.nextPage();
+          return resolve(fullResults);
         })
       }))
     });
@@ -84,8 +95,52 @@ function loadPreferencesData(preferences) {
   return Promise.all(promises);
 }
 
-function updateSectionsInfo(user,preferences,preferencesData) {
-  
+function updateSectionsInfo(user,preferences,places) {
+  updatePopularSectionInfo(user,preferences,places);
+}
+
+function updatePopularSectionInfo(user,preferences,places) {
+  updateSectionInfo('popular',places);
+}
+
+function updateSectionInfo(section, places) {
+  let html = '';
+  let template = `
+  <a class="place" href="#">
+    <div class="place-category">
+      <div class="place-category-icon"><img src="{iconurl}" alt="{categoryname}"></div>
+      <div class="place-category-name">{categoryname}</div>
+    </div>
+    <div class="place-info">
+      <div class="place-name">{placename}</div>
+      <div class="place-address">{placeaddress}</div>
+      <div class="place-description">Nivel de precio: {pricelevel}</div>
+      <div class="place-description">Nº de valoraciones: {ratingstotal}</div>
+      <div class="place-score">{rating}</div>
+    </div>
+  </a>`;
+  places.forEach(place => {
+    let scoreHtml = '';
+    let intScore = parseInt(place.rating);
+    for (let i = 0; i < intScore; i++) {
+      scoreHtml += '<span class="star on"></span>';
+    }
+    if (place.rating - intScore >= 0.5) scoreHtml += '<span class="star half"></span>'
+    for (let i = Math.round(place.rating); i < 5; i++) {
+      scoreHtml += '<span class="star"></span>';
+    }
+    scoreHtml += ` (${place.rating})`;
+    let placeHtml = template
+      .replace('{iconurl}',place.icon)
+      .replace(/{categoryname}/g,place.category)
+      .replace('{placename}',place.name)
+      .replace('{placeaddress}',place.vicinity)
+      .replace('{pricelevel}',priceLevels[place.price_level]||'Desconocido')
+      .replace('{ratingstotal}',place.user_ratings_total)
+      .replace('{rating}',scoreHtml);
+    html += placeHtml;
+  });
+  document.getElementById(section).innerHTML = html;
 }
 
 function initMap() {

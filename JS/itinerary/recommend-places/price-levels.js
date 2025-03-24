@@ -1,0 +1,1 @@
+export const priceLevels = ['Gratuito','Barato','Moderado','Costoso','Muy Costoso']
