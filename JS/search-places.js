@@ -64,6 +64,10 @@ function initMap() {
     console.log(placeAddress);
     console.log(placeRating);
 
+    if (listNames.includes(placeName)) {
+      alert("El lugar ya se ha añadido al itinerario");
+      return;
+    }
     listNames.push(placeName);
     listPhoto.push(placePhoto);
     listAddress.push(placeAddress);
@@ -88,9 +92,17 @@ function initMap() {
     } else { //Precio predeterminado 20
       listPrice.push(20);
     }
+
   });
 
-
+  const save = document.getElementById("save-itinerary");
+  addOption.addEventListener('click', function() {
+    console.log(listNames);
+    console.log(listPhoto);
+    console.log(listPrice); //0 = Gratis, 1 = Barato, 2 = Moderado, 3 = Caro, 4 = Muy Caro
+    console.log(listRating);
+    console.log(listAddress);
+  });
 
 
 

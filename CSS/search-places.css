@@ -1,4 +1,21 @@
 @import "colors.css";
+#separation{
+    display: flex;
+}
+
+#save-itinerary{
+    font-size: 13px;
+    height: auto;
+    padding: 1rem;
+    background-color: var(--rojo-oscuro);
+    border: 2px;
+    border-radius: 10px;
+    margin: auto;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    align-items: center;
+}
 
 #map {
     width: 800px;
