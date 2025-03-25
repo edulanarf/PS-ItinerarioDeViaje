@@ -18,6 +18,8 @@ let listPrice = [];
 let listAddress = [];
 let listRating = [];
 
+const placesList = document.getElementById("itinerary-list");
+
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Las Palmas GC
@@ -93,6 +95,11 @@ function initMap() {
       listPrice.push(20);
     }
 
+    const listItem = document.createElement("li");
+    const placeInfo = document.createElement("div");
+    placeInfo.innerHTML = placeName;
+    listItem.appendChild(placeInfo);
+    placesList.appendChild(listItem);
   });
 
   const save = document.getElementById("save-itinerary");
