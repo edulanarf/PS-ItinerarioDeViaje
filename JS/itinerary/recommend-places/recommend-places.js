@@ -19,7 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app,'itinerariosdeviaje');
-let map, service;
+let map, service, marker, infowindow;
 
 window.addEventListener('load',() => {
     document.querySelectorAll('.nav-tabs > a').forEach(el => {
@@ -32,37 +32,107 @@ window.addEventListener('load',() => {
             document.querySelector(el.getAttribute('href')).classList.add('show');
         });
     });
+    document.body.addEventListener('click',function(e){
+      if (!e.target.closest('.place')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      let placeId = e.target.closest('.place').dataset.place_id;
+      let request = {
+        placeId
+      };
+      service.getDetails(request, (place,status) => {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place &&
+          place.geometry &&
+          place.geometry.location
+        ) {
+
+          const center = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
+          map.panTo(center);
+    
+          // Log the result.
+          console.log(place.name);
+          console.log(place.formatted_address);
+
+          if (marker !== undefined) marker.setMap(null);
+    
+          // Add a marker for the place.
+          marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location,
+            title: place.name,
+          });
+          infowindow.setContent(place.name);
+          infowindow.open(map, marker);
+        }
+      });
+    })
     initMap();
 });
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    loadPreferences(user);
+    await loadPreferences(user);
+    await loadPreferencesData(preferences);
+    let places = (await loadPreferencesData(preferences)).flat()
+    console.log(places);
+    updateSectionsInfo(user,preferences,places);
   } else {
     console.log("No hay usuario autenticado.");
   }
 });
 
-let preferences;
+let preferences, placesRecommendationStats;
 
 function loadPreferences(user) {
-  let preferencesRef = doc(db, "preferences", user.uid);
-  getDoc(preferencesRef).then(docSnap => {
-    if (docSnap.exists()) {
-      preferences = docSnap.data();
-    } else {
-      preferences = {
-        cities: [{name:'Madrid',lat:40.416775,lng:-3.703790},{name:'Barcelona',lat:41.390205,lng:2.154007}],
-        categories: ['Restaurante','Cafetería']
+  return new Promise((resolve,reject)=>{
+    let preferencesRef = doc(db, "preferences", user.uid);
+    getDoc(preferencesRef).then(docSnap => {
+      if (docSnap.exists()) {
+        preferences = docSnap.data();
+      } else {
+        preferences = {
+          cities: [{name:'Madrid',lat:40.416775,lng:-3.703790},{name:'Barcelona',lat:41.390205,lng:2.154007}],
+          categories: ['Restaurante','Cafetería']
+        }
+        setDoc(preferencesRef,preferences);
       }
-      setDoc(preferencesRef,preferences);
-    }
-    loadPreferencesData(preferences).then(preferencesData => {
-      let places = preferencesData.flat();
-      console.log(places);
-      updateSectionsInfo(user,preferences,places);
+      resolve(preferences);
     });
-  })
+  });
+}
+
+function loadUserPlacesStats(user,places) {
+  return new Promise((resolve, rejec) => {
+    let placesRecommendationStatsRef = doc(db, "placesRecommendationStats", user.id);
+    getDoc(placesStatsRef).then(docSnap => {
+      if (docSnap.exists()) {
+        placesRecommendationStats = docSnap.data();
+      } else {
+        placesRecommendationStats = {};
+      }
+      let update = false;
+      places.forEach(place => {
+        let placeStats = placesRecommendationStats[place.place_id];
+        if (placeStats===undefined) {
+          placeStats = {
+            timesRecommended: 0,
+            ratingHistory: {}
+          };
+          placesRecommendationStats[place.place_id] = placeStats;
+        }
+        let date = (new Date()).toISOString().split('T')[0];
+        if (placeStats.ratingHistory[date] !== undefined) return;
+        update = true;
+        placeStats.ratingHistory[date] = place.rating;
+      });
+      if (update) {
+        setDoc(placesRecommendationStatsRef,placesRecommendationStats);
+      }
+      resolve(placesRecommendationStats);
+    });
+  });
 }
 
 function loadPreferencesData(preferences) {
@@ -100,13 +170,20 @@ function updateSectionsInfo(user,preferences,places) {
 }
 
 function updatePopularSectionInfo(user,preferences,places) {
-  updateSectionInfo('popular',places);
+  updateSectionInfo('popular',places.slice(0,20));
+}
+
+function updateNewSectionInfo(user,preferences,places) {
+  let newPlaces = places.filter(place => {
+    return placesRecommendationStats[place.place_id].timesRecommended === 0;
+  });
+  updateSectionInfo('new',places.slice(0,20));
 }
 
 function updateSectionInfo(section, places) {
   let html = '';
   let template = `
-  <a class="place" href="#">
+  <a class="place" href="#" data-place_id="{place_id}">
     <div class="place-category">
       <div class="place-category-icon"><img src="{iconurl}" alt="{categoryname}"></div>
       <div class="place-category-name">{categoryname}</div>
@@ -131,6 +208,7 @@ function updateSectionInfo(section, places) {
     }
     scoreHtml += ` (${place.rating})`;
     let placeHtml = template
+      .replace('{place_id}',place.place_id)
       .replace('{iconurl}',place.icon)
       .replace(/{categoryname}/g,place.category)
       .replace('{placename}',place.name)
@@ -150,6 +228,7 @@ function initMap() {
     zoom: 12,
   });
   service = new google.maps.places.PlacesService(map);
+  infowindow = new google.maps.InfoWindow();
 }
 
 // Función para obtener lugares cercanos y mostrarlos
