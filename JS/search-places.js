@@ -12,6 +12,13 @@ let placeAddress;
 let placeRating;
 let placeWebUrl;
 
+let listNames = [];
+let listPhoto = [];
+let listPrice = [];
+let listAddress = [];
+let listRating = [];
+
+
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Las Palmas GC
   map = new google.maps.Map(document.getElementById("map"), {
@@ -47,16 +54,45 @@ function initMap() {
   });
 
   //Listener para el botón de añadir
-  //TODO
   const addOption = document.getElementById("add-info-button");
   addOption.addEventListener('click', function() {
+
+
     console.log(placeName);
     console.log(placePhoto);
     console.log(placePrice); //0 = Gratis, 1 = Barato, 2 = Moderado, 3 = Caro, 4 = Muy Caro
     console.log(placeAddress);
     console.log(placeRating);
-    console.log(placeWebUrl);
+
+    listNames.push(placeName);
+    listPhoto.push(placePhoto);
+    listAddress.push(placeAddress);
+    listRating.push(placeRating);
+
+    if(placePrice != null && placePrice != undefined && placePrice !== "Precio no disponible"){
+      if(placePrice === 1){
+        listPrice.push(20);
+      }
+      if(placePrice === 2){
+        listPrice.push(30);
+      }
+      if(placePrice === 3){
+        listPrice.push(40);
+      }
+      if(placePrice=== 4){
+        listPrice.push(50);
+      }
+      if(placePrice === 5){
+        listPrice.push(60);
+      }
+    } else { //Precio predeterminado 20
+      listPrice.push(20);
+    }
   });
+
+
+
+
 
 
   // Listener para el botón de recargar la búsqueda
@@ -115,9 +151,8 @@ function showPlaceInfo(place) {
   `);
   placeName = place.name;
   placePhoto = place.photos ? place.photos[0].getUrl({ maxWidth: 300 }) : 'https://via.placeholder.com/200';
-  placePrice = place.price_level !== undefined
-    ? `💰 Precio: ${'💵'.repeat(place.price_level)}`
-    : 'Precio no disponible';
+
+  placePrice = place.price_level || 'Precio no disponible';
 
   placeRating = place.rating !== undefined
     ? `⭐ Valoración: ${place.rating} (${'⭐'.repeat(Math.round(place.rating))})`
