@@ -1,56 +1,7 @@
 @import "colors.css";
 #navigation {
-    display: flex;
-    width: 100%;
-    height: auto;
-    background-color: var(--beige-calido);
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    font-size: 1rem;
-    text-align: center;
+    justify-content: space-between;
 }
-
-#session-navbar {
-    display: flex;
-    width: 80%;
-    height: 2rem;
-    gap: 3rem;
-}
-
-
-#us {
-    display: flex;
-    gap: 1rem;
-}
-#brand-name {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-#links {
-    display: flex;
-    gap: 1rem;
-    align-items: end;
-}
-
-#logout-button {
-    border: none;
-    background-color: var(--marron-medio);
-    color: white;
-    height: 100%;
-    padding: 0 2rem;
-    border-radius: 1rem;
-    cursor: pointer;
-}
-
-#logout-button:hover {
-    background-color: var(--marron-oscuro);
-    box-shadow: 0 0 1rem black;
-}
-
-
 
 main {
     width: 100%;

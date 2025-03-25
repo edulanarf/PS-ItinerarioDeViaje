@@ -23,11 +23,11 @@ button {
     gap: 3rem;
 }
 
-
 #us {
     display: flex;
     gap: 1rem;
 }
+
 #brand-name {
     text-align: center;
     font-size: 2rem;
