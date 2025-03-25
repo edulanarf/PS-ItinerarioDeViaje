@@ -3,37 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi página</title>
+
+    <link rel="stylesheet" href="/CSS/reset-stylesheet.css">
     <link rel="stylesheet" href="/CSS/user-login.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/CSS/colors.css">
-    <link rel="stylesheet" href="/CSS/navbar.css">
+    <link rel="stylesheet" href="/CSS/index.css">
+    <link rel="stylesheet" href="/CSS/navigation.css">
     <script type="module" src="/JS/login-google.js"></script>
     <script type="module" src="/JS/login.js"></script>
 
+
 </head>
 <body>
-<nav id="nav">
-    <ul>
-        <li><a href="../HTML/user-register.html">Registrarse</a></li>
-        <li><a href="../HTML/search-places.html">Buscar Lugares</a></li>
-        <li><a href="../HTML/user-reset-password.html">Recuperar Contraseña</a></li>
-        <li><a href="../HTML/user-logout.html">Cerrar Sesión</a></li>
-    </ul>
-</nav>
-    <div class="background-square">
-        <form id="login-form">
-            <label for="login-email"></label>
-            <input type="email" id="login-email" placeholder="Email *" required>
-            <label for="login-password"></label>
-            <input type="password" id="login-password" placeholder="Password *" required>
-            <button id="google-login" class="google-button">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
-                Iniciar sesión con Google
-            </button>
-            <a href="user-reset-password.html" id="reset-password">Olvidé mi contraseña</a>
-            <button type="submit" id="login-button">Iniciar Sesión</button>
-        </form>
-    </div>
-
+    <header id="navigation">
+        <nav id="session-navbar">
+            <div id="us">
+                <img id="logo" src="../mockups/logo.png" alt="logo"/>
+                <div id="brand-name">Itineraries</div>
+            </div>
+            <div id="links">
+                <button class="nav-button"><a href="user-register.html">Registrarse</a></button>
+                <button class="nav-button"><a href="user-reset-password.html">Recuperar Contraseña</a></button>
+                <button class="nav-button"><a href="user-logout.html">Cerrar Sesión</a></button>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="background-square">
+            <form id="login-form">
+                <label for="login-email"></label>
+                <input type="email" id="login-email" placeholder="Email *" required>
+                <label for="login-password"></label>
+                <input type="password" id="login-password" placeholder="Password *" required>
+                <button id="google-login" class="google-button">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
+                    Iniciar sesión con Google
+                </button>
+                <a href="user-reset-password.html" id="reset-password">Olvidé mi contraseña</a>
+                <button type="submit" id="login-button">Iniciar Sesión</button>
+            </form>
+        </div>
+    </main>
 </body>
 </html>
