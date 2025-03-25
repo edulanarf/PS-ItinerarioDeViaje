@@ -97,7 +97,11 @@ function initMap() {
 
     const listItem = document.createElement("li");
     const placeInfo = document.createElement("div");
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.placeholder = "Fecha:";
     placeInfo.innerHTML = placeName;
+    listItem.appendChild(inputField);
     listItem.appendChild(placeInfo);
     placesList.appendChild(listItem);
   });
