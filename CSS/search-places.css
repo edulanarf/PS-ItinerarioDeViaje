@@ -34,6 +34,12 @@
     border-radius: 10px;
 }
 
+#itinerary-title:focus {
+    outline: none;
+    border-color: var(--borgona-profundo);
+    box-shadow: 0 0 10px var(--rojo-oxido);
+}
+
 h3{
     font-family: 'Montserrat', sans-serif;
     margin: 2rem;
@@ -41,6 +47,28 @@ h3{
 
 #separation-itinerary{
     display: flex;
+    align-items: center;
+}
+
+
+.list-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.delete-button{
+    font-size: 13px;
+    height: auto;
+    background-color: var(--rojo-oscuro);
+    border: 2px;
+    padding: 2px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
     align-items: center;
 }
 
@@ -52,7 +80,7 @@ body{
 #search-input {
     padding: 12px 20px;
     font-size: 15px;
-    height: 30px;
+    height: 54px;
     width: 350px;
     border: 2px;
     transition: all 0.3s ease;
