@@ -1,39 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
 import {
-  getStorage,
   ref,
   uploadBytes,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 
 import {
-  getFirestore,
   setDoc,
   doc
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
-  authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
-  projectId: "itinerarios-de-viaje-2db0b",
-  storageBucket: "itinerarios-de-viaje-2db0b.appspot.com",
-  messagingSenderId: "86468425538",
-  appId: "1:86468425538:web:8bc9c4194193614f7cfadb",
-  measurementId: "G-CKN1D6S9GR"
-};
+import {auth, db,storage} from "./firebase-config.js";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const storage = getStorage(app);
-const db = getFirestore(app);
 
 function registerUser(email, password, displayName, picture) {
   createUserWithEmailAndPassword(auth, email, password)
@@ -52,8 +36,8 @@ function registerUser(email, password, displayName, picture) {
         displayName: displayName,
         photoURL: photoURL
       });
-
       const usersCollection = doc(db, `users/${userCredential.user.uid}`);
+      console.log(usersCollection);
       await setDoc(usersCollection, {
         username: displayName,
         email: userCredential.user.email,
@@ -79,6 +63,5 @@ document.getElementById("register-form").addEventListener("submit", function (e)
   const password = document.getElementById("register-password").value;
   const username = document.getElementById("register-username").value;
   const picture = document.getElementById("register-picture").files[0];
-
   registerUser(email, password, username, picture);
 });
