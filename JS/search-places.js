@@ -12,7 +12,6 @@ let selectedCategory = "Hotel";
 // Info para el itinerario
 let placeName, placePhoto, placePrice, placeAddress, placeRating, placeWebUrl;
 export let listNames = [], listPhoto = [], listPrice = [], listRating = [], listAddress = [], listDates = [], listCategories = [];
-let itineraryTitle;
 let counter = 0;
 
 const placesList = document.getElementById("itinerary-list");
@@ -181,10 +180,6 @@ window.onload = initMap;
 
 document.getElementById("select-container").addEventListener("change", (e) => {
   selectedCategory = e.target.value;
-});
-
-document.getElementById("itinerary-title").addEventListener("change", (e) => {
-  itineraryTitle = e.target.value;
 });
 
 export function getItineraryData() {
