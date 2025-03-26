@@ -34,6 +34,12 @@
     border-radius: 10px;
 }
 
+#itinerary-title:focus {
+    outline: none;
+    border-color: var(--borgona-profundo);
+    box-shadow: 0 0 10px var(--rojo-oxido);
+}
+
 h3{
     font-family: 'Montserrat', sans-serif;
     margin: 2rem;
@@ -47,9 +53,9 @@ h3{
 
 .list-item {
     display: grid;
-    grid-template-columns: 1fr auto; /* Nombre ocupa todo el espacio, botones alineados */
-    gap: 10px; /* Espacio entre elementos */
-    width: 100%; /* Asegurar que ocupa todo el ancho disponible */
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    width: 100%;
     margin-bottom: 20px;
 }
 
