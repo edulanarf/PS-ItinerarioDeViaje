@@ -5,17 +5,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
-import {auth} from "./firebase-config.js";
-
-function checkAuthState() {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("Usuario autenticado:", user.email);
-    } else {
-      console.log("No hay usuario autenticado.");
-    }
-  });
-}
+import {auth, checkAuthState} from "./firebase-config.js";
 
 checkAuthState();
 
