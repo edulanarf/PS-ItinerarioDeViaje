@@ -12,13 +12,14 @@ let placeAddress;
 let placeRating;
 let placeWebUrl;
 
-let listNames = [];
-let listPhoto = [];
-let listPrice = [];
-let listAddress = [];
-let listRating = [];
-let listCategories = [];
-let listDates = [];
+export let listNames = [];
+export let listPhoto = [];
+export let listPrice = [];
+export let listRating = [];
+export let listAddress = [];
+export let listDates = [];
+export let listCategories = [];
+let itineraryTitle;
 let counter = 0;
 let counterButtons = 0;
 
@@ -114,10 +115,10 @@ function initMap() {
         let priceMapping = [20, 20, 50, 100, 250, 500]; // Mapea los precios
         listPrice.push(priceMapping[ratingIndex-1] || 20);
         price = priceMapping[ratingIndex-1] || 20;
-        price = price + "Euros por noche";
+        price = price + "Euros la noche";
       } else {
         listPrice.push(20); // Precio por defecto
-        price = "20 Euros por noche";
+        price = "20 Euros la noche";
       }
     }
 
@@ -160,35 +161,33 @@ function initMap() {
           renumberListItems();
       });
 
-// Función para renumerar los ítems en la lista
+    //Reordenar la lista
     function renumberListItems() {
       const items = placesList.getElementsByTagName("li");
 
-      // Asegúrate de renumerar correctamente solo los elementos restantes
       for (let i = 0; i < items.length; i++) {
         const placeInfo = items[i].querySelector('div');
-        placeInfo.innerHTML = `${i + 1}. ${listNames[i]}`; // Muestra el número del lugar actualizado
+        if(listCategories[i] === "Hotel"){
+          placeInfo.innerHTML = `${i + 1}. ${listNames[i]} ${listPrice[i]} Euros la noche`;
+        }
+        if(listCategories[i] === "Restaurante" || listCategories[i] === "Cafetería" ||
+          listCategories[i] === "Museo") {
+          placeInfo.innerHTML = `${i + 1}. ${listNames[i]} ${listPrice[i]} Euros por persona`;
+        }
+
+        if(listCategories[i] === "Parque" || listCategories[i] === "Centro comercial" ||
+          listCategories[i] === "Aeropuerto") {
+          placeInfo.innerHTML = `${i + 1}. ${listNames[i]} Gratis`;
+        }
+
       }
     }
 
-    // Añade el ítem a la lista
+    // Añadir el item a la lista
     listItem.appendChild(placeInfo);
     listItem.appendChild(deleteButton);
     listItem.classList.add("list-item");
     placesList.appendChild(listItem);
-  });
-
-
-  //Guardar itinerario
-  const save = document.getElementById("save-itinerary");
-  save.addEventListener('click', function() {
-    console.log(listNames);
-    console.log(listPhoto);
-    console.log(listPrice);
-    console.log(listRating);
-    console.log(listAddress);
-    console.log(listDates);
-    console.log(listCategories);
   });
 
   // Listener para el botón de recargar la búsqueda
@@ -269,7 +268,7 @@ function fetchNearbyPlaces(location) {
           price = "5 Euros"; // Precio por defecto
         }
 
-        if(selectedCategory === "Parque" || selectedCategory === "Centro Comercial"
+        if(selectedCategory === "Parque" || selectedCategory === "Centro comercial"
           || selectedCategory === "Aeropuerto") {
           price = "gratis";
         }
@@ -317,3 +316,24 @@ categorySelect.addEventListener('change', function() {
   selectedCategory = categorySelect.value;
   console.log("Categoría seleccionada:", selectedCategory);
 });
+
+//Listener para el titulo del itinerario
+const itineraryTitleInput = document.getElementById('itinerary-title');
+itineraryTitleInput.addEventListener('change', function() {
+  itineraryTitle = itineraryTitle.value;
+  console.log(itineraryTitle.value);
+})
+
+//exportar las listas para el js de guardar itinerario
+export function getItineraryData() {
+  return {
+    listNames,
+    listPhoto,
+    listPrice,
+    listRating,
+    listAddress,
+    listDates,
+    listCategories,
+  };
+}
+

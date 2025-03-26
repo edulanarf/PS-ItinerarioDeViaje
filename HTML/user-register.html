@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Mi página</title>
-    <link rel="stylesheet" href="/CSS/reset-stylesheet.css">
-    <link rel ="stylesheet" href="../CSS/user-register.css">
-    <link rel ="stylesheet" href="../CSS/user-login.css">
-    <link rel="stylesheet" href="../CSS/colors.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/CSS/index.css">
-    <link rel="stylesheet" href="/CSS/navigation.css">
+    <link rel="stylesheet" href="/CSS/reset-stylesheet.css" />
+    <link rel="stylesheet" href="../CSS/user-register.css" />
+    <link rel="stylesheet" href="../CSS/user-login.css" />
+    <link rel="stylesheet" href="../CSS/colors.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/CSS/index.css" />
+    <link rel="stylesheet" href="/CSS/navigation.css" />
 </head>
 <body>
 <header id="navigation">
     <nav id="session-navbar">
         <div id="us">
-            <img id="logo" src="../mockups/logo.png" alt="logo"/>
+            <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
         <div id="links">
@@ -24,25 +24,26 @@
         </div>
     </nav>
 </header>
+
 <main>
     <div class="background-square">
         <form id="register-form">
             <div id="profile-pic-container">
                 <label for="register-picture" id="profile-pic-label"></label>
-                <input type="file" id="register-picture" accept="image/*">
-                <img id="profile-pic" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" alt="pfp">
+                <input type="file" id="register-picture" accept="image/*" />
+                <img id="profile-pic" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" alt="pfp" />
                 <span id="profile-text">Foto Perfil</span>
             </div>
-            <label for="register-username"></label>
-            <input type="text" id="register-username" placeholder= "Nombre de usuario:" required>
-            <label for="register-email"></label>
-            <input type="email" id="register-email" placeholder="Correo" required>
-            <label for="register-password"></label>
-            <input type="password" id="register-password" placeholder="Contraseña" required>
-            <button id="google-login" class="google-button">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo">
+
+            <input type="text" id="register-username" placeholder="Nombre de usuario:" required />
+            <input type="email" id="register-email" placeholder="Correo" required />
+            <input type="password" id="register-password" placeholder="Contraseña" required />
+
+            <button id="google-login" class="google-button" type="button">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo" />
                 Registrarse con Google
             </button>
+
             <button type="submit" id="register-button">Registrarse</button>
         </form>
     </div>
@@ -50,6 +51,5 @@
 
 <script type="module" src="../JS/register.js"></script>
 <script type="module" src="../JS/register-google.js"></script>
-
 </body>
 </html>
