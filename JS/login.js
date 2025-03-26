@@ -1,7 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -14,15 +15,27 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("Usuario autenticado:", user.email);
-  } else {
-    console.log("No hay usuario autenticado.");
-  }
-});
+export const auth = getAuth(app);
+
+/**
+ * change navbar and accessible html for user
+ * @param login - function to execute once user has login
+ * @param logout - function to execute once user has logout
+ */
+export function onAuthStateChanged(login, logout) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Usuario autenticado:", user.email);
+      login()
+    } else {
+      console.log("No hay usuario autenticado.");
+      logout()
+    }
+  });
+}
+
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
 function loginUser(email, password) {
   signInWithEmailAndPassword(auth, email, password)
