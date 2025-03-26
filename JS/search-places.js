@@ -19,6 +19,7 @@ let listAddress = [];
 let listRating = [];
 let listDates = [];
 let counter = 0;
+let counterButtons = 0;
 
 
 const placesList = document.getElementById("itinerary-list");
@@ -73,14 +74,18 @@ function initMap() {
 
     counter++;
     listDates.push(counter);
+    let price=0;
 
     // Asignación de precio
     if(selectedCategory === "Restaurante") {
       if (placePrice != null && placePrice !== "Precio no disponible") {
         let priceMapping = [20, 20, 30, 40, 50, 60]; // Mapea los precios
         listPrice.push(priceMapping[placePrice] || 20);
+        price = priceMapping[placePrice] || 20;
+        price = price + "Euros por persona";
       } else {
         listPrice.push(20); // Precio por defecto
+        price = "20 Euros por persona";
       }
     }
 
@@ -88,8 +93,11 @@ function initMap() {
       if (placePrice != null && placePrice !== "Precio no disponible") {
         let priceMapping = [10, 10, 15, 20, 25, 30]; // Mapea los precios
         listPrice.push(priceMapping[placePrice] || 10);
+        price = priceMapping[placePrice] || 10;
+        price = price + "Euros por persona";
       } else {
         listPrice.push(10); // Precio por defecto
+        price = "10 Euros por persona";
       }
     }
 
@@ -98,47 +106,59 @@ function initMap() {
         let ratingIndex = Math.round(placeRating);
         let priceMapping = [20, 20, 50, 100, 250, 500]; // Mapea los precios
         listPrice.push(priceMapping[ratingIndex-1] || 20);
+        price = priceMapping[ratingIndex-1] || 20;
+        price = price + "Euros por noche";
       } else {
         listPrice.push(20); // Precio por defecto
+        price = "20 Euros por noche";
       }
     }
 
     if(selectedCategory === "Museo") {
       listPrice.push(5); // Precio por defecto
+      price = "5 Euros por persona";
     }
 
-    if(selectedCategory === "Parque" || selectedCategory === "Centro Comercial"
+    if(selectedCategory === "Parque" || selectedCategory === "Centro comercial"
       || selectedCategory === "Aeropuerto") {
       listPrice.push(0); // Precio por defecto
+      price = "Gratis";
     }
 
     // Crea un nuevo ítem para la lista
     const listItem = document.createElement("li");
     const placeInfo = document.createElement("div");
-    placeInfo.innerHTML = `${counter}. ${placeName}`; // Muestra el número del lugar junto al nombre
+    placeInfo.innerHTML = `${counter}. ${placeName} ${price}`; // Muestra el número del lugar junto al nombre
 
     const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Eliminar";
-    deleteButton.classList.add("delete-button");
-    deleteButton.id = `delete-button-${counter}`;  // Asignar un id único al botón de eliminación
+      deleteButton.textContent = "Eliminar";
+      deleteButton.classList.add("delete-button");
+      deleteButton.id = `delete-button-${counter}`;  // Asignar un id único al botón de eliminación
 
-// Agregar un event listener al botón de eliminar
-    deleteButton.addEventListener('click', function() {
-      // Eliminar el lugar de las listas internas usando el número de lugar (counter)
-      const index = deleteButton.id-1;
-        listNames.splice(index, 1);
-        listPhoto.splice(index, 1);
-        listPrice.splice(index, 1);
-        listAddress.splice(index, 1);
-        listRating.splice(index, 1);
-        listDates.splice(index, 1);
-        // Eliminar el ítem de la lista en el DOM
-        listItem.remove();
-        console.log("eliminado");
-        counter--;
-        // Actualizar el contador y renumerar los ítems restantes
-        renumberListItems();
-    });
+  // Agregar un event listener al botón de eliminar
+      deleteButton.addEventListener('click', function() {
+        // Eliminar el lugar de las listas internas usando el número de lugar (counter)
+        const index = Array.from(placesList.children).indexOf(listItem);
+
+          listNames.splice(index, 1);
+          listPhoto.splice(index, 1);
+          listPrice.splice(index, 1);
+          listAddress.splice(index, 1);
+          listRating.splice(index, 1);
+          listDates.splice(index, 1);
+          // Eliminar el ítem de la lista en el DOM
+          listItem.remove();
+          counter--;
+          counterButtons++;
+
+          console.log(index+1 +" eliminado");
+          console.log("contador "+ counter);
+
+
+
+          // Actualizar el contador y renumerar los ítems restantes
+          renumberListItems();
+      });
 
 // Función para renumerar los ítems en la lista
     function renumberListItems() {
