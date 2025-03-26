@@ -1,4 +1,3 @@
-
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -16,8 +15,9 @@ import {
   doc
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-import {auth, db,storage} from "./firebase-config.js";
+import { auth, checkAuthState, db, storage } from './firebase-config.js';
 
+checkAuthState();
 
 function registerUser(email, password, displayName, picture) {
   createUserWithEmailAndPassword(auth, email, password)

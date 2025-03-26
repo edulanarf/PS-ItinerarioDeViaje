@@ -1,13 +1,7 @@
-import {signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import {auth} from "./firebase-config.js";
+import {signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import { auth, checkAuthState } from './firebase-config.js';
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("Usuario autenticado:", user.email);
-  } else {
-    console.log("No hay usuario autenticado.");
-  }
-});
+checkAuthState();
 
 function userLogout() {
   signOut(auth)

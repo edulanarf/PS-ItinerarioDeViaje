@@ -1,10 +1,13 @@
 // ✅ MODIFICACIÓN PRINCIPAL: añadir botón "Añadir" a cada resultado
 
 import { request } from '/JS/places.js';
+import {checkAuthState} from "./firebase-config.js";
 
 let map, service, infowindow;
 let markers = [];
 let selectedCategory = "Hotel";
+
+
 
 // Info para el itinerario
 let placeName, placePhoto, placePrice, placeAddress, placeRating, placeWebUrl;
@@ -13,6 +16,7 @@ let itineraryTitle;
 let counter = 0;
 
 const placesList = document.getElementById("itinerary-list");
+checkAuthState();
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 };

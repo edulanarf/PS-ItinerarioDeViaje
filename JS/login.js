@@ -1,8 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import {
-  getAuth,
   signInWithEmailAndPassword,
-  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
 import {auth, checkAuthState} from "./firebase-config.js";
@@ -15,8 +12,6 @@ function loginUser(email, password) {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        console.log("✅ Usuario logueado:", user.email);
-
         window.location.href = "index.html";
       } else {
         alert("⚠️ Debes verificar tu correo antes de iniciar sesión.");
