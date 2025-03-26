@@ -17,9 +17,11 @@ let listPhoto = [];
 let listPrice = [];
 let listAddress = [];
 let listRating = [];
+let listCategories = [];
 let listDates = [];
 let counter = 0;
 let counterButtons = 0;
+
 
 
 const placesList = document.getElementById("itinerary-list");
@@ -71,6 +73,7 @@ function initMap() {
     listPhoto.push(placePhoto);
     listAddress.push(placeAddress);
     listRating.push(placeRating);
+    listCategories.push(selectedCategory);
 
     counter++;
     listDates.push(counter);
@@ -89,7 +92,7 @@ function initMap() {
       }
     }
 
-    if(selectedCategory === "Cafeterìa") {
+    if(selectedCategory === "Cafetería") {
       if (placePrice != null && placePrice !== "Precio no disponible") {
         let priceMapping = [10, 10, 15, 20, 25, 30]; // Mapea los precios
         listPrice.push(priceMapping[placePrice] || 10);
@@ -146,6 +149,7 @@ function initMap() {
           listAddress.splice(index, 1);
           listRating.splice(index, 1);
           listDates.splice(index, 1);
+          listCategories.slice(index, 1);
           // Eliminar el ítem de la lista en el DOM
           listItem.remove();
           counter--;
@@ -187,6 +191,7 @@ function initMap() {
     console.log(listRating);
     console.log(listAddress);
     console.log(listDates);
+    console.log(listCategories);
   });
 
   // Listener para el botón de recargar la búsqueda
