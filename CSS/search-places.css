@@ -44,6 +44,28 @@ h3{
     align-items: center;
 }
 
+
+.list-item {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Nombre ocupa todo el espacio, botones alineados */
+    gap: 10px; /* Espacio entre elementos */
+    width: 100%; /* Asegurar que ocupa todo el ancho disponible */
+    margin-bottom: 20px;
+}
+
+.delete-button{
+    font-size: 13px;
+    height: auto;
+    background-color: var(--rojo-oscuro);
+    border: 2px;
+    padding: 2px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    align-items: center;
+}
+
 body{
     margin: 0;
     background: #FFE3B3;
