@@ -68,7 +68,7 @@ body{
 
 #register-button{
     margin: 15px;
-    background-color: var(--beige-calido);
+    background-color: var(--marron-medio);
     cursor: pointer;
     border-color: black;
     padding: 5px 20px;
@@ -76,8 +76,9 @@ body{
     border-radius: 30px;
     font-family: 'Montserrat', sans-serif;
     transition: background-color 0.3s ease;
+    color: white;
 }
 
-#login-button:hover {
-    background-color: var(--naranja-suave);
+#register-button:hover {
+    background-color: var(--marron-oscuro);
 }

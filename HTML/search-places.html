@@ -8,10 +8,30 @@
   <!-- AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/CSS/search-places.css">
   <link rel="stylesheet" href="/CSS/colors.css">
+
+  <link rel="stylesheet" href="../CSS/navigation.css">
 </head>
 <body>
+
+<header id="navigation">
+  <nav id="session-navbar">
+    <div id="us">
+      <img id="logo" src="../mockups/logo.png" alt="logo"/>
+      <div id="brand-name">Itineraries</div>
+    </div>
+    <div id="links">
+      <a class="nav-link" href="user-login.html">Iniciar Sesión</a>
+      <a class="nav-link" href="user-register.html">Registrarse</a>
+      <a class="nav-link" href="search-places.html">Buscar Lugares</a>
+      <a class="nav-link" href="user-reset-password.html">Recuperar Contraseña</a>
+      <a class="nav-link" href="user-logout.html">Cerrar Sesión</a>
+    </div>
+  </nav>
+</header>
+
 <div id="separation">
 <div id="form-map-list">
 <div id="form-map">
@@ -21,9 +41,9 @@
     <input id="search-input" type="text" placeholder="Busca un lugar...">
     <label for="select-container"></label>
     <select id="select-container">
+      <option value="Hotel">Hotel</option>
       <option value="Restaurante">Restaurante</option>
       <option value="Cafetería">Cafeteria</option>
-      <option value="Hotel">Hotel</option>
       <option value="Museo">Museo</option>
       <option value="Parque">Parque</option>
       <option value="Centro comercial">Centro comercial</option>
@@ -47,6 +67,7 @@
 </div>
   <section>
     <button id="save-itinerary">Guardar </button>
+    <h3> Elige un Hotel donde quedarte:</h3>
     <ul id="itinerary-list"></ul>
   </section>
 </div>
