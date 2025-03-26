@@ -140,7 +140,6 @@ function initMap() {
     const deleteButton = document.createElement("button");
       deleteButton.textContent = "Eliminar";
       deleteButton.classList.add("delete-button");
-      deleteButton.id = `delete-button-${counter}`;  // Asignar un id único al botón de eliminación
 
   // Agregar un event listener al botón de eliminar
       deleteButton.addEventListener('click', function() {
@@ -158,11 +157,6 @@ function initMap() {
           listItem.remove();
           counter--;
           counterButtons++;
-
-
-
-
-          // Actualizar el contador y renumerar los ítems restantes
           renumberListItems();
       });
 
@@ -180,6 +174,7 @@ function initMap() {
     // Añade el ítem a la lista
     listItem.appendChild(placeInfo);
     listItem.appendChild(deleteButton);
+    listItem.classList.add("list-item");
     placesList.appendChild(listItem);
   });
 
