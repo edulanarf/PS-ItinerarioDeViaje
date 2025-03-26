@@ -67,6 +67,10 @@ function initMap() {
       alert("El lugar ya se ha añadido al itinerario");
       return;
     }
+    if(listCategories.includes("Hotel") && selectedCategory === "Hotel") {
+      alert("Ya se ha elegido un hotel");
+      return;
+    }
 
 
     listNames.push(placeName);
@@ -149,14 +153,12 @@ function initMap() {
           listAddress.splice(index, 1);
           listRating.splice(index, 1);
           listDates.splice(index, 1);
-          listCategories.slice(index, 1);
+        listCategories.splice(index, 1);
           // Eliminar el ítem de la lista en el DOM
           listItem.remove();
           counter--;
           counterButtons++;
 
-          console.log(index+1 +" eliminado");
-          console.log("contador "+ counter);
 
 
 
@@ -187,7 +189,7 @@ function initMap() {
   save.addEventListener('click', function() {
     console.log(listNames);
     console.log(listPhoto);
-    console.log(listPrice); //0 = Gratis, 1 = Barato, 2 = Moderado, 3 = Caro, 4 = Muy Caro
+    console.log(listPrice);
     console.log(listRating);
     console.log(listAddress);
     console.log(listDates);
