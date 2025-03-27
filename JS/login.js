@@ -12,7 +12,7 @@ function loginUser(email, password) {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        window.location.href = "index.html";
+        window.location.href = "home-page.html";
       } else {
         alert("⚠️ Debes verificar tu correo antes de iniciar sesión.");
       }
