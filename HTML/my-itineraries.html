@@ -47,44 +47,68 @@
                 <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
-    </div>
+      <script>
+                // Selecciona el SVG y el path dentro de él
+                const actions = document.getElementById('actions');
+                const svgs = actions.querySelectorAll('svg');
 
-    <div id="search-actions">
-        <label for="search"></label>
-        <input id="search" type="text" placeholder="search in your itineraries">
-        <button id="reload-button">
-            <img src="https://icon-icons.com/icons2/3285/PNG/512/magnifying_glass_magnifier_search_icon_208236.png" alt="">
-        </button>
-    </div>
+                // Obtiene las dimensiones del path usando getBBox
+                svgs.forEach(function(svg) {
+                    const bbox = svg.querySelector('path').getBBox();
+                    svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
+                });
+                // Ajusta el viewBox del SVG para ajustarse al tamaño del path
+            </script>
+        </div>
+        <div id="search-actions">
+            <label for="search"></label>
+            <input id="search" type="text" placeholder="search in your itineraries">
+            <button id="reload-button">
+                <img src="https://icon-icons.com/icons2/3285/PNG/512/magnifying_glass_magnifier_search_icon_208236.png" alt="" class="">
+            </button>
+        </div>
 </header>
 
 <main>
-    <div id="my-itineraries">
-        <article id="preview">
-            <div id="image-preview">
-                <img id="intro" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="photo"/>
+    <template>
+        <div class="my-itineraries">
+            <article class="preview">
+                <div class="image-preview">
+                    <img class="intro" src="" alt=""/>
+                </div>
+                <div class="summary">
+                    <div class="title"></div>
+                    <div class="description">description</div>
+                </div>
+            </article>
+
+            <section class="content">
+                <div class="side-bar"></div>
+                <div class="list-container">
+                    <!--
+                    in class places:
+                    each li = place.toString()
+                    -->
+                    <ul class="places"></ul>
+                </div>
+            </section>
+        </div>
+    </template>
+    <div class="my-itineraries">
+        <article class="preview">
+            <div class="image-preview">
+                <img class="intro" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="photo"/>
             </div>
-            <div id="summary">
-                <div id="title">title</div>
-                <div id="description">description</div>
+            <div class="summary">
+                <div class="title">title</div>
+                <div class="description">description</div>
             </div>
         </article>
 
-        <section id="content">
-            <div id="side-bar"></div>
-            <div id="list-container">
-                <ul id="places">
-                    <li>list</li>
-                    <script>
-                        let list = document.getElementById("places")
-                        let first = list.querySelector("li")
-                        for (let i = 0; i < 30; i++) {
-                            let clone = first.cloneNode(true)
-                            clone.id = i
-                            list.appendChild(clone)
-                        }
-                    </script>
-                </ul>
+        <section class="content">
+            <div class="side-bar"></div>
+            <div class="list-container">
+                <ul class="places"></ul>
             </div>
         </section>
     </div>

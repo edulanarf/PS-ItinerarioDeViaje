@@ -23,10 +23,10 @@ export function checkAuthState() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("Usuario autenticado:", user.email);
-      return true
+      return user.uid
     } else {
       console.log("No hay usuario autenticado.");
-      return false;
+      return null;
     }
   });
 }
@@ -48,8 +48,6 @@ async function getUserData(userId) {
     return null;
   }
 }
-
-
 
 export async function getUserItineraries(userId) {
   const itinerariesRef = collection(db, `users/${userId}/itineraries`);
