@@ -1,49 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home-page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Itinerarios de Viaje</title>
+    <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
+    <link rel="stylesheet" href="../CSS/index.css" />
+    <link rel="stylesheet" href="../CSS/navigation.css" />
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inspiration&display=swap" rel="stylesheet">
+        main {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 16px;
+        }
 
-    <link rel="stylesheet" href="../CSS/reset-stylesheet.css">
-    <link rel="stylesheet" href="../CSS/colors.css">
-    <link rel="stylesheet" href="../CSS/home-page.css">
+        .section {
+            margin-bottom: 40px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #008cff;
+            margin-bottom: 15px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .team {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1 1 calc(50% - 20px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gallery-box {
+            flex: 1 1 calc(50% - 20px);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background-color: #eaeaea;
+        }
+
+        .gallery-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .review {
+            background-color: #f7f9fc;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            background-color: #ffffffc2;
+            border-top: 1px solid #ccc;
+            border-radius: 0 0 16px 16px;
+        }
+
+        a {
+            color: #008cff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-box, .team-member {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 <header id="navigation">
     <nav id="session-navbar">
         <div id="us">
-            <img id="logo" src="../mockups/logo.png" alt="logo"/>
+            <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
         <div id="links">
-            <a href="./home-page.html" >Home</a>
-            <a href="my-itineraries.html">My itineraries</a>
+            <button class="nav-button" onclick="location.href='my-itineraries.html'">Mis itinerarios</button>
+            <button class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</button>
+            <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
+            <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar Sesión</button>
         </div>
+        <!-- Perfil del usuario -->
+        <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
     </nav>
-    <button id="logout-button">log out</button>
 </header>
+
 <main>
-    <img id="background-photo" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="back">
-    <div id="title">Discover Your Itineraries</div>
-    <div id="intro">What you want to do?</div>
-    <button id="new-itinerary">Begin your Journey</button>
+    <section class="section">
+        <h2>¿Qué es Itineraries?</h2>
+        <p>
+            Itineraries es una aplicación web diseñada para ayudarte a planificar tu viaje ideal.
+            Descubre los mejores restaurantes, hoteles y atracciones turísticas con base en
+            precio, calidad y valoraciones de otros viajeros. ¡Explora con confianza!
+        </p>
+    </section>
 
+    <section class="section">
+        <h2>Explora el mundo con imágenes</h2>
+        <div class="gallery-row">
+            <div class="gallery-box">
+                <img src="../mockups/argentina.jpg" alt="Viaje 1" />
+            </div>
+            <div class="gallery-box">
+                <img src="../mockups/Italia.jpg" alt="Viaje 2" />
+            </div>
+        </div>
+        <div class="gallery-row">
+            <div class="gallery-box">
+                <img src="../mockups/hotel.jpg" alt="Hotel 1" />
+            </div>
+            <div class="gallery-box">
+                <img src="../mockups/restaurante.jpeg" alt="Restaurante 1" />
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Valoración de nuestros usuarios</h2>
+        <p style="font-size: 1.2em; margin-bottom: 20px;">
+            ⭐⭐⭐⭐☆ <strong>4.0</strong> de 5 estrellas basado en <strong>200 opiniones</strong>
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="review">
+                <strong>Carla M. ⭐⭐⭐⭐⭐</strong>
+                <p>"La app me ayudó a encontrar lugares increíbles en mi viaje por Italia. Muy intuitiva y rápida."</p>
+            </div>
+            <div class="review">
+                <strong>Daniel P. ⭐⭐⭐⭐☆</strong>
+                <p>"Me encantó la función de comparar hoteles. Ahorra tiempo y dinero. Recomendadísima."</p>
+            </div>
+            <div class="review">
+                <strong>Lucía T. ⭐⭐⭐⭐☆</strong>
+                <p>"Fácil de usar, aunque podría mejorar la vista del mapa. Aún así, una gran herramienta."</p>
+            </div>
+            <div class="review">
+                <strong>Marcelo G. ⭐⭐⭐☆☆</strong>
+                <p>"Buena idea, pero me gustaría ver más ciudades en Latinoamérica. Espero futuras actualizaciones."</p>
+            </div>
+            <div class="review">
+                <strong>Ana R. ⭐⭐⭐⭐⭐</strong>
+                <p>"¡Maravillosa! Planeé mi luna de miel con esta app y fue un éxito total."</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Conoce al equipo</h2>
+        <div class="team">
+            <div class="team-member">
+                <strong>Eduardo Arbelo Rua-Figueroa</strong><br />
+                Desarrollador Full Stack
+            </div>
+            <div class="team-member">
+                <strong>Santiago Galindo Peralta</strong><br />
+                Diseñadora UX/UI
+            </div>
+            <div class="team-member">
+                <strong>Javier Antobio Alfonso Quintana</strong><br />
+                Backend Developer
+            </div>
+            <div class="team-member">
+                <strong>Said Sbai</strong><br />
+                Frontend Developer
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Contacto</h2>
+        <p>¿Tienes dudas, sugerencias o quieres colaborar con nosotros?</p>
+        <p>
+            Escríbenos a <a href="mailto:contacto@itineraries.com">contacto@itineraries.com</a> o síguenos en nuestras redes sociales.
+        </p>
+    </section>
 </main>
-</body>
-<script>
-    // Obtener el elemento de la imagen y el div
-    const img = document.getElementById('background-photo');
-    const main = document.querySelector("main");
 
-    // Obtener la URL de la imagen
-    const src = img.src;
+<footer>
+    © 2025 Itineraries. Todos los derechos reservados.
+</footer>
 
-    // Aplicar la URL de la imagen como fondo al div
-    main.style.backgroundImage = `url(${src})`;
+<!-- 🔽 Script para mostrar nombre y foto de perfil -->
+<script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
+        authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
+        projectId: "itinerarios-de-viaje-2db0b",
+        storageBucket: "itinerarios-de-viaje-2db0b.appspot.com",
+        messagingSenderId: "86468425538",
+        appId: "1:86468425538:web:8bc9c4194193614f7cfadb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const profileContainer = document.getElementById("profile-info");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const img = document.createElement("img");
+            img.src = user.photoURL || "../mockups/default-profile.jpg";
+            img.alt = "Perfil";
+            img.style.width = "40px";
+            img.style.height = "40px";
+            img.style.borderRadius = "50%";
+            img.style.objectFit = "cover";
+
+            const name = document.createElement("span");
+            name.textContent = user.displayName || "Usuario";
+
+            profileContainer.appendChild(img);
+            profileContainer.appendChild(name);
+        }
+    });
 </script>
+
+</body>
 </html>

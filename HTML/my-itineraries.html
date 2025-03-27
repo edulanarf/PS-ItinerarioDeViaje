@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../CSS/reset-stylesheet.css">
     <link rel="stylesheet" href="../CSS/colors.css">
     <link rel="stylesheet" href="../CSS/my-itineraries.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
 </head>
 <body>
 <header id="navigation">
@@ -21,30 +22,32 @@
             <div id="brand-name">Itineraries</div>
         </div>
         <div id="links">
-            <a href="home-page.html" >Home</a>
-            <a href="../../itinerary/my-itineraries/my-itineraries.html">My itineraries</a>
+            <button class="nav-button" onclick="location.href='home-page.html'">Home</button>
+            <button class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</button>
+            <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
+            <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar sesión</button>
         </div>
+        <!-- Aquí se mostrará el perfil del usuario -->
+        <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto; padding-right: 1rem;"></div>
     </nav>
-    <button id="logout-button">log out</button>
 </header>
+
 <header id="tools">
-        <div id="user">
-            <img id="user-pfp" alt="pfp" src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"/>
-            <div id="user-name">user name</div>
-        </div>
-        <div id="actions">
-            <button id="previous-itinerary">
-                <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <button id="open-itinerary">open this itinerary</button>
-            <button id="next-itinerary">
-                <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <script>
+
+
+    <div id="actions">
+        <button id="previous-itinerary">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button id="open-itinerary">open this itinerary</button>
+        <button id="next-itinerary">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+      <script>
                 // Selecciona el SVG y el path dentro de él
                 const actions = document.getElementById('actions');
                 const svgs = actions.querySelectorAll('svg');
@@ -54,9 +57,7 @@
                     const bbox = svg.querySelector('path').getBBox();
                     svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
                 });
-
                 // Ajusta el viewBox del SVG para ajustarse al tamaño del path
-
             </script>
         </div>
         <div id="search-actions">
@@ -67,36 +68,97 @@
             </button>
         </div>
 </header>
-<main>
 
-    <div id="my-itineraries">
-        <article id="preview">
-            <div id="image-preview">
-                <img id="intro" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="photo"/>
+<main>
+    <template>
+        <div class="my-itineraries">
+            <article class="preview">
+                <div class="image-preview">
+                    <img class="intro" src="" alt=""/>
+                </div>
+                <div class="summary">
+                    <div class="title"></div>
+                    <div class="description">description</div>
+                </div>
+            </article>
+
+            <section class="content">
+                <div class="side-bar"></div>
+                <div class="list-container">
+                    <!--
+                    in class places:
+                    each li = place.toString()
+                    -->
+                    <ul class="places"></ul>
+                </div>
+            </section>
+        </div>
+    </template>
+    <div class="my-itineraries">
+        <article class="preview">
+            <div class="image-preview">
+                <img class="intro" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="photo"/>
             </div>
-            <div id="summary">
-                <div id="title">title</div>
-                <div id="description">description</div>
+            <div class="summary">
+                <div class="title">title</div>
+                <div class="description">description</div>
             </div>
         </article>
-        <section id="content">
-            <div id="side-bar"></div>
-            <div id="list-container">
-                <ul id="places">
-                    <li>list</li>
-                    <script>
-                        let list = document.getElementById("places")
-                        let first = list.querySelector("li")
-                        for (let i = 0; i < 30; i++) {
-                            let clone = first.cloneNode(true)
-                            clone.id = i
-                            list.appendChild(clone)
-                        }
-                    </script>
-                </ul>
+
+        <section class="content">
+            <div class="side-bar"></div>
+            <div class="list-container">
+                <ul class="places"></ul>
             </div>
         </section>
     </div>
 </main>
+
+<!-- Firebase user info script -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
+        authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
+        projectId: "itinerarios-de-viaje-2db0b",
+        storageBucket: "itinerarios-de-viaje-2db0b.appspot.com",
+        messagingSenderId: "86468425538",
+        appId: "1:86468425538:web:8bc9c4194193614f7cfadb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const profileInfo = document.getElementById("profile-info");
+    const userPfp = document.getElementById("user-pfp");
+    const userName = document.getElementById("user-name");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const img = document.createElement("img");
+            img.src = user.photoURL || "../mockups/default-profile.jpg";
+            img.alt = "Perfil";
+            img.style.width = "40px";
+            img.style.height = "40px";
+            img.style.borderRadius = "50%";
+            img.style.objectFit = "cover";
+            img.style.border = "2px solid #444";
+
+            const name = document.createElement("span");
+            name.textContent = user.displayName || "Usuario";
+            name.style.fontWeight = "600";
+            name.style.fontSize = "1.1rem";
+            name.style.color = "#222";
+            name.style.fontFamily = "Montserrat, sans-serif";
+
+            profileInfo.appendChild(img);
+            profileInfo.appendChild(name);
+
+
+        }
+    });
+</script>
 </body>
 </html>

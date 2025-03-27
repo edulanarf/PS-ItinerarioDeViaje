@@ -47,3 +47,25 @@
     background-color: var(--marron-oscuro);
     box-shadow: 0 0 1rem black;
 }
+#profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    padding-right: 2rem;
+}
+
+#profile-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #444; /* borde oscuro discreto */
+}
+
+#profile-info span {
+    font-weight: 600;
+    color: #222;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+}
