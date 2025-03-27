@@ -25,7 +25,7 @@ function registerUser(email, password, displayName, picture) {
       let photoURL;
 
       if (!picture) {
-        photoURL = "https://firebasestorage.googleapis.com/v0/b/itinerarios-de-viaje-2db0b.appspot.com/o/imgs%2FImagen%20perfil%20predeterminada.jpg?alt=media&token=2c1e55dd-3e3d-49cc-b77e-1d6c8abdf4d8";
+        photoURL = "https://firebasestorage.googleapis.com/v0/b/itinerarios-de-viaje-2db0b.firebasestorage.app/o/imgs%2FImagen%20perfil%20predeterminada.jpg?alt=media&token=2c1e55dd-3e3d-49cc-b77e-1d6c8abdf4d8";
       } else {
         const storageRef = ref(storage, `/Users/${userCredential.user.uid}/ProfilePicture/${picture.name}`);
         await uploadBytes(storageRef, picture);
@@ -37,7 +37,6 @@ function registerUser(email, password, displayName, picture) {
         photoURL: photoURL
       });
       const usersCollection = doc(db, `users/${userCredential.user.uid}`);
-      console.log(usersCollection);
       await setDoc(usersCollection, {
         username: displayName,
         email: userCredential.user.email,

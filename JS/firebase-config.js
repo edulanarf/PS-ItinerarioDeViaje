@@ -23,7 +23,7 @@ export function checkAuthState() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("Usuario autenticado:", user.email);
-      return user.uid
+      return user.uid;
     } else {
       console.log("No hay usuario autenticado.");
       return null;
@@ -34,7 +34,7 @@ export function checkAuthState() {
 
 export { app, auth, storage, db };
 
-async function getUserData(userId) {
+export async function getUserData(userId) {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
 
