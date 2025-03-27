@@ -7,6 +7,9 @@ function loginWithGoogle() {
   signInWithPopup(auth, provider)
     .then((result) => {
       console.log("Usuario autenticado:", result.user);
+      if (result.user.emailVerified) {
+        window.location.href = "home-page.html";
+      }
       alert(`Bienvenido, ${result.user.displayName}`);
     })
     .catch((error) => {
