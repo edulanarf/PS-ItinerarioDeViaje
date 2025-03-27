@@ -8,9 +8,7 @@ import {
 import {
   getFirestore,
   doc,
-  getDoc,
-  setDoc,
-  serverTimestamp
+  setDoc
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import {
   getStorage,
@@ -40,41 +38,15 @@ const photoInput = document.getElementById("profile-picture");
 const photoPreview = document.getElementById("current-photo");
 const saveButton = document.getElementById("save-button");
 const form = document.getElementById("edit-profile-form");
-const notice = document.getElementById("notice");
 
-let canEdit = false;
 let userRef;
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     userRef = doc(db, "users", user.uid);
-
     nameInput.value = user.displayName || "";
     emailInput.value = user.email || "";
     photoPreview.src = user.photoURL || "../mockups/default-profile.jpg";
-
-    const docSnap = await getDoc(userRef);
-    const lastUpdate = docSnap.exists() ? docSnap.data().lastProfileUpdate?.toDate() : null;
-
-    const now = new Date();
-    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-
-    if (!lastUpdate || now - lastUpdate > THIRTY_DAYS) {
-      canEdit = true;
-      notice.textContent = "Puedes editar tu perfil.";
-      notice.classList.remove("warning");
-    } else {
-      const nextDate = new Date(lastUpdate.getTime() + THIRTY_DAYS);
-      canEdit = false;
-      notice.textContent = `⚠️ Solo puedes editar tu perfil cada 30 días. Inténtalo el ${nextDate.toLocaleDateString()}.`;
-      notice.classList.add("warning");
-
-      // Desactiva los inputs y botón
-      nameInput.disabled = true;
-      passwordInput.disabled = true;
-      photoInput.disabled = true;
-      saveButton.disabled = true;
-    }
   }
 });
 
@@ -89,7 +61,7 @@ async function uploadProfilePicture(file, uid) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
-  if (!canEdit || !user) return;
+  if (!user) return;
 
   const updates = {};
   const newName = nameInput.value.trim();
@@ -117,8 +89,7 @@ form.addEventListener("submit", async (e) => {
     await setDoc(userRef, {
       username: newName || user.displayName,
       email: user.email,
-      photoURL: updates.photoURL || user.photoURL,
-      lastProfileUpdate: serverTimestamp()
+      photoURL: updates.photoURL || user.photoURL
     });
 
     alert("✅ Perfil actualizado correctamente.");

@@ -1,52 +1,138 @@
 @import "colors.css";
 
-body {
+/* Reset */
+* {
+    box-sizing: border-box;
     margin: 0;
-    background-color: #f5f7fa;
-    font-family: 'Montserrat', sans-serif;
+    padding: 0;
 }
 
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* NAVBAR */
+#navigation {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#session-navbar {
+    max-width: 1200px;
+    margin: auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logo {
+    height: 60px;
+}
+
+#brand-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--rojo-oscuro);
+}
+
+#links {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-button {
+    padding: 10px 18px;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--rojo-oscuro);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--borgona-profundo);
+}
+
+/* Usuario info */
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #000;
+}
+
+/* MAIN */
 main {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     padding: 60px 20px;
-    min-height: 100vh;
+    min-height: calc(100vh - 100px);
 }
 
+/* CONTENEDOR DEL FORMULARIO */
 .edit-profile-container {
     background-color: #fff;
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
-    box-sizing: border-box;
+    text-align: center;
 }
 
+/* TÍTULO */
 .edit-profile-container h2 {
-    text-align: center;
     color: var(--rojo-oscuro);
     margin-bottom: 1.5rem;
 }
 
+/* FORMULARIO */
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    text-align: left;
     margin-bottom: 1.5rem;
 }
 
 .form-group label {
     font-weight: 600;
     color: #444;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"],
 .form-group input[type="file"] {
-    padding: 12px 15px;
+    width: 100%;
+    padding: 12px;
     border-radius: 10px;
     border: 2px solid #ddd;
     font-size: 1rem;
@@ -59,16 +145,19 @@ main {
     outline: none;
 }
 
+/* FOTO DE PERFIL ACTUAL */
 #current-photo {
-    margin-top: 10px;
+    margin: 10px auto;
     width: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--crema-ligera);
+    display: block;
 }
 
-button#save-button {
+/* BOTÓN GUARDAR */
+#save-button {
     width: 100%;
     padding: 14px;
     background-color: var(--rojo-oscuro);
@@ -81,19 +170,6 @@ button#save-button {
     transition: background-color 0.3s ease;
 }
 
-button#save-button:hover {
+#save-button:hover {
     background-color: var(--borgona-profundo);
-}
-
-/* Mensaje de advertencia */
-.warning-message {
-    text-align: center;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-    color: #444;
-}
-
-.warning-message.warning {
-    color: #c0392b;
-    font-weight: bold;
 }
