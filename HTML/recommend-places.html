@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recomendación de Lugares</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places&async&defer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/CSS/search-places.css">
+</head>
+<body>
+<div id="form-map-list">
+  <div id="form-map">
+    <div id = "form">
+      <ul>
+        <li>
+          <button>Añadir Destino</button>
+        </li>
+      </ul>
+      <label for="select-container"></label>
+      <select id="select-container" multiple>
+        <option value="Restaurante">Restaurante</option>
+        <option value="Cafetería">Cafeteria</option>
+        <option value="Hotel">Hotel</option>
+        <option value="Museo">Museo</option>
+        <option value="Parque">Parque</option>
+        <option value="Centro comercial">Centro comercial</option>
+        <option value="Aeropuerto">Aeropuerto</option>
+      </select>
+      <button id="reload-button">
+        Actualizar Recomendaciones
+      </button>
+    </div>
+    <div id="map"></div>
+  </div>
+  <div id="list">
+    <ul id="places-list">
+
+    </ul>
+  </div>
+</div>
+
+<script type="module" src="../JS/search-places.js"></script>
+</body>
+</html>

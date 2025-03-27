@@ -1,0 +1,260 @@
+@import "colors.css";
+
+button {
+    cursor: pointer;
+}
+
+
+#navigation,#tools {
+    display: flex;
+    height: auto;
+    background-color: var(--beige-calido);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#session-navbar {
+    display: flex;
+    width: 80%;
+    height: 2rem;
+    gap: 3rem;
+}
+
+#us {
+    display: flex;
+    gap: 1rem;
+}
+
+#brand-name {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#links {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+#logout-button {
+    border: none;
+    background-color: var(--marron-medio);
+    color: white;
+    height: 100%;
+    padding: 0 2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+
+#logout-button:hover {
+    background-color: var(--marron-oscuro);
+    box-shadow: 0 0 1rem black;
+}
+
+#tools {
+    background-color: var(--naranja-quemado);
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr;
+}
+
+#user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2em;
+    flex: 1;
+}
+
+#user-pfp {
+    border-radius: 100%;
+    height: 4em;
+    width: 4em;
+}
+
+#user-name {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: var(--beige-calido);
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    width: fit-content;
+}
+
+#actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#open-itinerary {
+    padding: 1rem;
+    border-radius: 2rem;
+    background-color: var(--marron-claro);
+    border-color: var(--marron-medio);
+}
+
+#open-itinerary:hover {
+    background-color: var(--marron-medio);
+    border-color: var(--marron-oscuro);
+    box-shadow: 0 0 0.5rem var(--marron-oscuro);
+}
+
+#next-itinerary,#previous-itinerary {
+    border: none;
+    height: 4em;
+    width: 4em;
+    outline: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#previous-itinerary {
+    rotate: 180deg;
+}
+
+#next-itinerary svg,#previous-itinerary svg{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+
+}
+
+#previous-itinerary:hover, #next-itinerary:hover svg {
+    transform: scale(1.1); /* Animación de tamaño al pasar el cursor */
+}
+
+
+
+#search-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* from search-places.css*/
+#search {
+    padding: 12px 20px;
+    font-size: 15px;
+    height: 54px;
+    width: 350px;
+    border: 2px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#search:focus {
+    outline: none;
+    border-color: var(--borgona-profundo);
+    box-shadow: 0 0 10px var(--rojo-oxido);
+}
+
+#reload-button {
+    padding: 0;
+    height: 54px;
+    width: 54px; /* Ajusta el tamaño del botón para que se ajuste a la imagen */
+    border: none;
+    display: flex; /* Flexbox para centrar la imagen dentro del botón */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    background-color: var(--marron-medio);
+    cursor: pointer;
+    border-top-right-radius: 10px; /* Curva en el borde superior derecho */
+    border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
+}
+
+#reload-button img {
+    width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+/* until here*/
+
+main {
+    padding: 3rem;
+    flex: 1;
+    background-color: var(--marron-medio);
+}
+
+#my-itineraries {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 2rem;
+}
+
+#preview {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: var(--oro-suave);
+    max-height: 100%;
+}
+
+#image-preview {
+    display: flex;
+    justify-content: center; /* Centra la imagen en el contenedor */
+    align-items: center;
+    padding: 0 2rem;
+    overflow: hidden; /* Asegura que no haya desbordamiento en el contenedor */
+}
+
+#intro {
+    width: 100%;
+    max-width: 380px !important; /* La imagen nunca será más ancha que su contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+    border-radius: 2em;
+}
+
+
+#summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#title {
+    font-size: 4rem;
+}
+
+#description {
+    font-size: 1.5rem;
+}
+
+.grid-column {
+    display: grid;
+    grid-template-rows: 1fr 18fr 1fr;
+    background-color: var(--oro-suave);
+}
+
+#content {
+    padding: 1rem 0;
+    background-color: var(--oro-suave);
+    display: flex;
+    overflow: hidden;
+}
+
+#side-bar {
+    width: 0.5rem;
+    border-radius: 1rem;
+    height: 100%;
+    background-color: black;
+}
+
+#list-container {
+    margin: 1rem;
+    padding: 1rem;
+    width: 100%;
+    overflow-y: auto;
+}

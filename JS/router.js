@@ -1,41 +1,52 @@
 function navigateTo(page) {
-  // Construir la URL del archivo HTML
   let htmlPath = `HTML/${page}.html`;
-
-  // Construir la URL del archivo CSS correspondiente (mismo nombre de la página)
   let cssPath = `CSS/${page}.css`;
 
-  // Cargar el HTML en el contenido principal
   fetch(htmlPath, { cache: "no-cache" })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`Página no encontrada: ${htmlPath}`);
-          }
-          return response.text();
-      })
-      .then(data => {
-          document.getElementById('content').innerHTML = data;
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Página no encontrada: ${htmlPath}`);
+      }
+      return response.text();
+    })
+    .then(data => {
+      let contentDiv = document.getElementById('content');
+      contentDiv.innerHTML = data; // Cargar el contenido HTML
 
-          // Eliminar cualquier CSS anterior cargado dinámicamente
-          let oldCss = document.getElementById('dynamic-CSS');
-          if (oldCss) {
-              console.log(oldCss.href, oldCss.rel)
-              oldCss.remove();
-          }
+      // Eliminar cualquier CSS anterior
+      let oldCss = document.getElementById('dynamic-CSS');
+      if (oldCss) oldCss.remove();
 
-          // Crear una nueva referencia al CSS de la página cargada
-          let newCss = document.createElement('link');
-          newCss.id = 'dynamic-CSS';
-          newCss.rel = 'stylesheet';
-          newCss.href = cssPath;
-          newCss.type = 'text/css';
-          console.log(newCss.href, newCss.rel);
-          document.head.appendChild(newCss);
-      })
-      .catch(error => console.error(`Error al cargar la página: ${error.message}`));
+      // Agregar nuevo CSS si existe
+      fetch(cssPath, { method: 'HEAD' })
+        .then(res => {
+          if (res.ok) {
+            let newCss = document.createElement('link');
+            newCss.id = 'dynamic-CSS';
+            newCss.rel = 'stylesheet';
+            newCss.href = cssPath;
+            document.head.appendChild(newCss);
+          }
+        });
+
+      // Ejecutar los scripts dentro del HTML cargado
+      let scripts = contentDiv.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        let newScript = document.createElement("script");
+        newScript.type = "module"; // Permite usar módulos si es necesario
+        if (oldScript.src) {
+          newScript.src = oldScript.src; // Si el script tiene un archivo src, lo tomamos
+        } else {
+          newScript.textContent = oldScript.textContent; // Si el script tiene código dentro, lo ejecutamos
+        }
+
+        document.body.appendChild(newScript);
+      });
+    })
+    .catch(error => console.error(`Error al cargar la página: ${error.message}`));
 }
 
-// Cargar una página inicial por defecto
+// Cargar la página inicial
 document.addEventListener("DOMContentLoaded", () => {
-  navigateTo('user-management/user-login'); // Puedes cambiar la página de inicio aquí
+  navigateTo('user-login');  // Cambia esto según la página de inicio
 });

@@ -1,6 +1,5 @@
 @import "colors.css";
 
-/* Fondo general marrón */
 body {
   background-color: var(--fondo-marron);
   color: var(--texto-negro);

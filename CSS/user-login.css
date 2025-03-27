@@ -1,0 +1,103 @@
+main {
+    justify-items: center;
+    align-content: center;
+    height: 100%;
+
+}
+#login-form{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#login-email,
+#login-password {
+    border: none;
+    border-radius: 4px;
+    margin: 15px;
+    padding-left: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    width: 100%;
+    max-width: 250px;
+    height: 48px;
+    box-sizing: border-box;
+}
+
+#login-button{
+    margin: 15px;
+    background-color: var(--marron-medio);
+    cursor: pointer;
+    border-color: black;
+    padding: 5px 20px;
+    text-align: center;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s ease;
+    color: white;
+}
+
+#login-button:hover {
+    background-color: var(--marron-oscuro);
+}
+
+.background-square {
+    background-color: var(--beige-calido);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 300px;
+    max-height: 500px;
+}
+
+
+input::placeholder {
+    font-family: 'Montserrat', sans-serif; /* Fuente importada en el HTML */
+    font-size: 12px;
+    color: gray;
+    font-style: italic; /* Cursiva */
+}
+
+.google-button {
+    background-color: var(--gris-claro); /* Color azul de Google */
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+    transition: background-color 0.3s ease;
+}
+
+.google-button:hover {
+    background-color: var(--azul-brillante);
+}
+
+.google-logo {
+    width: 20px;
+    margin-right: 10px;
+}
+
+#reset-password {
+    font-size: 12px;
+    color: var(--google-blue);
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin-right: 25px;
+}
+
+#reset-password:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

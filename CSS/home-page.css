@@ -1,4 +1,4 @@
-@import "colors.css";
+@import url("CSS/colors.css");
 #navigation {
     display: flex;
     width: 100%;

@@ -1,0 +1,143 @@
+@import "colors.css";
+#navigation {
+    justify-content: space-between;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    background-color: var(--beige-calido);
+    overflow: hidden;
+}
+
+#map-list {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+    height: 100%;
+}
+
+#map-summary {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 2%;
+    background-color: var(--marron-oscuro);
+}
+
+#place-summary {
+    background-color: var(--naranja-quemado);
+    border-radius: 2em;
+    padding: 2%;
+    height: 100%;
+    width: 100%;
+}
+
+#title-contents {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 5fr;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#title {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#title span {
+    font-size: 4em;
+}
+
+#contents {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 8fr 1fr;
+    place-items: center;
+    width: 100%;
+    height: min(100%,644px);
+    padding: 10px;
+    overflow: hidden;
+}
+
+#description {
+    height: 100%;
+    width: 100%;
+}
+
+#list {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1em;
+    overflow-y: auto;
+}
+
+.places-list-item {
+    width: 100%;
+}
+
+.places-list-item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+}
+
+.transport-method-icon {
+    height: 100%;
+    width: fit-content;
+    background-color: var(--marron-medio);
+}
+
+.place-brief {
+    padding-left: 1em;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 90%;
+}
+
+
+#edit-button {
+    width: 50%;
+    height: 100%;
+    background-color: var(--rojo-oxido);
+    border-color: black;
+    border-radius: 1rem;
+}
+
+#edit-button:hover {
+    box-shadow: 0 0 5px black;
+    background-color: var(--borgona-profundo);
+}
+
