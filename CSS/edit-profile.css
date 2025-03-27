@@ -1,0 +1,99 @@
+@import "colors.css";
+
+body {
+    margin: 0;
+    background-color: #f5f7fa;
+    font-family: 'Montserrat', sans-serif;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 20px;
+    min-height: 100vh;
+}
+
+.edit-profile-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+
+.edit-profile-container h2 {
+    text-align: center;
+    color: var(--rojo-oscuro);
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="file"] {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--rojo-oscuro);
+    outline: none;
+}
+
+#current-photo {
+    margin-top: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--crema-ligera);
+}
+
+button#save-button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--rojo-oscuro);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#save-button:hover {
+    background-color: var(--borgona-profundo);
+}
+
+/* Mensaje de advertencia */
+.warning-message {
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #444;
+}
+
+.warning-message.warning {
+    color: #c0392b;
+    font-weight: bold;
+}

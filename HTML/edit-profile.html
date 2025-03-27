@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Perfil</title>
+  <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
+  <link rel="stylesheet" href="../CSS/colors.css" />
+  <link rel="stylesheet" href="../CSS/edit-profile.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<header id="navigation">
+  <nav id="session-navbar">
+    <div id="us">
+      <img id="logo" src="../mockups/logo.png" alt="logo" />
+      <div id="brand-name">Itineraries</div>
+    </div>
+    <div id="links">
+      <button class="nav-button" onclick="location.href='home-page.html'">Home</button>
+      <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar sesión</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="edit-profile-container">
+    <h2>Editar Perfil</h2>
+    <p id="notice" class="warning-message"></p>
+
+    <form id="edit-profile-form">
+      <div class="form-group">
+        <label for="profile-picture">Foto de perfil</label>
+        <input type="file" id="profile-picture" accept="image/*" />
+        <img id="current-photo" src="" alt="Foto actual" />
+      </div>
+
+      <div class="form-group">
+        <label for="display-name">Nombre</label>
+        <input type="text" id="display-name" placeholder="Nuevo nombre" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="new-password">Nueva contraseña</label>
+        <input type="password" id="new-password" placeholder="Nueva contraseña" />
+      </div>
+
+      <button type="submit" id="save-button">Guardar cambios</button>
+    </form>
+  </div>
+</main>
+
+<script type="module" src="../JS/edit-profile.js"></script>
+</body>
+</html>
