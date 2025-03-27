@@ -1,6 +1,6 @@
 import{getItineraryData} from "./search-places.js";
-import { db, auth} from './firebase-config.js';
-import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { db, auth } from './firebase-config.js';
+import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 
 let itineraryTitle;
@@ -22,13 +22,13 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
 
           // Guardar los datos en Firestore
           await setDoc(itineraryRef, {
-            listNames: itineraryData.listNames,
-            listPhoto: itineraryData.listPhoto,
-            listPrice: itineraryData.listPrice,
-            listRating: itineraryData.listRating,
-            listAddress: itineraryData.listAddress,
-            listDates: itineraryData.listDates,
-            listCategories: itineraryData.listCategories,
+            names: itineraryData.listNames,
+            photos: itineraryData.listPhoto,
+            prices: itineraryData.listPrice,
+            ratings: itineraryData.listRating,
+            addresses: itineraryData.listAddress,
+            dates: itineraryData.listDates,
+            categories: itineraryData.listCategories,
           });
           console.log("✅ Itinerario guardado correctamente.");
         } catch (error) {
@@ -40,3 +40,17 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
       console.log("No hay usuario autenticado.");
     }
   });
+
+
+/**
+ * for the future...
+ * @param dates
+ * @returns {Timestamp[]}
+ */
+function datesToTimestamp(dates) {
+    let timestamps = []
+    dates.forEach( date => {
+      timestamps.push(Timestamp.fromDate(date))
+    })
+    return timestamps;
+  }
