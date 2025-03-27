@@ -61,6 +61,7 @@ document.getElementById("register-form").addEventListener("submit", function (e)
   const email = document.getElementById("register-email").value;
   const password = document.getElementById("register-password").value;
   const username = document.getElementById("register-username").value;
-  const picture = document.getElementById("register-picture").files[0];
-  registerUser(email, password, username, picture);
+  const picture = document.getElementById("register-picture");
+  const profilePicture = picture.files[0];
+  registerUser(email, password, username, profilePicture);
 });
