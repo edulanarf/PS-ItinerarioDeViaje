@@ -67,7 +67,7 @@ function fetchNearbyPlaces(location) {
 
     sortedResults.forEach((place) => {
       const li = document.createElement("li");
-      const photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
+      const photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : 'https://via.placeholder.com/200';
 
       const name = place.name;
       const rating = place.rating || 'N/A';
@@ -115,7 +115,7 @@ function calculatePrice(category, place) {
   }
   if (category === "Museo")
   {
-    priceString = `${price} Euros por persona`;
+    priceString = `5 Euros por persona`;
     return 5;
   }
 
@@ -139,7 +139,7 @@ function addToItinerary(place) {
   price = calculatePrice(selectedCategory, place);
 
   listNames.push(place.name);
-  listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 300 }) : '');
+  listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : '');
   listAddress.push(place.vicinity || '');
   listRating.push(place.rating || '');
   listCategories.push(selectedCategory);
@@ -208,3 +208,10 @@ export function getItineraryData() {
     listCategories,
   };
 }
+
+window.addEventListener("beforeunload", (event) => {
+  if (listNames.length > 0) { // Solo muestra la advertencia si hay datos en el itinerario
+    event.preventDefault();
+    event.returnValue = "Tienes cambios sin guardar. ¿Seguro que quieres salir?";
+  }
+});
