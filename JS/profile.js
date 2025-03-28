@@ -5,8 +5,12 @@ import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-
 const profileContainer = document.getElementById("profile-info");
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    const existingImage = profileContainer.querySelector("img");
+    if (existingImage) return;  // Si ya existe, no hacemos nada
+
     const docRef = doc(db, `users/${user.uid}`);
     const docSnap = await getDoc(docRef);
+
 
     const profileLink = document.createElement("a");
     profileLink.href = "edit-profile.html";
