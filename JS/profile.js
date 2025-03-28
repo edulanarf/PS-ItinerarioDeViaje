@@ -8,19 +8,25 @@ onAuthStateChanged(auth, async (user) => {
     const docRef = doc(db, `users/${user.uid}`);
     const docSnap = await getDoc(docRef);
 
+    const profileLink = document.createElement("a");
+    profileLink.href = "edit-profile.html";
+    profileLink.style.display = "inline-block";
+
     const img = document.createElement("img");
     img.src = docSnap.data().photoURL;
     console.log(docSnap.data().photoURL);
     img.alt = "Perfil";
-    img.style.width = "40px";
-    img.style.height = "40px";
+    img.style.width = "60px";
+    img.style.height = "60px";
     img.style.borderRadius = "50%";
     img.style.objectFit = "cover";
 
-    const name = document.createElement("span");
-    name.textContent = user.displayName || "Usuario";
+    profileLink.appendChild(img);
 
-    profileContainer.appendChild(img);
+    const name = document.createElement("span");
+    name.textContent = docSnap.data().username;
+
+    profileContainer.appendChild(profileLink);
     profileContainer.appendChild(name);
   }
 });

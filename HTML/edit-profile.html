@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="../CSS/navigation.css" />
   <link rel="stylesheet" href="../CSS/edit-profile.css" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <script type="module" src="/JS/firebase-config.js"></script>
+  <script type="module" src="/JS/types.js"></script>
 </head>
 <body>
 
@@ -22,11 +24,6 @@
       <button class="nav-button" onclick="location.href='home-page.html'">Home</button>
       <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar sesión</button>
     </div>
-    <!-- Usuario y foto -->
-    <div id="user-info" style="display: flex; align-items: center; gap: 10px;">
-      <img id="user-photo" src="" alt="Foto de perfil" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-      <span id="user-name" style="font-weight: 600; font-size: 1rem; color: #000;"></span>
-    </div>
   </nav>
 </header>
 
@@ -35,9 +32,9 @@
     <h2>Editar Perfil</h2>
     <form id="edit-profile-form">
       <div class="form-group">
+        <img id="current-photo" src="" alt="Foto actual" />
         <label for="profile-picture">Foto de perfil</label>
         <input type="file" id="profile-picture" accept="image/*">
-        <img id="current-photo" src="" alt="Foto actual" />
       </div>
 
       <div class="form-group">
@@ -60,71 +57,7 @@
   </div>
 </main>
 
-<!-- ✅ JS de perfil -->
-<script type="module">
-  import { getAuth, onAuthStateChanged, updateEmail, updatePassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-
-  const auth = getAuth();
-  const storage = getStorage();
-
-  const userNameEl = document.getElementById("user-name");
-  const userPhotoEl = document.getElementById("user-photo");
-  const currentPhotoEl = document.getElementById("current-photo");
-  const nameInput = document.getElementById("display-name");
-  const emailInput = document.getElementById("email");
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      userNameEl.textContent = user.displayName || "Usuario";
-      userPhotoEl.src = user.photoURL || "https://via.placeholder.com/40";
-      currentPhotoEl.src = user.photoURL || "https://via.placeholder.com/80";
-      nameInput.value = user.displayName || "";
-      emailInput.value = user.email || "";
-    }
-  });
-
-  document.getElementById("edit-profile-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const newName = nameInput.value.trim();
-    const newEmail = emailInput.value.trim();
-    const newPassword = document.getElementById("password").value;
-    const file = document.getElementById("profile-picture").files[0];
-
-    try {
-      let photoURL = user.photoURL;
-
-      if (file) {
-        const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
-        await uploadBytes(storageRef, file);
-        photoURL = await getDownloadURL(storageRef);
-      }
-
-      await updateProfile(user, {
-        displayName: newName,
-        photoURL: photoURL
-      });
-
-      if (newEmail !== user.email) {
-        await updateEmail(user, newEmail);
-      }
-
-      if (newPassword) {
-        await updatePassword(user, newPassword);
-      }
-
-      alert("Perfil actualizado correctamente");
-      location.reload();
-    } catch (error) {
-      console.error("Error al actualizar perfil:", error);
-      alert(`Error: ${error.message}`);
-    }
-  });
-</script>
+<script type="module" src="/JS/edit-profile.js"></script>
 
 </body>
 </html>
