@@ -80,6 +80,11 @@ function fetchNearbyPlaces(location) {
         <div>Rating: ${rating}</div>
       `;
 
+      const imgElement = li.querySelector('.place-image');
+      imgElement.addEventListener('click', () => {
+        showPlaceInfo(place);
+      });
+
       const addBtn = document.createElement("button");
       addBtn.textContent = "Añadir";
       addBtn.className = "add-button";
