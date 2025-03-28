@@ -17,7 +17,6 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
         const itineraryData = getItineraryData();
 
         try {
-          console.log("1...");
           const itineraryRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`);
 
           // Guardar los datos en Firestore
@@ -31,6 +30,7 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
             categories: itineraryData.listCategories,
           });
           console.log("✅ Itinerario guardado correctamente.");
+          alert("✅ Itinerario guardado correctamente.");
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }

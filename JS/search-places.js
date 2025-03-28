@@ -120,7 +120,7 @@ function calculatePrice(category, place) {
   }
 
   if (["Parque", "Centro comercial", "Aeropuerto"].includes(category)) {
-    priceString = `${price} Gratis`;
+    priceString = ` Gratis`;
     return 0;
   }
 }
@@ -158,7 +158,6 @@ function addToItinerary(place) {
   delBtn.addEventListener("click", () => {
     const index = Array.from(placesList.children).indexOf(li);
     [listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories].forEach(arr => arr.splice(index, 1));
-    console.log(listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories);
     li.remove();
     counter--;
     renumberItems();
