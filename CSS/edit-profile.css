@@ -75,7 +75,7 @@ main {
 
 /* TÍTULO */
 .edit-profile-container h2 {
-    color: var(--rojo-oscuro);
+    color:#d9534f;
     margin-bottom: 1.5rem;
 }
 
@@ -106,7 +106,7 @@ main {
 }
 
 .form-group input:focus {
-    border-color: var(--rojo-oscuro);
+    background-color: #d9534f;
     outline: none;
 }
 
@@ -125,7 +125,7 @@ main {
 #save-button {
     width: 100%;
     padding: 14px;
-    background-color: var(--rojo-oscuro);
+    background-color: #d9534f;
     color: white;
     border: none;
     border-radius: 12px;
@@ -136,5 +136,5 @@ main {
 }
 
 #save-button:hover {
-    background-color: var(--borgona-profundo);
+    background-color: #c9302c;
 }
