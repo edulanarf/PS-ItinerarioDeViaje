@@ -1,7 +1,10 @@
-import{getItineraryData} from "./search-places.js";
+import { getItineraryData, listNames } from './search-places.js';
 import { db, auth } from './firebase-config.js';
 import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { getSaved, setSaved } from './saved-verification.js';
+
+export let saved;
 
 let itineraryTitle;
 document.getElementById("itinerary-title").addEventListener("change", (e) => {
@@ -30,7 +33,9 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
             categories: itineraryData.listCategories,
           });
           console.log("✅ Itinerario guardado correctamente.");
+          saved = true;
           alert("✅ Itinerario guardado correctamente.");
+          setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }
@@ -54,3 +59,11 @@ function datesToTimestamp(dates) {
     })
     return timestamps;
   }
+
+  //Mensaje alerta si no se ha guardado
+window.addEventListener("beforeunload", (event) => {
+  if (!getSaved()) { // Solo muestra la advertencia si hay datos en el itinerario
+    event.preventDefault();
+    event.returnValue = "Tienes cambios sin guardar. ¿Seguro que quieres salir?";
+  }
+});

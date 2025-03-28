@@ -2,12 +2,16 @@
 
 import { request } from '/JS/places.js';
 import {checkAuthState} from "./firebase-config.js";
+import {saved} from "./saveItinerary.js";
+import { setSaved } from './saved-verification.js';
 
 let map, service, infowindow;
 let markers = [];
 let selectedCategory = "Hotel";
 let price;
 let priceString;
+
+
 
 
 // Info para el itinerario
@@ -166,8 +170,9 @@ function addToItinerary(place) {
     li.remove();
     counter--;
     renumberItems();
+    setSaved(false);
   });
-
+  setSaved(false);
   li.append(div, delBtn);
   placesList.appendChild(li);
 }
@@ -214,9 +219,3 @@ export function getItineraryData() {
   };
 }
 
-window.addEventListener("beforeunload", (event) => {
-  if (listNames.length > 0) { // Solo muestra la advertencia si hay datos en el itinerario
-    event.preventDefault();
-    event.returnValue = "Tienes cambios sin guardar. ¿Seguro que quieres salir?";
-  }
-});
