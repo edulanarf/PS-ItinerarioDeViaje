@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="../CSS/colors.css">
     <link rel="stylesheet" href="../CSS/my-itineraries.css">
     <link rel="stylesheet" href="../CSS/navigation.css">
+
+    <script type="module" src="../JS/types.js"></script>
+    <script type="module" src="../JS/my-itineraries.js"></script>
 </head>
 <body>
 <header id="navigation">
@@ -94,24 +97,6 @@
             </section>
         </div>
     </template>
-    <div class="my-itineraries">
-        <article class="preview">
-            <div class="image-preview">
-                <img class="intro" src="https://i.pinimg.com/736x/11/80/11/1180117ea6ce5aafd2ea7d2eef81f45b.jpg" alt="photo"/>
-            </div>
-            <div class="summary">
-                <div class="title">title</div>
-                <div class="description">description</div>
-            </div>
-        </article>
-
-        <section class="content">
-            <div class="side-bar"></div>
-            <div class="list-container">
-                <ul class="places"></ul>
-            </div>
-        </section>
-    </div>
 </main>
 
 <!-- Firebase user info script -->
@@ -138,7 +123,7 @@
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const img = document.createElement("img");
-            img.src = user.photoURL || "../mockups/default-profile.jpg";
+            img.src = user.photoURL || "../mockups/default-profile.png";
             img.alt = "Perfil";
             img.style.width = "40px";
             img.style.height = "40px";
@@ -160,5 +145,7 @@
         }
     });
 </script>
+
+
 </body>
 </html>

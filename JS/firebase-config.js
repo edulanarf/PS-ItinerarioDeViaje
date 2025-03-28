@@ -60,7 +60,7 @@ export async function getUserItineraries(userId) {
     querySnapshot.forEach((file) => {
       const fbi = new FBItinerary(file.data());
       const i =  loadItinerary(file.id, fbi)
-      itineraries.push( i);
+      itineraries.push(i);
     });
     itineraries.forEach(
       (i) => {
