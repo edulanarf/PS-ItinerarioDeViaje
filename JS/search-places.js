@@ -6,7 +6,8 @@ import {checkAuthState} from "./firebase-config.js";
 let map, service, infowindow;
 let markers = [];
 let selectedCategory = "Hotel";
-
+let price;
+let priceString;
 
 
 // Info para el itinerario
@@ -99,19 +100,29 @@ function calculatePrice(category, place) {
 
   if (category === "Restaurante") {
     price = [20, 20, 30, 40, 50, 60][priceLevel] || 20;
-    return `${price} Euros por persona`;
+    priceString = `${price} Euros por persona`;
+    return price;
   }
   if (category === "Cafetería") {
     price = [10, 10, 15, 20, 25, 30][priceLevel] || 10;
-    return `${price} Euros por persona`;
+    priceString = `${price} Euros por persona`;
+    return price;
   }
   if (category === "Hotel") {
     price = [20, 20, 50, 100, 250, 500][Math.round(rating) - 1] || 20;
-    return `${price} Euros la noche`;
+    priceString = `${price} Euros por noche`;
+    return price;
   }
-  if (category === "Museo") return `5 Euros`;
-  if (["Parque", "Centro comercial", "Aeropuerto"].includes(category)) return `Gratis`;
-  return `Precio no disponible`;
+  if (category === "Museo")
+  {
+    priceString = `${price} Euros por persona`;
+    return 5;
+  }
+
+  if (["Parque", "Centro comercial", "Aeropuerto"].includes(category)) {
+    priceString = `${price} Gratis`;
+    return 0;
+  }
 }
 
 function addToItinerary(place) {
@@ -124,18 +135,22 @@ function addToItinerary(place) {
     return;
   }
 
+  //precio del lugar en euros, tipo int
+  price = calculatePrice(selectedCategory, place);
+
   listNames.push(place.name);
   listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 300 }) : '');
   listAddress.push(place.vicinity || '');
   listRating.push(place.rating || '');
   listCategories.push(selectedCategory);
-  listPrice.push(place.price_level || 0);
+  listPrice.push(price);
   listDates.push(++counter);
 
   const li = document.createElement("li");
   li.classList.add("list-item");
   const div = document.createElement("div");
-  div.innerHTML = `${counter}. ${place.name}`;
+
+  div.innerHTML = `${counter}. ${place.name} ${priceString} `;
 
   const delBtn = document.createElement("button");
   delBtn.className = "delete-button";
@@ -143,6 +158,7 @@ function addToItinerary(place) {
   delBtn.addEventListener("click", () => {
     const index = Array.from(placesList.children).indexOf(li);
     [listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories].forEach(arr => arr.splice(index, 1));
+    console.log(listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories);
     li.remove();
     counter--;
     renumberItems();
