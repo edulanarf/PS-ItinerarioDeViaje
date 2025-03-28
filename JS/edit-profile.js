@@ -60,7 +60,7 @@
     const updates = {};
     const newName = nameInput.value.trim();
     console.log("2..");
-    //const newPassword = passwordInput.value.trim();
+    const newPassword = passwordInput.value.trim();
     const newPhoto = photoInput.files[0];
     console.log("3..");
 
@@ -87,9 +87,9 @@
         await updateProfile(user, updates);
       }
 
-      //if (newPassword.length >= 6) {
-      //  await updatePassword(user, newPassword);
-      //}
+      if (newPassword.length >= 6) {
+        await updatePassword(user, newPassword);
+      }
 
 
       alert("✅ Perfil actualizado correctamente.");
