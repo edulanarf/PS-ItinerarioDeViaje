@@ -74,10 +74,10 @@ window.addEventListener('load',() => {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     await loadPreferences(user);
-    await loadPreferencesData(preferences);
-    let places = (await loadPreferencesData(preferences)).flat()
-    console.log(places);
+    let places = await loadPreferencesData(preferences);
+    await loadUserPlacesStats(user,places);
     updateSectionsInfo(user,preferences,places);
+    updateUserPlacesStats(user);
   } else {
     console.log("No hay usuario autenticado.");
   }
@@ -105,19 +105,20 @@ function loadPreferences(user) {
 
 function loadUserPlacesStats(user,places) {
   return new Promise((resolve, rejec) => {
-    let placesRecommendationStatsRef = doc(db, "placesRecommendationStats", user.id);
-    getDoc(placesStatsRef).then(docSnap => {
+    let placesRecommendationStatsRef = doc(db, "placesRecommendationStats", user.uid);
+    getDoc(placesRecommendationStatsRef).then(docSnap => {
       if (docSnap.exists()) {
         placesRecommendationStats = docSnap.data();
       } else {
         placesRecommendationStats = {};
       }
+      placesRecommendationStats = {};
       let update = false;
       places.forEach(place => {
         let placeStats = placesRecommendationStats[place.place_id];
         if (placeStats===undefined) {
           placeStats = {
-            timesRecommended: 0,
+            showOnNew: true,
             ratingHistory: {}
           };
           placesRecommendationStats[place.place_id] = placeStats;
@@ -135,7 +136,14 @@ function loadUserPlacesStats(user,places) {
   });
 }
 
-function loadPreferencesData(preferences) {
+function updateUserPlacesStats(user) {
+  return new Promise((resolve,reject)=>{
+    let placesRecommendationStatsRef = doc(db, "placesRecommendationStats", user.uid);
+    setDoc(placesRecommendationStatsRef,placesRecommendationStats);
+  });
+}
+
+async function loadPreferencesData(preferences) {
   const promises = [];
   preferences.cities.forEach(city => {
     preferences.categories.forEach(category => {
@@ -162,22 +170,53 @@ function loadPreferencesData(preferences) {
       }))
     });
   });
-  return Promise.all(promises);
+  let places = (await Promise.all(promises)).flat();
+  return places;
 }
 
 function updateSectionsInfo(user,preferences,places) {
   updatePopularSectionInfo(user,preferences,places);
+  updateUpSectionInfo(user,preferences,places);
+  updateNewSectionInfo(user,preferences,places);
+}
+
+function updateUpSectionInfo(user,preferences,places) {
+  let upPlaces = places.sort((a,b) => {
+    let priorDate = new Date(new Date().setDate(new Date().getDate()-30)).toISOString().split('T')[0];
+    let aPlaceStats = placesRecommendationStats[a.place_id];
+    let aRatingHistoryDates = Object.keys(aPlaceStats.ratingHistory).sort().reverse();
+    let aPriorDate = aRatingHistoryDates.find(d => d >= priorDate)||aRatingHistoryDates[0];
+    let bPlaceStats = placesRecommendationStats[b.place_id];
+    let bRatingHistoryDates = Object.keys(bPlaceStats.ratingHistory).sort().reverse();
+    let bPriorDate = bRatingHistoryDates.find(d => d >= priorDate)||bRatingHistoryDates[0];
+    let currentDate = aRatingHistoryDates.slice(-1)[0];
+    let aRatingDiff = aPlaceStats.ratingHistory[currentDate] - aPlaceStats.ratingHistory[aPriorDate];
+    let bRatingDiff = aPlaceStats.ratingHistory[currentDate] - bPlaceStats.ratingHistory[bPriorDate];
+    return bRatingDiff - aRatingDiff;
+  }).slice(0,20);
+  upPlaces.forEach(place => {
+    placesRecommendationStats[place.place_id].showOnNew = false;
+  });
+  updateSectionInfo('up',upPlaces.slice(0,20));
 }
 
 function updatePopularSectionInfo(user,preferences,places) {
-  updateSectionInfo('popular',places.slice(0,20));
+  let popularPlaces = places.slice(0,20);
+  popularPlaces.forEach(place => {
+    placesRecommendationStats[place.place_id].showOnNew = false;
+  });
+  updateSectionInfo('popular',popularPlaces);
 }
 
 function updateNewSectionInfo(user,preferences,places) {
+  let date = (new Date()).toISOString().split('T')[0];
   let newPlaces = places.filter(place => {
-    return placesRecommendationStats[place.place_id].timesRecommended === 0;
+    return placesRecommendationStats[place.place_id].showOnNew === true || placesRecommendationStats[place.place_id].showOnNew === date;
+  }).slice(0,20);
+  newPlaces.forEach(place => {
+    placesRecommendationStats[place.place_id].showOnNew = date;
   });
-  updateSectionInfo('new',places.slice(0,20));
+  updateSectionInfo('new',newPlaces);
 }
 
 function updateSectionInfo(section, places) {
