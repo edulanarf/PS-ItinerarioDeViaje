@@ -2,10 +2,15 @@
 
 import { request } from '/JS/places.js';
 import {checkAuthState} from "./firebase-config.js";
+import {saved} from "./saveItinerary.js";
+import { setSaved } from './saved-verification.js';
 
 let map, service, infowindow;
 let markers = [];
 let selectedCategory = "Hotel";
+let price;
+let priceString;
+
 
 
 
@@ -66,7 +71,7 @@ function fetchNearbyPlaces(location) {
 
     sortedResults.forEach((place) => {
       const li = document.createElement("li");
-      const photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
+      const photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : 'https://via.placeholder.com/200';
 
       const name = place.name;
       const rating = place.rating || 'N/A';
@@ -78,6 +83,11 @@ function fetchNearbyPlaces(location) {
         <div>${price}</div>
         <div>Rating: ${rating}</div>
       `;
+
+      const imgElement = li.querySelector('.place-image');
+      imgElement.addEventListener('click', () => {
+        showPlaceInfo(place);
+      });
 
       const addBtn = document.createElement("button");
       addBtn.textContent = "Añadir";
@@ -99,19 +109,29 @@ function calculatePrice(category, place) {
 
   if (category === "Restaurante") {
     price = [20, 20, 30, 40, 50, 60][priceLevel] || 20;
-    return `${price} Euros por persona`;
+    priceString = `${price} Euros por persona`;
+    return price;
   }
   if (category === "Cafetería") {
     price = [10, 10, 15, 20, 25, 30][priceLevel] || 10;
-    return `${price} Euros por persona`;
+    priceString = `${price} Euros por persona`;
+    return price;
   }
   if (category === "Hotel") {
     price = [20, 20, 50, 100, 250, 500][Math.round(rating) - 1] || 20;
-    return `${price} Euros la noche`;
+    priceString = `${price} Euros por noche`;
+    return price;
   }
-  if (category === "Museo") return `5 Euros`;
-  if (["Parque", "Centro comercial", "Aeropuerto"].includes(category)) return `Gratis`;
-  return `Precio no disponible`;
+  if (category === "Museo")
+  {
+    priceString = `5 Euros por persona`;
+    return 5;
+  }
+
+  if (["Parque", "Centro comercial", "Aeropuerto"].includes(category)) {
+    priceString = ` Gratis`;
+    return 0;
+  }
 }
 
 function addToItinerary(place) {
@@ -124,18 +144,22 @@ function addToItinerary(place) {
     return;
   }
 
+  //precio del lugar en euros, tipo int
+  price = calculatePrice(selectedCategory, place);
+
   listNames.push(place.name);
-  listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 300 }) : '');
+  listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : '');
   listAddress.push(place.vicinity || '');
   listRating.push(place.rating || '');
   listCategories.push(selectedCategory);
-  listPrice.push(place.price_level || 0);
+  listPrice.push(price);
   listDates.push(++counter);
 
   const li = document.createElement("li");
   li.classList.add("list-item");
   const div = document.createElement("div");
-  div.innerHTML = `${counter}. ${place.name}`;
+
+  div.innerHTML = `${counter}. ${place.name} ${priceString} `;
 
   const delBtn = document.createElement("button");
   delBtn.className = "delete-button";
@@ -146,8 +170,9 @@ function addToItinerary(place) {
     li.remove();
     counter--;
     renumberItems();
+    setSaved(false);
   });
-
+  setSaved(false);
   li.append(div, delBtn);
   placesList.appendChild(li);
 }
@@ -193,3 +218,4 @@ export function getItineraryData() {
     listCategories,
   };
 }
+

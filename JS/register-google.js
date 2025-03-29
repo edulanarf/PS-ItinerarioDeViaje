@@ -27,6 +27,7 @@ function loginWithGoogle() {
       });
 
       console.log("Usuario autenticado:", userCredential.user);
+      window.location.href = "user-login.html";
       alert(`Bienvenido, ${userCredential.user.displayName}`);
     })
     .catch((error) => {

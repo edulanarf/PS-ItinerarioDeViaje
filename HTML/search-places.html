@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buscar Lugar y Lugares Cercanos</title>
   <link rel="stylesheet" href="/CSS/reset-stylesheet.css">
-
   <!-- AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="/CSS/search-places.css">
   <link rel="stylesheet" href="/CSS/colors.css">
-
   <link rel="stylesheet" href="../CSS/navigation.css">
+  <script type="module" src="/JS/firebase-config.js"></script>
+  <script type="module" src="/JS/types.js"></script>
+  <script type="module" src="/JS/profile.js"></script>
 </head>
 <body>
 
@@ -29,6 +29,7 @@
       <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
       <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar session</button>
     </div>
+    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
 </header>
 

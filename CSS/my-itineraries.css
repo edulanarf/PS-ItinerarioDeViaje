@@ -5,6 +5,7 @@ button {
 }
 
 
+
 #navigation,#tools {
     display: flex;
     height: auto;
@@ -16,23 +17,6 @@ button {
     text-align: center;
 }
 
-#session-navbar {
-    display: flex;
-    width: 80%;
-    height: 2rem;
-    gap: 3rem;
-}
-
-#us {
-    display: flex;
-    gap: 1rem;
-}
-
-#brand-name {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-}
 
 #links {
     display: flex;

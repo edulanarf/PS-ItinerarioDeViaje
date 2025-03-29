@@ -13,22 +13,7 @@ body {
     color: #333;
 }
 
-/* NAVBAR */
-#navigation {
-    width: 100%;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
 
-#session-navbar {
-    max-width: 1200px;
-    margin: auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
 
 #us {
     display: flex;
@@ -40,33 +25,13 @@ body {
     height: 60px;
 }
 
-#brand-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--rojo-oscuro);
-}
 
 #links {
     display: flex;
     gap: 1rem;
 }
 
-.nav-button {
-    padding: 10px 18px;
-    font-family: 'Montserrat', sans-serif;
-    background-color: var(--rojo-oscuro);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
 
-.nav-button:hover {
-    background-color: var(--borgona-profundo);
-}
 
 /* Usuario info */
 #user-info {
@@ -110,7 +75,7 @@ main {
 
 /* TÍTULO */
 .edit-profile-container h2 {
-    color: var(--rojo-oscuro);
+    color:#d9534f;
     margin-bottom: 1.5rem;
 }
 
@@ -141,7 +106,7 @@ main {
 }
 
 .form-group input:focus {
-    border-color: var(--rojo-oscuro);
+    background-color: #d9534f;
     outline: none;
 }
 
@@ -160,7 +125,7 @@ main {
 #save-button {
     width: 100%;
     padding: 14px;
-    background-color: var(--rojo-oscuro);
+    background-color: #d9534f;
     color: white;
     border: none;
     border-radius: 12px;
@@ -171,5 +136,5 @@ main {
 }
 
 #save-button:hover {
-    background-color: var(--borgona-profundo);
+    background-color: #c9302c;
 }

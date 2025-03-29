@@ -4,10 +4,21 @@ main {
     height: 100%;
 
 }
+
 #login-form{
     display:flex;
     align-items: center;
     flex-direction: column;
+}
+
+#us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logo {
+    height: 60px;
 }
 
 #login-email,
@@ -42,6 +53,7 @@ main {
 }
 
 .background-square {
+    margin-top:120px;
     background-color: var(--beige-calido);
     display: flex;
     justify-content: center;

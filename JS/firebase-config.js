@@ -2,13 +2,13 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Place, Itinerary, FBItinerary } from "./types.js"
+import { Place, Itinerary, FBItinerary } from "./types.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
   authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
   projectId: "itinerarios-de-viaje-2db0b",
-  storageBucket: "itinerarios-de-viaje-2db0b.appspot.com",
+  storageBucket: "itinerarios-de-viaje-2db0b.firebasestorage.app",
   messagingSenderId: "86468425538",
   appId: "1:86468425538:web:8bc9c4194193614f7cfadb",
   measurementId: "G-CKN1D6S9GR"
@@ -23,7 +23,7 @@ export function checkAuthState() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("Usuario autenticado:", user.email);
-      return user.uid
+      return user.uid;
     } else {
       console.log("No hay usuario autenticado.");
       return null;
@@ -34,7 +34,7 @@ export function checkAuthState() {
 
 export { app, auth, storage, db };
 
-async function getUserData(userId) {
+export async function getUserData(userId) {
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
 
@@ -60,7 +60,7 @@ export async function getUserItineraries(userId) {
     querySnapshot.forEach((file) => {
       const fbi = new FBItinerary(file.data());
       const i =  loadItinerary(file.id, fbi)
-      itineraries.push( i);
+      itineraries.push(i);
     });
     itineraries.forEach(
       (i) => {

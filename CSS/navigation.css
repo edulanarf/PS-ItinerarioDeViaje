@@ -1,11 +1,12 @@
 @import "colors.css";
+
 #navigation {
     display: flex;
     width: 100%;
     height: auto;
     background-color: var(--beige-calido);
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 2rem;
     font-size: 1rem;
     text-align: center;
@@ -15,23 +16,27 @@
     display: flex;
     height: 2rem;
     gap: 3rem;
+    justify-content: center;
+    width: 100%;
 }
-
 
 #us {
     display: flex;
     gap: 1rem;
 }
+
 #brand-name {
     text-align: center;
     font-size: 2rem;
-    font-weight: bold;
+    font-family: fantasy;
 }
 
 #links {
     display: flex;
     gap: 1rem;
-    align-items: end;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .nav-button {
@@ -47,6 +52,17 @@
     background-color: var(--marron-oscuro);
     box-shadow: 0 0 1rem black;
 }
+
+#us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logo {
+    height: 60px;
+}
+
 #profile-info {
     display: flex;
     align-items: center;
@@ -60,7 +76,7 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #444; /* borde oscuro discreto */
+    border: 2px solid #444;
 }
 
 #profile-info span {
@@ -69,3 +85,4 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 2rem;
 }
+
