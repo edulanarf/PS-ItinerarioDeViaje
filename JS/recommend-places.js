@@ -3,8 +3,8 @@ import { getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { request } from '/JS/itinerary/search-places/places.js';
-import { priceLevels } from "/JS/itinerary/recommend-places/price-levels.js";
+import { request } from '/JS/places.js';
+import { priceLevels } from "/JS/price-levels.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
