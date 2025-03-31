@@ -116,14 +116,6 @@ body {
 .star.on {
     color: gold;
 }
-.star.half:after {
-    content:'\2605';
-    color: gold;
-    position: absolute;
-    margin-left: -1.25rem;
-    width: 0.6rem;
-    overflow: hidden;
-}
 #preferences .categories {
     display: flex;
     flex-flow: row wrap;
