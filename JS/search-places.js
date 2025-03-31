@@ -1,9 +1,9 @@
 // ✅ MODIFICACIÓN PRINCIPAL: añadir botón "Añadir" a cada resultado
 
 import { request } from '/JS/places.js';
-import {checkAuthState} from "./firebase-config.js";
-import {saved} from "./saveItinerary.js";
+import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { setSaved } from './saved-verification.js';
+import { auth } from './firebase-config.js';
 
 let map, service, infowindow;
 let markers = [];
@@ -11,16 +11,19 @@ let selectedCategory = "Hotel";
 let price;
 let priceString;
 
-
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    console.log("not authenticated!!!!");
+    window.location.href = "../HTML/user-login.html"
+  }
+})
 
 
 // Info para el itinerario
-let placeName, placePhoto, placePrice, placeAddress, placeRating, placeWebUrl;
 export let listNames = [], listPhoto = [], listPrice = [], listRating = [], listAddress = [], listDates = [], listCategories = [];
 let counter = 0;
 
 const placesList = document.getElementById("itinerary-list");
-checkAuthState();
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 };

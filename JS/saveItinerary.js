@@ -1,4 +1,4 @@
-import { getItineraryData, listNames } from './search-places.js';
+import { getItineraryData } from './search-places.js';
 import { db, auth } from './firebase-config.js';
 import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
@@ -42,7 +42,8 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
       });
 
     } else {
-      console.log("No hay usuario autenticado.");
+      console.log("not authenticated!!!!");
+      window.location.href = "../HTML/user-login.html"
     }
   });
 

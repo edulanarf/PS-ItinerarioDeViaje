@@ -1,7 +1,12 @@
-import { signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { auth, checkAuthState } from './firebase-config.js';
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import { auth } from './firebase-config.js';
 
-checkAuthState();
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    console.log("not authenticated!!!!");
+    window.location.href = "../HTML/user-login.html"
+  }
+})
 
 function userLogout() {
   signOut(auth)

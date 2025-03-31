@@ -32,5 +32,8 @@ onAuthStateChanged(auth, async (user) => {
 
     profileContainer.appendChild(profileLink);
     profileContainer.appendChild(name);
+  } else {
+    console.log("not authenticated!!!!");
+    window.location.href = "../HTML/user-login.html"
   }
 });

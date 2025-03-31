@@ -3,11 +3,10 @@
     updatePassword,
     updateProfile
   } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-  import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+  import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
   import {
     deleteObject,
     getDownloadURL,
-    listAll,
     ref,
     uploadBytes
   } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
@@ -21,7 +20,6 @@
   const passwordInput = document.getElementById("new-password");
   const photoInput = document.getElementById("profile-picture");
   const photoPreview = document.getElementById("current-photo");
-  const saveButton = document.getElementById("save-button");
   const form = document.getElementById("edit-profile-form");
 
   onAuthStateChanged(auth, async (user) => {
@@ -32,6 +30,9 @@
       nameInput.value = docSnap.data().username;
       emailInput.value = user.email;
       photoPreview.src = docSnap.data().photoURL;
+    } else {
+      console.log("not authenticated!!!!");
+      window.location.href = "../HTML/user-login.html"
     }
   });
 
