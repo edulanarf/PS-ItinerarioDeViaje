@@ -47,9 +47,54 @@
       <div id="new">
         Cargando...
       </div>
+      <div id="preferences">
+        <div class="categories-header">Categorías</div>
+        <div class="categories">
+          <label>
+            <input type="checkbox" name="categories[]" value="Hotel">
+            <span>Hotel</span>
+          </label>
+          <label>
+           <input type="checkbox" name="categories[]" value="Restaurante">
+           <span>Restaurante</span>
+          </label>
+          <label>
+           <input type="checkbox" name="categories[]" value="Cafetería">
+           <span>Cafetería</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Museo">
+            <span>Museo</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Parque">
+            <span>Parque</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Centro comercial">
+            <span>Centro comercial</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Aeropuerto">
+            <span>Aeropuerto</span>
+          </label>
+        </div>
+        <div class="locations-header">Localizaciones seleccionadas</div>
+        <div class="selected-locations">
+
+        </div>
+        <div class="locations-search-container">
+          <input type="text" name="locations-search" id="locations-search" placeholder="Buscar localización">
+        </div>
+        <div class="found-locations">
+
+        </div>
+      </div>
     </div>
     <div class="sidebar-footer">
       <a class="configure-preferences" href="#">Configurar preferencias</a>
+      <a class="save-preferences hidden" href="#">Guardar</a>
+      <a class="cancel-preferences hidden" href="#">Cancelar</a>
     </div>
   </div>
   <div id="map">

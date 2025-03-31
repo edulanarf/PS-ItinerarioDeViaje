@@ -5,21 +5,9 @@ import { getAuth,
 import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { request } from '/JS/places.js';
 import { priceLevels } from "/JS/price-levels.js";
+import { db, auth } from './firebase-config.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
-  authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
-  projectId: "itinerarios-de-viaje-2db0b",
-  storageBucket: "itinerarios-de-viaje-2db0b.firebasestorage.app",
-  messagingSenderId: "86468425538",
-  appId: "1:86468425538:web:8bc9c4194193614f7cfadb",
-  measurementId: "G-CKN1D6S9GR"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app,'itinerariosdeviaje');
-let map, service, marker, infowindow;
+let map, service, marker, infowindow, geocoder;
 
 window.addEventListener('load',() => {
     document.querySelectorAll('.nav-tabs > a').forEach(el => {
@@ -37,6 +25,22 @@ window.addEventListener('load',() => {
       e.preventDefault();
       e.stopPropagation();
       let placeId = e.target.closest('.place').dataset.place_id;
+      if (e.target.classList.contains('remove-location')) {
+        e.target.closest('.place').remove();
+        return;
+      }
+      if (e.target.classList.contains('add-location')) {
+        let selectedLocations = document.querySelector('.selected-locations');
+        let alreadySelected = selectedLocations.querySelector(`a.place[data-place_id="${placeId}"]`) !== null;
+        if (alreadySelected) {
+          alert('Está localización ya esta seleccionada.')
+          return;
+        }
+        selectedLocations.innerHTML += e.target.closest('.place').outerHTML
+          .replace('class="add-location"','class="remove-location"')
+          .replace('Añadir localización','Quitar localización');
+        return;
+      }
       let request = {
         placeId
       };
@@ -63,13 +67,88 @@ window.addEventListener('load',() => {
             position: place.geometry.location,
             title: place.name,
           });
-          infowindow.setContent(place.name);
+          if (place.rating) {
+            let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
+    
+            let content = `
+              <img src="${photoUrl}" alt="${place.name}" class="place-image" style="width: 200px; height: auto; border-radius: 10px;">
+              <h2><b>${place.name}</b></h2>`;
+            infowindow.setContent(content);
+          } else {
+            infowindow.setContent(place.name);
+          }
           infowindow.open(map, marker);
         }
       });
-    })
+    });
+    let timeout;
+    document.querySelector('#locations-search').addEventListener('keyup',function(e){
+      if (timeout !== undefined) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(()=>{
+        timeout = undefined;
+        geocoder.geocode({address: this.value}, (results, status) => {
+          if (status == 'OK') {
+            setFoundLocations(results.map(result => ({
+              name: result.formatted_address,
+              place_id: result.place_id,
+              lat: result.geometry.location.lat(),
+              lng: result.geometry.location.lng()
+            })));
+          }
+        });
+      },500)
+    });
     initMap();
 });
+
+function setSelectedCategories(categories) {
+  document.querySelectorAll(`#preferences .categories input`).forEach(el => el.checked = false);
+  categories.forEach(category => document.querySelector(`#preferences .categories input[value="${category}"]`).checked = true);
+}
+
+function setSelectedLocations(results) {
+  let html = '';
+  let template = `
+  <a class="place" href="#" data-place_id="{place_id}" data-lat="{lat}" data-lng="{lng}" data-name="{placename}">
+    <div class="location-info">
+      <div class="place-name">{placename}</div>
+      <div class="place-address">Latitude: {lat}</div>
+      <div class="place-address">Longitude: {lng}</div>
+      <div class="place-control"><button type="button" class="remove-location">Quitar localización</button></div>
+    </div>
+  </a>`;
+  results.forEach(result => {
+    html += template
+      .replace('{place_id}',result.place_id)
+      .replace(/{placename}/g,result.name)
+      .replace(/{lat}/g,result.lat)
+      .replace(/{lng}/g,result.lng);
+  });
+  document.querySelector('#preferences .selected-locations').innerHTML = html;
+}
+
+function setFoundLocations(results) {
+  let html = '';
+  let template = `
+  <a class="place" href="#" data-place_id="{place_id}" data-lat="{lat}" data-lng="{lng}" data-name="{placename}">
+    <div class="location-info">
+      <div class="place-name">{placename}</div>
+      <div class="place-address">Latitude: {lat}</div>
+      <div class="place-address">Longitude: {lng}</div>
+      <div class="place-control"><button type="button" class="add-location">Añadir localización</button></div>
+    </div>
+  </a>`;
+  results.forEach(result => {
+    html += template
+      .replace('{place_id}',result.place_id)
+      .replace(/{placename}/g,result.name)
+      .replace(/{lat}/g,result.lat)
+      .replace(/{lng}/g,result.lng);
+  });
+  document.querySelector('#preferences .found-locations').innerHTML = html;
+}
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -93,11 +172,40 @@ function loadPreferences(user) {
         preferences = docSnap.data();
       } else {
         preferences = {
-          cities: [{name:'Madrid',lat:40.416775,lng:-3.703790},{name:'Barcelona',lat:41.390205,lng:2.154007}],
+          cities: [{name:'Madrid, España',place_id:'ChIJgTwKgJcpQg0RaSKMYcHeNsQ',lat:40.41672790000001,lng:-3.7032905},{name:'Barcelona, España',place_id:'ChIJ5TCOcRaYpBIRCmZHTz37sEQ',lat:41.3873974,lng:2.168568}],
           categories: ['Restaurante','Cafetería']
         }
         setDoc(preferencesRef,preferences);
       }
+      document.querySelector('.configure-preferences').addEventListener('click',function(e){
+        setSelectedLocations(preferences.cities);
+        setSelectedCategories(preferences.categories);
+        Array.from(this.parentElement.children).forEach(el => el.classList.remove('hidden'));
+        this.classList.add('hidden');
+        document.querySelector('.nav-tabs').classList.add('hidden');
+        document.querySelectorAll('.tab-content > div').forEach(el => el.classList.remove('show'));
+        document.querySelector('#preferences').classList.add('show');
+      });
+      document.querySelector('.cancel-preferences').addEventListener('click',function(e){
+        Array.from(this.parentElement.children).forEach(el => el.classList.add('hidden'));
+        document.querySelector('.configure-preferences').classList.remove('hidden');
+        document.querySelector('.nav-tabs').classList.remove('hidden');
+        document.querySelectorAll('.tab-content > div').forEach(el => el.classList.remove('show'));
+        document.querySelector(document.querySelector('.nav-tabs a.active').getAttribute('href')).classList.add('show');
+      });
+      document.querySelector('.save-preferences').addEventListener('click',function(e){
+        let categories = Array.from(document.querySelectorAll('#preferences .categories input')).filter(el => el.checked).map(el => el.value);
+        let cities = Array.from(document.querySelectorAll('#preferences .selected-locations .place')).map(el => ({
+          name: el.dataset.name,
+          place_id: el.dataset.place_id,
+          lat: el.dataset.lat,
+          lng: el.dataset.lng
+        }));
+        setDoc(preferencesRef,{
+          cities,
+          categories
+        }).then(() => window.location.reload());
+      });
       resolve(preferences);
     });
   });
@@ -148,7 +256,7 @@ async function loadPreferencesData(preferences) {
   preferences.cities.forEach(city => {
     preferences.categories.forEach(category => {
       const radius = request[category].radius;
-      const location = {lat:city.lat,lng:city.lng};
+      const location = {lat:parseFloat(city.lat),lng:parseFloat(city.lng)};
       const requests = {
         location,
         radius,
@@ -170,7 +278,7 @@ async function loadPreferencesData(preferences) {
       }))
     });
   });
-  let places = (await Promise.all(promises)).flat();
+  let places = (await Promise.all(promises)).flat().sort((a, b) => b.rating - a.rating);
   return places;
 }
 
@@ -268,42 +376,5 @@ function initMap() {
   });
   service = new google.maps.places.PlacesService(map);
   infowindow = new google.maps.InfoWindow();
-}
-
-// Función para obtener lugares cercanos y mostrarlos
-function fetchNearbyPlaces(location) {
-  const option = request[selectedCategory];
-
-  const requests = {
-    location: location,
-    radius: option.radius,
-    keyword: selectedCategory,
-  };
-
-  service.nearbySearch(requests, (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      const sortedResults = results
-        .filter(place => place.rating && place.photos)
-        .sort((a, b) => b.rating - a.rating);
-      const placesList = document.getElementById('places-list');
-      placesList.innerHTML = '';
-
-      sortedResults.forEach((place) => {
-        const li = document.createElement('li');
-        let photoUrl = place.photos ? place.photos[0].getUrl({ maxWidth: 200 }) : 'https://via.placeholder.com/200';
-
-        li.innerHTML = `
-          <img src="${photoUrl}" alt="${place.name}" class="place-image" style="width: 200px; height: auto; border-radius: 10px;">
-          <div> ${place.name} </div>
-          Rating: ${place.rating || 'N/A'}`;
-
-        const imgElement = li.querySelector('.place-image');
-        imgElement.addEventListener('click', () => {
-          showPlaceInfo(place);
-        });
-
-        placesList.appendChild(li);
-      });
-    }
-  });
+  geocoder = new google.maps.Geocoder();
 }
