@@ -17,7 +17,6 @@
             margin: 0;
             overflow-x: hidden;
             overflow-y: auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fa;
             color: #333;
         }
@@ -122,15 +121,17 @@
             <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
-        <div id="links">
-            <button class="nav-button" onclick="location.href='my-itineraries.html'">Mis itinerarios</button>
-            <button class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</button>
-            <button class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</button>
-            <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
-            <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar Sesión</button>
-        </div>
         <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
     </nav>
+    <section id="links-section">
+        <div id="links">
+            <a class="nav-button" onclick="location.href='my-itineraries.html'">Mis itinerarios</a>
+            <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+            <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+            <a class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</a>
+            <a class="nav-button" onclick="location.href='user-logout.html'">Cerrar Sesión</a>
+        </div>
+    </section>
 </header>
 
 <main>

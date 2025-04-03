@@ -1,16 +1,27 @@
 @import "colors.css";
 
 #navigation {
-    display: flex;
+    display: block;
     width: 100%;
     height: auto;
     background-color: var(--beige-calido);
     align-items: center;
     justify-content: space-between;
-    padding: 2rem;
+    padding: 2rem 2rem 0.5rem 2rem ;
     font-size: 1rem;
     text-align: center;
 }
+
+#links-section{
+    margin-top: 2rem;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    width: 100%;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
 
 #session-navbar {
     display: flex;
@@ -28,29 +39,29 @@
 #brand-name {
     text-align: center;
     font-size: 2rem;
-    font-family: fantasy;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    color: black;
 }
 
 #links {
     display: flex;
     gap: 1rem;
     align-items: center;
-    justify-content: center;
+    font-size: 16px;
+    justify-content: space-evenly;
     width: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .nav-button {
-    background-color: var(--marron-medio);
-    color: white;
-    height: 100%;
-    padding: 0 2rem;
-    border-radius: 1rem;
-    cursor: pointer;
+    color:black;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .nav-button:hover {
-    background-color: var(--marron-oscuro);
-    box-shadow: 0 0 1rem black;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 #us {
