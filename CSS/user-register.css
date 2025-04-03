@@ -27,6 +27,16 @@ body{
     box-sizing: border-box;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.7rem;
+    display: none; /* Inicialmente oculto */
+}
+
+input:invalid {
+    border-color: red;
+}
+
 
 #profile-pic-container{
     margin:12px;
