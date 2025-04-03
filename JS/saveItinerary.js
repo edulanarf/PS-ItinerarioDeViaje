@@ -4,7 +4,7 @@ import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
 
-export let saved;
+export let saved=false;
 
 let itineraryTitle;
 document.getElementById("itinerary-title").addEventListener("change", (e) => {
@@ -18,10 +18,17 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
       console.log("Usuario autenticado:", user.email);
       const save = document.getElementById("save-itinerary");
       save.addEventListener("click", async function () {
-        if(itineraryTitle === undefined){
-          alert("Asigne un título al itinerario.");
+
+        const titleError = document.getElementById("title-error");
+        if (itineraryTitle === undefined) {
+          titleError.textContent = "Asigne un título al itinerario";
+          titleError.style.display = "block";
+          titleError.style.borderColor = "red";
           return;
+        } else {
+          titleError.style.display = "none";
         }
+
 
         try {
           const itineraryRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`);
@@ -88,6 +95,7 @@ function datesToTimestamp(dates) {
   }
 
   //Mensaje alerta si no se ha guardado
+
 window.addEventListener("beforeunload", (event) => {
   if (!getSaved()) { // Solo muestra la advertencia si hay datos en el itinerario
     event.preventDefault();

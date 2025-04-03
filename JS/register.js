@@ -52,11 +52,13 @@ function registerUser(email, password, displayName, picture) {
     })
     .catch((error) => {
       console.error("❌ Error en el registro:", error.message);
+      const emailError = document.getElementById("email-error");
       if(error.code === "auth/email-already-in-use"){
-        const emailError = document.getElementById("email-error");
         emailError.textContent = "El correo está en uso";
         emailError.style.display = "block";
         email.style.borderColor = "red";
+      } else {
+        emailError.style.display = "none";
       }
     });
 }
@@ -75,6 +77,8 @@ document.getElementById("register-form").addEventListener("submit", function (e)
     nameError.style.display = "block";
     username.style.borderColor = "red";
     return;
+  }  else {
+    nameError.style.display = "none";
   }
 
   const passwordError = document.getElementById("password-error");
@@ -83,6 +87,8 @@ document.getElementById("register-form").addEventListener("submit", function (e)
     passwordError.style.display = "block";
     password.style.borderColor = "red";
     return;
+  } else {
+    passwordError.style.display = "none";
   }
 
   registerUser(email, password, username, profilePicture);

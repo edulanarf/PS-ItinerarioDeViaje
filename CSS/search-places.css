@@ -18,6 +18,17 @@ body {
     flex-wrap: wrap;
 }
 
+/*mensajes de error */
+.error-message {
+    color: red;
+    font-size: 0.7rem;
+    display: none;
+}
+
+input:invalid {
+    border-color: red;
+}
+
 
 
 /* Sección izquierda: búsqueda, mapa, resultados */
@@ -297,4 +308,18 @@ h3 {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 10px;
+}
+
+/* kilometros */
+
+#km-input-value{
+    margin-left:20px;
+    display: flex;
+    align-items: center;
+}
+
+#km-value {
+    display: inline-block;
+    width: 5ch; /* Espacio suficiente para 5 caracteres */
+    text-align: center;
 }

@@ -254,3 +254,12 @@ document.getElementById("save-day-button").addEventListener("click", (e) => {
 });
 
 
+//listener para barra de kilómetros
+const kmInput = document.getElementById("km");
+const kmValue = document.getElementById("km-value");
+kmValue.textContent = kmInput.value;
+kmInput.addEventListener("input", () => {
+  kmValue.textContent = kmInput.value;
+});
+
+
