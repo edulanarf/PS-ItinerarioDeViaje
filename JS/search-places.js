@@ -1,4 +1,3 @@
-// ✅ MODIFICACIÓN PRINCIPAL: añadir botón "Añadir" a cada resultado
 
 import { request } from '/JS/places.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
@@ -10,6 +9,8 @@ let markers = [];
 let selectedCategory = "Hotel";
 let price;
 let priceString;
+let firstPlaceHotel=false;
+let counterDay = 1;
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -142,8 +143,19 @@ function addToItinerary(place) {
     alert("Este lugar ya está en el itinerario.");
     return;
   }
+
   if (listCategories.includes("Hotel") && selectedCategory === "Hotel") {
     alert("Ya has elegido un hotel.");
+    return;
+  }
+  if(firstPlaceHotel === true && selectedCategory === "Hotel"){ //Esta comprobacion es necesaria debido al cambio de dias y borrado de listas
+    alert("Ya has elegido un hotel.");
+    return;
+  }
+
+
+  if(firstPlaceHotel === false && selectedCategory !== "Hotel"){
+    alert("Elige un hotel para continuar");
     return;
   }
 
@@ -169,6 +181,9 @@ function addToItinerary(place) {
   delBtn.textContent = "Eliminar";
   delBtn.addEventListener("click", () => {
     const index = Array.from(placesList.children).indexOf(li);
+    if(listCategories[index] === "Hotel") {
+      firstPlaceHotel = false;
+    }
     [listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories].forEach(arr => arr.splice(index, 1));
     li.remove();
     counter--;
@@ -178,6 +193,11 @@ function addToItinerary(place) {
   setSaved(false);
   li.append(div, delBtn);
   placesList.appendChild(li);
+
+  if(selectedCategory === "Hotel"){
+    firstPlaceHotel = true;
+    day.innerHTML = `Día ${counterDay}`;
+  }
 }
 
 function renumberItems() {
@@ -204,14 +224,21 @@ function showPlaceInfo(place) {
   infowindow.open(map);
 }
 
-window.onload = initMap;
+window.onload = function() {
+  localStorage.clear(); // Elimina todas las claves del localStorage
+  console.log("LocalStorage limpio al recargar la página.");
+  initMap();
+};
+
 
 document.getElementById("select-container").addEventListener("change", (e) => {
   selectedCategory = e.target.value;
 });
 
-export function getItineraryData() {
-  return {
+document.getElementById("save-day-button").addEventListener("click", (e) => {
+  const daykey = `Día ${counterDay}`;
+  counterDay++;
+  let listaTareasDia = [
     listNames,
     listPhoto,
     listPrice,
@@ -219,6 +246,11 @@ export function getItineraryData() {
     listAddress,
     listDates,
     listCategories,
-  };
-}
+  ]
+  localStorage.setItem(daykey, JSON.stringify(listaTareasDia));
+  day.innerHTML = `Día ${counterDay}`;
+  listNames = [], listPhoto = [], listPrice = [], listRating = [], listAddress = [], listDates = [], listCategories = [];
+  placesList.innerHTML = '';
+});
+
 
