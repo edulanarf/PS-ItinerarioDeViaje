@@ -320,6 +320,11 @@ h3 {
 
 #km-value {
     display: inline-block;
-    width: 5ch; /* Espacio suficiente para 5 caracteres */
+    width: 5ch;
     text-align: center;
+}
+
+#km-range {
+    height: 8px;
+    width: 100%;
 }

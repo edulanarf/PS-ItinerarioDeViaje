@@ -4,13 +4,14 @@ import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/fir
 import { setSaved } from './saved-verification.js';
 import { auth } from './firebase-config.js';
 
-let map, service, infowindow;
+let map, service, infowindow, circle;
 let markers = [];
 let selectedCategory = "Hotel";
 let price;
 let priceString;
 let firstPlaceHotel=false;
 let counterDay = 1;
+let radius = 2000;
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -51,6 +52,7 @@ function initMap() {
     markers.push(marker);
     infowindow.setContent(place.name);
     infowindow.open(map, marker);
+    createCircle(place.geometry.location);
     fetchNearbyPlaces(place.geometry.location);
   });
 
@@ -61,11 +63,56 @@ function initMap() {
     if (!places.length) return;
     fetchNearbyPlaces(places[0].geometry.location);
   });
+
+  //Añado area base en el mapa
+  circle = new google.maps.Circle({
+    map: map,
+    center: defaultLocation,
+    radius: radius,
+    fillColor: "#4285F4",
+    fillOpacity: 0.3,
+    strokeColor: "#4285F4",
+    strokeOpacity: 0.8,
+    strokeWeight: 2
+  });
+
+
+}
+
+//si se actualiza el radio del círculo
+document.getElementById("km-range").addEventListener("input", function () {
+  radius = parseInt(this.value); // Convertir km a metros
+  document.getElementById("km-value").textContent = this.value;
+  updateCircleRadius(radius);
+});
+
+function updateCircleRadius(radius) {
+  if (circle) {
+    circle.setRadius(radius);
+  }
+}
+
+function createCircle(center) {
+  if (circle) {
+    circle.setMap(null); // Elimina el círculo anterior si ya existe
+  }
+
+  // Crear un nuevo círculo con el nuevo centro
+  circle = new google.maps.Circle({
+    map: map,
+    center: center,
+    radius: radius,
+    fillColor: "#4285F4",
+    fillOpacity: 0.3,
+    strokeColor: "#4285F4",
+    strokeOpacity: 0.8,
+    strokeWeight: 2
+  });
 }
 
 function fetchNearbyPlaces(location) {
   const option = request[selectedCategory];
-  const req = { location, radius: option.radius, keyword: selectedCategory };
+  const req = { location, radius: radius, keyword: selectedCategory };
   service.nearbySearch(req, (results, status) => {
     if (status !== google.maps.places.PlacesServiceStatus.OK) return;
 
