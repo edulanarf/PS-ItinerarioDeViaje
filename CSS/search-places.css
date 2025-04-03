@@ -29,7 +29,11 @@ input:invalid {
     border-color: red;
 }
 
-
+#errors{
+    justify-content: center;
+    align-content: center;
+    padding-left: 30px;
+}
 
 /* Sección izquierda: búsqueda, mapa, resultados */
 #form-map-list {
