@@ -12,7 +12,6 @@ html, body {
   margin: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: 'Montserrat', sans-serif;
   background-color: #f5f7fa;
   color: #333;
 }
@@ -93,14 +92,6 @@ footer {
   border-radius: 0 0 16px 16px;
 }
 
-a {
-  color: #008cff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
 
 @media (max-width: 768px) {
   .gallery-box, .team-member {

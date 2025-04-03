@@ -6,34 +6,56 @@ const profileContainer = document.getElementById("profile-info");
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const existingImage = profileContainer.querySelector("img");
-    if (existingImage) return;  // Si ya existe, no hacemos nada
+    if (existingImage) return; // Si ya existe, no hacemos nada
 
     const docRef = doc(db, `users/${user.uid}`);
     const docSnap = await getDoc(docRef);
 
+    // Contenedor del perfil
+    const profileWrapper = document.createElement("div");
+    profileWrapper.id = "profile-wrapper";
+    profileWrapper.style.position = "relative"; // Necesario para el menú
+    profileWrapper.style.cursor = "pointer";
 
-    const profileLink = document.createElement("a");
-    profileLink.href = "edit-profile.html";
-    profileLink.style.display = "inline-block";
-
+    // Imagen de perfil
     const img = document.createElement("img");
     img.src = docSnap.data().photoURL;
-    console.log(docSnap.data().photoURL);
     img.alt = "Perfil";
     img.style.width = "60px";
     img.style.height = "60px";
     img.style.borderRadius = "50%";
     img.style.objectFit = "cover";
 
-    profileLink.appendChild(img);
+    // Menú desplegable
+    const dropdownMenu = document.createElement("div");
+    dropdownMenu.id = "dropdown-menu";
+    dropdownMenu.classList.add("hidden"); // Inicialmente oculto
 
-    const name = document.createElement("span");
-    name.textContent = docSnap.data().username;
+    // Opciones del menú
+    dropdownMenu.innerHTML = `
+      <a onclick="location.href='edit-profile.html'">Editar Perfil</a>
+      <a onclick="location.href='my-itineraries.html'">Mis Itinerarios</a>
+      <a onclick="location.href='user-logout.html'">Cerrar Sesión</a>
+    `;
 
-    profileContainer.appendChild(profileLink);
-    profileContainer.appendChild(name);
+    // Agregar eventos para mostrar/ocultar menú
+    profileWrapper.addEventListener("click", function (event) {
+      event.stopPropagation(); // Evita que se cierre inmediatamente
+      dropdownMenu.classList.toggle("show");
+    });
+
+    // Cierra el menú si se hace clic fuera de él
+    document.addEventListener("click", function (event) {
+      if (!profileWrapper.contains(event.target)) {
+        dropdownMenu.classList.remove("show");
+      }
+    });
+
+    profileWrapper.appendChild(img);
+    profileWrapper.appendChild(dropdownMenu);
+    profileContainer.appendChild(profileWrapper);
   } else {
     console.log("not authenticated!!!!");
-    window.location.href = "../HTML/user-login.html"
+    window.location.href = "../HTML/user-login.html";
   }
 });

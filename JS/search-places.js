@@ -1,5 +1,3 @@
-
-import { request } from '/JS/places.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { setSaved } from './saved-verification.js';
 import { auth } from './firebase-config.js';
@@ -111,7 +109,6 @@ function createCircle(center) {
 }
 
 function fetchNearbyPlaces(location) {
-  const option = request[selectedCategory];
   const req = { location, radius: radius, keyword: selectedCategory };
   service.nearbySearch(req, (results, status) => {
     if (status !== google.maps.places.PlacesServiceStatus.OK) return;
