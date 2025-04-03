@@ -73,13 +73,16 @@
       <button id="save-itinerary">Guardar Itinerario</button>
       <label for="itinerary-title"></label>
       <input type="text" id="itinerary-title" placeholder="Título:">
-      <span id="title-error" class="error-message"> <strong>Asigne un título al itinerario</strong> </span>
+      <span id="title-error" class="error-message"> <strong>Asigne un título al itinerario</strong></span>
     </div>
     <h3> Añade un único Hotel: </h3>
     <section id="places">
       <h1 id="day"></h1>
       <ul id="itinerary-list"></ul>
     </section>
+    <span id="not-hotel-error" class="error-message"> <strong>Asigne un hotel</strong></span>
+    <span id="hotel-error" class="error-message"> <strong>Ya se ha elegido un hotel</strong></span>
+    <span id="repeat-error" class="error-message"> <strong>Este lugar ya está en el itinerario</strong></span>
     <button id="save-day-button">Guardar día</button>
   </section>
 </div>

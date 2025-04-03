@@ -63,7 +63,6 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
 
           console.log("✅ Itinerario guardado correctamente.");
           saved = true;
-          alert("✅ Itinerario guardado correctamente.");
           setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);

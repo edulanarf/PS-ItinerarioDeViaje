@@ -186,25 +186,42 @@ function calculatePrice(category, place) {
 }
 
 function addToItinerary(place) {
+
+  //Mensaje error repetido
+  const repeatError = document.getElementById("repeat-error");
   if (listNames.includes(place.name)) {
-    alert("Este lugar ya está en el itinerario.");
+    repeatError.textContent = "Este lugar ya se ha añadido al itinerario";
+    repeatError.style.display = "block";
+    repeatError.style.borderColor = "red";
     return;
+  } else {
+    repeatError.style.display = "none";
   }
 
-  if (listCategories.includes("Hotel") && selectedCategory === "Hotel") {
-    alert("Ya has elegido un hotel.");
+  //Mensaje error Hotel
+  const hotelError = document.getElementById("hotel-error");
+  if (listCategories.includes("Hotel") && selectedCategory === "Hotel" ||
+    firstPlaceHotel === true && selectedCategory === "Hotel") {
+    hotelError.textContent = "Ya se ha añadido un hotel";
+    hotelError.style.display = "block";
+    hotelError.style.borderColor = "red";
     return;
+  } else {
+    hotelError.style.display = "none";
   }
-  if(firstPlaceHotel === true && selectedCategory === "Hotel"){ //Esta comprobacion es necesaria debido al cambio de dias y borrado de listas
-    alert("Ya has elegido un hotel.");
+
+  //Mensaje error Elegir un hotel
+  const nothotelError = document.getElementById("not-hotel-error");
+  if (firstPlaceHotel === false && selectedCategory !== "Hotel") {
+    nothotelError.textContent = "Ya se ha añadido un hotel";
+    nothotelError.style.display = "block";
+    nothotelError.style.borderColor = "red";
     return;
+  } else {
+    nothotelError.style.display = "none";
   }
 
 
-  if(firstPlaceHotel === false && selectedCategory !== "Hotel"){
-    alert("Elige un hotel para continuar");
-    return;
-  }
 
   //precio del lugar en euros, tipo int
   price = calculatePrice(selectedCategory, place);
