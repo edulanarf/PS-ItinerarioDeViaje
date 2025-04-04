@@ -1,4 +1,5 @@
 let map;
+const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Letras para puntuar los sitios del mapa e imprimirlos por pantalla
 
 //Ejemplo con variables
 let inicio = "C. León y Castillo, 227, Las Palmas de Gran Canaria"; //Salimos del hotel
@@ -40,12 +41,19 @@ function initMap() {
       console.log(result.routes[0].legs); //Tiempos, distancias, etc.
 
       //Obtengo la distancia y tiempo de cada ruta por separado
-      result.routes[0].legs.forEach(leg => {
+      result.routes[0].legs.forEach((leg, index) => {
         const distancia = leg.distance.text;
         const tiempo = leg.duration.text;
-        console.log("Distancia:", distancia);
-        console.log("Tiempo:",tiempo );
-      })
+
+        const letraInicio = letras[index];
+        const letraFin = letras[index + 1];
+
+        console.log(`Ruta ${letraInicio} ➝ ${letraFin}`);
+        console.log(`  Desde: ${leg.start_address}`);
+        console.log(`  Hasta: ${leg.end_address}`);
+        console.log(`  Tiempo estimado: ${tiempo}`);
+        console.log(`  Distancia: ${distancia}`);
+      });
     } else {
       console.error("No se pudo calcular la ruta:", status);
     }
