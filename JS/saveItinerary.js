@@ -54,6 +54,12 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
                   dates: dates,
                   categories: categories,
                 });
+
+                const itineraryInfoRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`);
+                await setDoc(itineraryInfoRef, {
+                  title: itineraryTitle,
+                  photo: photos[0] || "",
+                });
                 console.log(`✅ Día ${key} guardado correctamente en Firestore.`);
 
               }
