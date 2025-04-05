@@ -69,3 +69,33 @@ export class FBItinerary {
   }
 }
 
+
+export class ItineraryPlan {
+  /**
+   *
+   * @param {string} title
+   * @param {string} photo
+   * @param {string} description
+   * @param {Itinerary[]} itineraries
+   */
+  constructor(title, description, photo,itineraries) {
+    this.title = title
+    this.description = description
+    this.photo = photo
+    this.itineraries = itineraries;
+  }
+
+  /**
+   * @typedef itineraryPlanData
+   * @property {string} title
+   * @property {string} description
+   * @property {string} photo
+   */
+  /**
+   * @param {itineraryPlanData} object
+   */
+  static fromJson(object){
+    return new ItineraryPlan(object.title,object.description,object.photo,[] )
+  }
+
+}

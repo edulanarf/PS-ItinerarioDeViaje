@@ -2,7 +2,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Place, Itinerary, FBItinerary } from "./types.js";
+import { Place, Itinerary, FBItinerary, ItineraryPlan } from './types.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -49,22 +49,57 @@ export async function getUserData(userId) {
   }
 }
 
+async function addDay(id,data) {
+  let i = await loadItinerary(id, new FBItinerary(data));
+  console.log(i);
+  return i
+}
+
+async function addPlan(file, itinerariesRef) {
+  const planning = await ItineraryPlan.fromJson(file);
+  const daysRef = await collection(itinerariesRef, file.title, 'days');
+  console.log(daysRef);
+  const daysQuerySnapshot = await getDocs(daysRef);
+  console.log(daysQuerySnapshot);
+  const jsons = []
+  console.log("consulting days");
+  await daysQuerySnapshot.forEach((data) => {
+    jsons.push([data.id, data.data()])
+  });
+  console.log(jsons);
+  await Promise.all(jsons.map( async (data) => {
+    console.log("a day is created");
+    await addDay(data.at(0),data.at(1))
+      .then((it) => planning.itineraries.push(it))
+      .then((_) => {
+        console.log("a day was created");
+        console.log(planning);
+      });
+  }))
+  return planning;
+}
+
 export async function getUserItineraries(userId) {
   const itinerariesRef = collection(db, `users/${userId}/itineraries`);
   try {
     const querySnapshot = await getDocs(itinerariesRef);
+    console.log(querySnapshot);
     /**
-     * @type {Itinerary[]}
+     * @type {ItineraryPlan[]}
      */
     const itineraries = [];
+    const jsons = []
     querySnapshot.forEach((file) => {
-      const fbi = new FBItinerary(file.data());
-      const i =  loadItinerary(file.id, fbi)
-      itineraries.push(i);
-    });
-    itineraries.forEach(
+      jsons.push(file.data())
+    })
+    for (const file of jsons) {
+      await addPlan(file, itinerariesRef)
+        .then((plan) => itineraries.push(plan))
+        .then((_) => console.log(itineraries));
+    }
+    itineraries.values().forEach(
       (i) => {
-        console.log(i.toString());
+        i.itineraries.forEach((k) => console.log(k.toString()));
       }
     )
     return itineraries;
@@ -78,13 +113,15 @@ export async function getUserItineraries(userId) {
  * @param {string} id
  * @param {FBItinerary} data
  */
-export function loadItinerary(id,data) {
+export async function loadItinerary(id,data) {
 
   let itinerary = new Itinerary(id);
   itinerary.toString = () => {
     return itinerary.name + ":\n" + itinerary.places.map(p => "-\t" + p.toString()).join('\n');
   }
-  for (let i = 0; i < data.names.length; i++) {
+
+  let i = 0
+  await Promise.all(data.names.map(async _ => {
     itinerary.places.push(
       new Place(
         data.names.at(i),
@@ -96,7 +133,11 @@ export function loadItinerary(id,data) {
         data.categories.at(i)
       )
     )
-  }
+    i += 1
+    console.log(itinerary.places);
+  }));
+
+  console.log(itinerary.toString());
   return itinerary;
 }
 

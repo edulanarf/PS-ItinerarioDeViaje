@@ -25,15 +25,16 @@
             <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
+        <div id="links-section">
+            <div id="links">
+                <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+                <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+                <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+            </div>
+        </div>
         <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
     </nav>
-    <section id="links-section">
-        <div id="links">
-            <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
-            <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
-            <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
-        </div>
-    </section>
+
 </header>
 
 
@@ -75,32 +76,41 @@
         </div>
 </header>
 
-<main>
-    <template>
-        <div class="my-itineraries">
-            <article class="preview">
-                <div class="image-preview">
-                    <img class="intro" src="" alt=""/>
-                </div>
-                <div class="summary">
-                    <div class="title"></div>
-                    <div class="description">description</div>
-                </div>
-            </article>
+<template id="day-button">
+    <button class="day-button"></button>
+</template>
+<template>
+    <ul class="places"></ul>
+</template>
+<template id="itinerary-container">
+    <div class="my-itineraries">
+        <article class="preview">
+            <div class="image-preview">
+                <img class="intro" src="" alt=""/>
+            </div>
+            <div class="summary">
+                <div class="title"></div>
+                <div class="description">description</div>
+            </div>
+        </article>
 
-            <section class="content">
+        <section class="day-container">
+            <div class="days"></div>
+            <div class="content">
                 <div class="side-bar"></div>
                 <div class="list-container">
                     <!--
                     in class places:
                     each li = place.toString()
                     -->
-                    <ul class="places"></ul>
+                    <!-- <ul class="places"></ul> -->
                 </div>
-            </section>
-        </div>
-    </template>
-</main>
+            </div>
+        </section>
+    </div>
+</template>
+
+<main></main>
 
 <!-- Firebase user info script -->
 <script type="module">
