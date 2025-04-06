@@ -58,10 +58,10 @@ onAuthStateChanged(auth, async (user) => {
         dropdownMenu.classList.remove("show");
       }
     });
-
+    profileWrapper.style.zIndex = "1000";
     profileWrapper.appendChild(img);
-    profileContainer.appendChild(username);
     profileWrapper.appendChild(dropdownMenu);
+    profileContainer.appendChild(username);
     profileContainer.appendChild(profileWrapper);
   } else {
     console.log("not authenticated!!!!");

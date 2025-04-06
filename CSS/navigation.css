@@ -50,6 +50,12 @@
     width: fit-content;
 }
 
+#links a{
+    margin-right: 2rem;
+}
+
+
+
 .nav-button {
     color:black;
     font-weight: bold;
@@ -73,14 +79,11 @@
 }
 
 #profile-info {
-    padding-top: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
     margin-left: auto;
     padding-right: 2rem;
-    height: fit-content;
-    width: fit-content;
 }
 
 #profile-info img {

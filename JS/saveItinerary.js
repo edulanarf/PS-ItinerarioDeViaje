@@ -6,10 +6,6 @@ import { getSaved, setSaved } from './saved-verification.js';
 import { Itinerary, ItineraryPlan } from './types.js';
 import { plan } from './search-places.js'
 
-
-
-
-
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -61,7 +57,6 @@ function datesToTimestamp(dates) {
   }
 
   //Mensaje alerta si no se ha guardado
-
 window.addEventListener("beforeunload", (event) => {
   if (!getSaved()) { // Solo muestra la advertencia si hay datos en el itinerario
     event.preventDefault();
