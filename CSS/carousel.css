@@ -177,3 +177,29 @@
 .carousel-container-horizontal:hover div {
     animation-play-state: paused;
 }
+
+
+
+.carousel-slide {
+    position: relative;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Mostrar tooltip en hover */
+.carousel-slide:hover .tooltip {
+    opacity: 1;
+}
