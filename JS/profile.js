@@ -39,19 +39,19 @@ onAuthStateChanged(auth, async (user) => {
     `;
 
     // Agregar eventos para mostrar/ocultar menú
-    profileWrapper.addEventListener("click", function (event) {
+    img.addEventListener("click", function (event) {
       event.stopPropagation(); // Evita que se cierre inmediatamente
       dropdownMenu.classList.toggle("show");
     });
 
     // Cierra el menú si se hace clic fuera de él
     document.addEventListener("click", function (event) {
-      if (!profileWrapper.contains(event.target)) {
+      if (!img.contains(event.target)) {
         dropdownMenu.classList.remove("show");
       }
     });
 
-    profileWrapper.appendChild(img);
+    profileContainer.appendChild(img);
     profileWrapper.appendChild(dropdownMenu);
     profileContainer.appendChild(profileWrapper);
   } else {

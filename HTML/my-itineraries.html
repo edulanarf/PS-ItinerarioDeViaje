@@ -32,7 +32,7 @@
                 <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
             </div>
         </div>
-        <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+        <div id="profile-info"></div>
     </nav>
 
 </header>
@@ -71,13 +71,13 @@
             <label for="search"></label>
             <input id="search" type="text" placeholder="search in your itineraries">
             <button id="reload-button">
-                <img src="https://icon-icons.com/icons2/3285/PNG/512/magnifying_glass_magnifier_search_icon_208236.png" alt="" class="">
+                <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="" class="">
             </button>
         </div>
 </header>
 
 <template id="day-button">
-    <button class="day-button"></button>
+    <button tabindex="0" class="day-button down"></button>
 </template>
 <template>
     <ul class="places"></ul>
@@ -111,54 +111,6 @@
 </template>
 
 <main></main>
-
-<!-- Firebase user info script -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
-        authDomain: "itinerarios-de-viaje-2db0b.firebaseapp.com",
-        projectId: "itinerarios-de-viaje-2db0b",
-        storageBucket: "itinerarios-de-viaje-2db0b.appspot.com",
-        messagingSenderId: "86468425538",
-        appId: "1:86468425538:web:8bc9c4194193614f7cfadb"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const profileInfo = document.getElementById("profile-info");
-    const userPfp = document.getElementById("user-pfp");
-    const userName = document.getElementById("user-name");
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const img = document.createElement("img");
-            img.src = user.photoURL || "../mockups/default-profile.png";
-            img.alt = "Perfil";
-            img.style.width = "40px";
-            img.style.height = "40px";
-            img.style.borderRadius = "50%";
-            img.style.objectFit = "cover";
-            img.style.border = "2px solid #444";
-
-            const name = document.createElement("span");
-            name.textContent = user.displayName || "Usuario";
-            name.style.fontWeight = "600";
-            name.style.fontSize = "1.1rem";
-            name.style.color = "#222";
-            name.style.fontFamily = "Montserrat, sans-serif";
-
-            profileInfo.appendChild(img);
-            profileInfo.appendChild(name);
-
-
-        }
-    });
-</script>
-
 
 </body>
 </html>

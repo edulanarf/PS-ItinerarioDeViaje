@@ -3,6 +3,7 @@ import { db, auth } from './firebase-config.js';
 import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
+import { ItineraryPlan } from './types.js';
 
 export let saved=false;
 
@@ -31,7 +32,8 @@ document.getElementById("itinerary-title").addEventListener("change", (e) => {
 
 
         try {
-          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`);
+          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`)
+            .withConverter(ItineraryPlan.itineraryPlanConverter);
 
 
           const keys = Object.keys(localStorage);

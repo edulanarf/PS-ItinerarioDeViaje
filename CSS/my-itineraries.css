@@ -238,6 +238,13 @@ main {
 .day-button {
     border-radius: 0;
 }
+.day-button.up {
+    background-color: var(--naranja-quemado);
+}
+
+.day-button.down {
+    background-color: inherit;
+}
 
 .side-bar {
     width: 0.5rem;

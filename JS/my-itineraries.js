@@ -1,4 +1,4 @@
-import {auth, getUserItineraries} from "./firebase-config.js"
+import { auth, getPlans } from './firebase-config.js';
 import { onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { ItineraryPlan } from './types.js';
 
@@ -27,43 +27,53 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+function switchDay(container, day) {
+  container.querySelector(`ul[data-day="${currentDay}"]`).style.display = 'none';
+  container.querySelector(`button[data-day="${currentDay}"]`).classList.replace('up', 'down');
+  currentDay = day.innerText;
+  container.querySelector(`ul[data-day="${currentDay}"]`).style.display = 'block';
+  container.querySelector(`button[data-day="${currentDay}"]`).classList.replace('down', 'up');
+}
+
 function addDaysListeners() {
+
   Object.values(itineraries).forEach(itinerary => {
     const container = document.getElementById(itinerary.title)
     const days = container.querySelector('.days').querySelectorAll(".day-button")
-    days.forEach(day => {day.addEventListener("click", (_) => {
-      container.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none"
-      currentDay = day.innerText
-      container.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
-    })})
+    days.forEach(day => {
+      day.addEventListener("click", (_) => switchDay(container, day));
+    })
   })
 }
 
+function nextDay() {
+  let it = document.getElementById(currentItinerary)
+  switchDay(it,
+    it.querySelector(`button[data-day="${currentDay}"]`).nextElementSibling ?
+      it.querySelector(`button[data-day="${currentDay}"]`).nextElementSibling :
+      it.querySelector(".days").firstElementChild
+  )
+}
+
+function prevDay() {
+  let it = document.getElementById(currentItinerary)
+  switchDay(it,
+    it.querySelector(`button[data-day="${currentDay}"]`).previousElementSibling ?
+      it.querySelector(`button[data-day="${currentDay}"]`).previousElementSibling :
+      it.querySelector(".days").lastElementChild
+  )
+}
+
 async function init(user) {
-  await getUserItineraries(user.uid).then(data => {
+  await getPlans(user.uid).then(data => {
     console.log("someone")
     console.log(user.uid)
     console.log("data")
     console.log(data)
     console.log(data.length);
-    // data is an ItineraryPlane[] type
-    if (Array.isArray(data) &&
-      data.length > 0 &&
-      data.every(item => item instanceof ItineraryPlan)
-    ) {
-      data.forEach((it) => {
-        console.log("it");
-        console.log(it);
-        if (it instanceof ItineraryPlan) {
-          itineraries[it.title] = it
-          console.log("hi");
-          console.log(it);
-        }
-        console.log("bye");
-        console.log(it);
-      });
-    }
-    console.log(data.length);
+    data.forEach((it) => {
+      itineraries[it.title] = it
+    });
   }).catch(err => console.error(err)).then(() => {
     console.log(itineraries);
     currentItinerary = Object.keys(itineraries).at(0);
@@ -84,6 +94,22 @@ async function init(user) {
           previousItinerary(currentItinerary).then(data => {currentItinerary = data});
         })
         addDaysListeners()
+        document.addEventListener("keydown", (event) => {
+          switch (event.key) {
+            case "ArrowDown":
+              nextDay()
+              break;
+            case "ArrowUp":
+              prevDay()
+              break;
+            case "ArrowLeft":
+              previousItinerary(currentItinerary).then(data => {currentItinerary = data});
+              break;
+            case "ArrowRight":
+              nextItinerary(currentItinerary).then(data => {currentItinerary = data});
+              break;
+          }
+        })
       });
   })
 }
@@ -96,18 +122,17 @@ async function init(user) {
  * @returns {Promise<void>}
  */
 async function showItinerary(before, after){
-  console.log(before + "\n" + document.getElementById(before));
-  document.getElementById(before).style.display = "none";
-  console.log(currentDay);
-  console.log(document.getElementById(before));
-  console.log(document.getElementById(before).querySelector(`ul[data-day="${currentDay}"]`));
-  document.getElementById(before).querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
-  let container = document.getElementById(after)
+  let from = document.getElementById(before)
+  from.style.display = "none";
+  from.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
+  from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up","down")
+  let to = document.getElementById(after)
   // visible day 1
   currentDay = itineraries[before].itineraries.at(0).name
-  container.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
+  to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
+  to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
   // then show
-  container.style.display = "grid";
+  to.style.display = "grid";
   //my-itineraries class is a grid display
   console.log("switch:" + before + " - " + after + " " + currentDay);
 }
@@ -148,13 +173,14 @@ async function renderDay(itinerary, daysContainer, listContainer) {
   console.log("day render");
   let button = await document.importNode(dayButton.content, true).querySelector('button');
   button.innerText = itinerary.name;
+  button.dataset.day = itinerary.name
   await daysContainer.appendChild(button);
   let ul = await document.createElement('ul');
   ul.className = 'places';
   ul.dataset.day = itinerary.name;
   await Promise.all(itinerary.places.map(async place => {
       let li = await document.createElement('li');
-      li.innerText = await place.toString();
+      li.innerText = place.toString();
       await ul.appendChild(li);
     console.log(ul);
     })
