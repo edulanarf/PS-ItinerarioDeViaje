@@ -69,6 +69,7 @@ export async function getPlans(userId){
     const processed = []
     await querySnapshot.forEach((file) => {
       itineraryPlans.push(file.data())
+      console.log(itineraryPlans);
     })
     await Promise.all(itineraryPlans.map(async (plan) => {
       const daysRef = collection(itinerariesRef, plan.title, 'days')

@@ -80,7 +80,7 @@ export class Itinerary {
       console.log("converted: ", places, Date.now());
       let i = new Itinerary(data.name, places);
       console.log("i", i, Date.now());
-      console.log(new Itinerary("hi"));
+      console.log(new Itinerary("hi",[]));
       return i
     }
   };
@@ -95,30 +95,42 @@ export class ItineraryPlan {
    * @param {Itinerary[]} itineraries
    */
   constructor(title, description, photo,itineraries) {
-    this.title = title
-    this.description = description
-    this.photo = photo
     this.itineraries = itineraries;
+    this._title = title;
+    this._description = description;
+    this._photo = photo;
   }
 
-  /**
-   * @typedef itineraryPlanData
-   * @property {string} title
-   * @property {string} description
-   * @property {string} photo
-   */
-  /**
-   * @param {itineraryPlanData} object
-   */
-  static from(object){
-    return new ItineraryPlan(object.title,object.description,object.photo,[] )
+
+  get title() {
+    return this._title;
+  }
+
+  set title(value) {
+    this._title = value;
+  }
+
+  get description() {
+    return this._description;
+  }
+
+  set description(value) {
+    this._description = value;
+  }
+
+  get photo() {
+    return this._photo;
+  }
+
+  set photo(value) {
+    this._photo = value;
   }
 
   toFirestore() {
     return {
-      title: this.title,
-      photo: this.photo,
-      description: this.description,
+      title: this._title,
+      photo: this._photo,
+      description: this._description,
     }
   }
 
