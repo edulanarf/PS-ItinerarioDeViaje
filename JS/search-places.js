@@ -73,6 +73,12 @@ function initMap() {
     if (!places.length) return;
     fetchNearbyPlaces(places[0].geometry.location);
   });
+  document.getElementById("select-container").addEventListener('change', function(event) {
+    event.preventDefault();
+    const places = searchBox.getPlaces();
+    if (!places.length) return;
+    fetchNearbyPlaces(places[0].geometry.location);
+  })
 
   //Añado area base en el mapa
   circle = new google.maps.Circle({
