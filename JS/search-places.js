@@ -1,26 +1,37 @@
+// noinspection JSUnresolvedReference
+
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { setSaved } from './saved-verification.js';
 import { auth } from './firebase-config.js';
+import { Itinerary, ItineraryPlan, Place } from './types.js';
+
 
 let map, service, infowindow, circle;
 let markers = [];
 let selectedCategory = "Hotel";
 let price;
 let priceString;
-let firstPlaceHotel=false;
 let counterDay = 1;
 let radius = 2000;
+/**
+ * @type {ItineraryPlan}
+ */
+export let plan = new ItineraryPlan("","","",[]);
+/**
+ * @type {Place[]}
+ */
+const listPlaces = []
+const day = document.getElementById("day")
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html"
   }
 })
 
 
 // Info para el itinerario
-export let listNames = [], listPhoto = [], listPrice = [], listRating = [], listAddress = [], listDates = [], listCategories = [];
+
 let counter = 0;
 
 const placesList = document.getElementById("itinerary-list");
@@ -61,6 +72,12 @@ function initMap() {
     if (!places.length) return;
     fetchNearbyPlaces(places[0].geometry.location);
   });
+  document.getElementById("select-container").addEventListener('change', function(event) {
+    event.preventDefault();
+    const places = searchBox.getPlaces();
+    if (!places.length) return;
+    fetchNearbyPlaces(places[0].geometry.location);
+  })
 
   //Añado area base en el mapa
   circle = new google.maps.Circle({
@@ -77,7 +94,7 @@ function initMap() {
 
 }
 
-//si se actualiza el radio del círculo
+//sí se actualiza el radio del círculo
 document.getElementById("km-range").addEventListener("input", function () {
   radius = parseInt(this.value); // Convertir km a metros
   document.getElementById("km-value").textContent = this.value;
@@ -186,7 +203,7 @@ function addToItinerary(place) {
 
   //Mensaje error repetido
   const repeatError = document.getElementById("repeat-error");
-  if (listNames.includes(place.name)) {
+  if (listPlaces.find(p => p.name === place.name)) {
     repeatError.textContent = "Este lugar ya se ha añadido al itinerario";
     repeatError.style.display = "block";
     repeatError.style.borderColor = "red";
@@ -197,8 +214,7 @@ function addToItinerary(place) {
 
   //Mensaje error Hotel
   const hotelError = document.getElementById("hotel-error");
-  if (listCategories.includes("Hotel") && selectedCategory === "Hotel" ||
-    firstPlaceHotel === true && selectedCategory === "Hotel") {
+  if (listPlaces.find(p => p.category === "Hotel" ) && place.category === "Hotel") {
     hotelError.textContent = "Ya se ha añadido un hotel";
     hotelError.style.display = "block";
     hotelError.style.borderColor = "red";
@@ -208,14 +224,14 @@ function addToItinerary(place) {
   }
 
   //Mensaje error Elegir un hotel
-  const nothotelError = document.getElementById("not-hotel-error");
-  if (firstPlaceHotel === false && selectedCategory !== "Hotel") {
-    nothotelError.textContent = "Ya se ha añadido un hotel";
-    nothotelError.style.display = "block";
-    nothotelError.style.borderColor = "red";
+  const notHotelError = document.getElementById("not-hotel-error");
+  if (counterDay === 1 && listPlaces.length === 0 && selectedCategory !== "Hotel") {
+    notHotelError.textContent = "No se ha añadido un hotel";
+    notHotelError.style.display = "block";
+    notHotelError.style.borderColor = "red";
     return;
   } else {
-    nothotelError.style.display = "none";
+    notHotelError.style.display = "none";
   }
 
 
@@ -223,13 +239,17 @@ function addToItinerary(place) {
   //precio del lugar en euros, tipo int
   price = calculatePrice(selectedCategory, place);
 
-  listNames.push(place.name);
-  listPhoto.push(place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : '');
-  listAddress.push(place.vicinity || '');
-  listRating.push(place.rating || '');
-  listCategories.push(selectedCategory);
-  listPrice.push(price);
-  listDates.push(++counter);
+  let aPlace = new Place(
+    place.name,
+    place.photos ? place.photos[0].getUrl({ maxWidth: 1024, maxHeight: 1024 }) : '',
+    price,
+    place.rating || '',
+    place.vicinity || '',
+    (++counter).toString(),
+    selectedCategory
+  )
+
+  listPlaces.push(aPlace)
 
   const li = document.createElement("li");
   li.classList.add("list-item");
@@ -242,10 +262,7 @@ function addToItinerary(place) {
   delBtn.textContent = "Eliminar";
   delBtn.addEventListener("click", () => {
     const index = Array.from(placesList.children).indexOf(li);
-    if(listCategories[index] === "Hotel") {
-      firstPlaceHotel = false;
-    }
-    [listNames, listPhoto, listPrice, listAddress, listRating, listDates, listCategories].forEach(arr => arr.splice(index, 1));
+    listPlaces.splice(index,1);
     li.remove();
     counter--;
     renumberItems();
@@ -256,7 +273,6 @@ function addToItinerary(place) {
   placesList.appendChild(li);
 
   if(selectedCategory === "Hotel"){
-    firstPlaceHotel = true;
     day.innerHTML = `Día ${counterDay}`;
   }
 }
@@ -264,9 +280,9 @@ function addToItinerary(place) {
 function renumberItems() {
   const items = placesList.children;
   for (let i = 0; i < items.length; i++) {
-    const name = listNames[i];
-    const price = listPrice[i];
-    const cat = listCategories[i];
+    const name = listPlaces[i].name;
+    const price = listPlaces[i].price;
+    const cat = listPlaces[i].category;
     let displayPrice = '';
     if (cat === "Hotel") displayPrice = `${price} Euros la noche`;
     else if (["Restaurante", "Cafetería", "Museo"].includes(cat)) displayPrice = `${price} Euros por persona`;
@@ -287,7 +303,6 @@ function showPlaceInfo(place) {
 
 window.onload = function() {
   localStorage.clear(); // Elimina todas las claves del localStorage
-  console.log("LocalStorage limpio al recargar la página.");
   initMap();
 };
 
@@ -296,31 +311,26 @@ document.getElementById("select-container").addEventListener("change", (e) => {
   selectedCategory = e.target.value;
 });
 
-document.getElementById("save-day-button").addEventListener("click", (e) => {
-  const daykey = `Día ${counterDay}`;
+document.getElementById("save-day-button").addEventListener("click", (_) => {
+  const key = `Día ${counterDay}`;
+  let it = new Itinerary(key, [...listPlaces])
+  plan.itineraries.push(it)
   counterDay++;
-  let listaTareasDia = [
-    listNames,
-    listPhoto,
-    listPrice,
-    listRating,
-    listAddress,
-    listDates,
-    listCategories,
-  ]
-  localStorage.setItem(daykey, JSON.stringify(listaTareasDia));
+  localStorage.setItem(key, JSON.stringify(listPlaces));
+  listPlaces.length = 0
   day.innerHTML = `Día ${counterDay}`;
-  listNames = [], listPhoto = [], listPrice = [], listRating = [], listAddress = [], listDates = [], listCategories = [];
   placesList.innerHTML = '';
 });
 
 
-//listener para barra de kilómetros
-const kmInput = document.getElementById("km");
-const kmValue = document.getElementById("km-value");
-kmValue.textContent = kmInput.value;
-kmInput.addEventListener("input", () => {
-  kmValue.textContent = kmInput.value;
+
+
+
+document.getElementById("itinerary-title").addEventListener("input", function (e) {
+    plan.title = e.target.value
 });
 
+document.getElementById("itinerary-description").addEventListener("input", function(e)  {
+    plan.description = e.target.value
+});
 
