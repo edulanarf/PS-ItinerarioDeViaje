@@ -26,6 +26,14 @@ onAuthStateChanged(auth, async (user) => {
     img.style.borderRadius = "50%";
     img.style.objectFit = "cover";
 
+    //Nombre de usuario
+    const username = document.createElement("p");
+    username.textContent = docSnap.data().username || "Usuario";
+    username.style.fontWeight = "bold";
+    username.style.textAlign = "center";
+    username.style.fontSize="40px";
+    username.style.fontFamily = "Montserrat, sans-serif";
+
     // Menú desplegable
     const dropdownMenu = document.createElement("div");
     dropdownMenu.id = "dropdown-menu";
@@ -52,6 +60,7 @@ onAuthStateChanged(auth, async (user) => {
     });
 
     profileWrapper.appendChild(img);
+    profileContainer.appendChild(username);
     profileWrapper.appendChild(dropdownMenu);
     profileContainer.appendChild(profileWrapper);
   } else {
