@@ -10,3 +10,7 @@
     max-width: 400px;
     border-radius:10px;
 }
+
+body {
+    height: fit-content;
+}
