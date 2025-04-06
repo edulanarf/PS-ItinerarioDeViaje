@@ -13,7 +13,6 @@ import { plan } from './search-places.js'
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("Usuario autenticado:", user.email);
       const save = document.getElementById("save-itinerary");
       save.addEventListener("click", async function () {
 
@@ -28,7 +27,7 @@ import { plan } from './search-places.js'
         }
 
         plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
-        console.log(plan);
+        
         try {
           const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
             .withConverter(ItineraryPlan.itineraryPlanConverter);
@@ -36,16 +35,13 @@ import { plan } from './search-places.js'
           for (const itinerary of plan.itineraries) {
             const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
             await setDoc(dayRef, itinerary);
-            console.log(`✅ Día ${itinerary.name} guardado correctamente en Firestore.`);
           }
-          console.log("✅ Itinerario guardado correctamente.");
           setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }
       });
     } else {
-      console.log("not authenticated!!!!");
       window.location.href = "../HTML/user-login.html"
     }
   });

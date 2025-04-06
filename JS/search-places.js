@@ -25,7 +25,6 @@ const day = document.getElementById("day")
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html"
   }
 })
@@ -276,8 +275,6 @@ function addToItinerary(place) {
   if(selectedCategory === "Hotel"){
     day.innerHTML = `Día ${counterDay}`;
   }
-
-  console.log(plan);
 }
 
 function renumberItems() {
@@ -306,7 +303,6 @@ function showPlaceInfo(place) {
 
 window.onload = function() {
   localStorage.clear(); // Elimina todas las claves del localStorage
-  console.log("LocalStorage limpio al recargar la página.");
   initMap();
 };
 
@@ -318,7 +314,6 @@ document.getElementById("select-container").addEventListener("change", (e) => {
 document.getElementById("save-day-button").addEventListener("click", (_) => {
   const key = `Día ${counterDay}`;
   let it = new Itinerary(key, [...listPlaces])
-  console.log(plan);
   plan.itineraries.push(it)
   counterDay++;
   localStorage.setItem(key, JSON.stringify(listPlaces));
@@ -333,16 +328,9 @@ document.getElementById("save-day-button").addEventListener("click", (_) => {
 
 document.getElementById("itinerary-title").addEventListener("input", function (e) {
     plan.title = e.target.value
-    console.log(e.target.value);
-});
-
-document.getElementById("itinerary-title").addEventListener("change", function( e) {
-  plan.title = e.target.value
-  console.log("b " + e.target.value);
 });
 
 document.getElementById("itinerary-description").addEventListener("input", function(e)  {
     plan.description = e.target.value
-    console.log(e.target.value);
 });
 

@@ -67,7 +67,6 @@ export class Itinerary {
     },
     fromFirestore: async function(snapshot, options) {
       const data = snapshot.data(options);
-      console.log(data.name, data.places);
       const places = data.places ? await Promise.all(data.places.map(placeData => new Place(
         placeData.name,
         placeData.photo,
@@ -77,11 +76,7 @@ export class Itinerary {
         placeData.date,
         placeData.category
       ))) : [];
-      console.log("converted: ", places, Date.now());
-      let i = new Itinerary(data.name, places);
-      console.log("i", i, Date.now());
-      console.log(new Itinerary("hi",[]));
-      return i
+      return new Itinerary(data.name, places)
     }
   };
 }
