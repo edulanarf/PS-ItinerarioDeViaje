@@ -164,7 +164,7 @@
 
 .carousel-horizontal, .carousel-horizontal-reverse {
     display: flex;
-    animation: scroll-x 10s linear infinite;
+    animation: scroll-x 20s linear infinite;
     min-width: 100%;
     align-items: center;
     flex-shrink: 0;
