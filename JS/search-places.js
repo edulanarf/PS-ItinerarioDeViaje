@@ -20,7 +20,7 @@ export let plan = new ItineraryPlan("","","",[]);
 /**
  * @type {Place[]}
  */
-const listPlaces = []
+let listPlaces = []
 const day = document.getElementById("day")
 
 onAuthStateChanged(auth, (user) => {
@@ -313,14 +313,102 @@ document.getElementById("select-container").addEventListener("change", (e) => {
 
 document.getElementById("save-day-button").addEventListener("click", (_) => {
   const key = `Día ${counterDay}`;
-  let it = new Itinerary(key, [...listPlaces])
-  plan.itineraries.push(it)
-  counterDay++;
+
+  const existingItineraryIndex = plan.itineraries.findIndex(itinerary => itinerary.name === key);
+  // Si el itinerario ya existe, lo actualizamos, de lo contrario lo agregamos || en caso de cambiar entre dias
+  if (existingItineraryIndex !== -1) {
+    plan.itineraries[existingItineraryIndex].places = [...listPlaces];
+    console.log(plan)
+  } else {
+    let it = new Itinerary(key, [...listPlaces]);
+    plan.itineraries.push(it);
+    console.log(plan)
+  }
+
+  //Guardamos el el lc st la lista del dia
   localStorage.setItem(key, JSON.stringify(listPlaces));
   listPlaces.length = 0
   day.innerHTML = `Día ${counterDay}`;
   placesList.innerHTML = '';
+
+  //Generacion de botones por dia
+  const dayButton = document.createElement("button");
+  dayButton.textContent = key;
+  dayButton.classList.add("day-button");
+
+  // Comprobamos si el botón ya existe
+  const existingButton = document.querySelector(`#day-buttons-container button[data-day="${key}"]`);
+  if (!existingButton) {
+    dayButton.setAttribute("data-day", key);  // Añadimos un atributo para identificar el día
+    dayButton.addEventListener("click", () => {
+      loadDay(key);
+    });
+    const dayButtonsContainer = document.getElementById("day-buttons-container");
+    dayButtonsContainer.appendChild(dayButton);
+  }
+  // **Incrementamos el contador de días después de guardar y mostrar**
+  counterDay++;
+
+  // Actualizamos el contenido del HTML para reflejar el nuevo día
+  day.innerHTML = `Día ${counterDay}`;
+
+  // Llamar a la función loadDay para cargar los lugares del siguiente día
+  loadDay(`Día ${counterDay}`);
+
 });
+
+
+function loadDay(dayKey) {
+  // Actualizamos el contador de días
+  counterDay = parseInt(dayKey.split(" ")[1]);
+  console.log(counterDay);
+  day.innerHTML = `Día ${counterDay}`;
+
+  // Obtener los lugares guardados para ese día desde localStorage
+  const savedPlaces = JSON.parse(localStorage.getItem(dayKey));
+  console.log(savedPlaces);
+  if (savedPlaces) {
+    // Limpiar la lista de lugares en el HTML
+    placesList.innerHTML = '';
+
+    // Sincronizar listPlaces con los lugares guardados
+    listPlaces = savedPlaces.map((place, index) => {
+      // Creamos un nuevo objeto Place con la estructura adecuada para listPlaces
+      return new Place(
+        place.name,
+        place.photo,
+        place.price,
+        place.rating,
+        place.address,
+        (index + 1).toString(),
+        place.category
+      );
+    });
+
+    // Reagregar los lugares a la lista
+    listPlaces.forEach((place, index) => {
+      const li = document.createElement("li");
+      li.classList.add("list-item");
+      const div = document.createElement("div");
+
+      div.innerHTML = `${index + 1}. ${place.name} ${place.price} Euros`;
+      const delBtn = document.createElement("button");
+      delBtn.className = "delete-button";
+      delBtn.textContent = "Eliminar";
+      delBtn.addEventListener("click", () => {
+        listPlaces.splice(index, 1);
+        li.remove();
+        counter--;
+        renumberItems();
+        setSaved(false);
+      });
+
+      li.append(div, delBtn);
+      placesList.appendChild(li);
+    });
+    console.log(listPlaces);
+  }
+}
 
 
 
