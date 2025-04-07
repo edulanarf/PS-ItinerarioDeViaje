@@ -315,16 +315,17 @@ document.getElementById("save-day-button").addEventListener("click", (_) => {
   const key = `Día ${counterDay}`;
 
   const existingItineraryIndex = plan.itineraries.findIndex(itinerary => itinerary.name === key);
-  // Si el itinerario ya existe, lo actualizamos, de lo contrario lo agregamos
+  // Si el itinerario ya existe, lo actualizamos, de lo contrario lo agregamos || en caso de cambiar entre dias
   if (existingItineraryIndex !== -1) {
-    plan.itineraries[existingItineraryIndex].places = [...listPlaces];  // Actualizamos los lugares del día
+    plan.itineraries[existingItineraryIndex].places = [...listPlaces];
+    console.log(plan)
   } else {
-    let it = new Itinerary(key, [...listPlaces]);  // Si no existe, creamos un nuevo itinerario
+    let it = new Itinerary(key, [...listPlaces]);
     plan.itineraries.push(it);
+    console.log(plan)
   }
 
-  //Guardamos el el lc la lista del dia
-  console.log(plan.itineraries)
+  //Guardamos el el lc st la lista del dia
   localStorage.setItem(key, JSON.stringify(listPlaces));
   listPlaces.length = 0
   day.innerHTML = `Día ${counterDay}`;
@@ -344,8 +345,6 @@ document.getElementById("save-day-button").addEventListener("click", (_) => {
     });
     const dayButtonsContainer = document.getElementById("day-buttons-container");
     dayButtonsContainer.appendChild(dayButton);
-  } else {
-    loadDay(key);
   }
   // **Incrementamos el contador de días después de guardar y mostrar**
   counterDay++;
@@ -377,10 +376,10 @@ function loadDay(dayKey) {
       // Creamos un nuevo objeto Place con la estructura adecuada para listPlaces
       return new Place(
         place.name,
-        place.photos,
+        place.photo,
         place.price,
         place.rating,
-        place.vicinity,
+        place.address,
         (index + 1).toString(),
         place.category
       );
@@ -392,19 +391,16 @@ function loadDay(dayKey) {
       li.classList.add("list-item");
       const div = document.createElement("div");
 
-      // Mostrar el nombre del lugar y su precio
       div.innerHTML = `${index + 1}. ${place.name} ${place.price} Euros`;
-
       const delBtn = document.createElement("button");
       delBtn.className = "delete-button";
       delBtn.textContent = "Eliminar";
       delBtn.addEventListener("click", () => {
-        // Eliminar el lugar de listPlaces
-        listPlaces.splice(index, 1);  // Eliminamos el lugar de listPlaces
-        li.remove();  // Eliminar el lugar del DOM
-        counter--;  // Decrementar el contador
-        renumberItems();  // Reenumerar los elementos
-        setSaved(false);  // Marcar como no guardado
+        listPlaces.splice(index, 1);
+        li.remove();
+        counter--;
+        renumberItems();
+        setSaved(false);
       });
 
       li.append(div, delBtn);
