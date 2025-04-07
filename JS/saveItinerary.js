@@ -21,6 +21,7 @@ import { plan } from './search-places.js'
         } else {
           titleError.style.display = "none";
         }
+        console.log(plan)
 
         plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
         
