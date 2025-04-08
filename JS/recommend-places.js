@@ -91,10 +91,33 @@ window.addEventListener("load", () => {
           let photoUrl = place.photos
             ? place.photos[0].getUrl({ maxWidth: 200 })
             : "https://via.placeholder.com/200";
+          let scoreHtml = "";
+          let intScore = parseInt(place.rating);
+          for (let i = 0; i < intScore; i++) {
+            scoreHtml += '<span class="star on"></span>';
+          }
+          if (place.rating - intScore >= 0.5)
+            scoreHtml += '<span class="star half"></span>';
+          for (let i = Math.round(place.rating); i < 5; i++) {
+            scoreHtml += '<span class="star"></span>';
+          }
+          scoreHtml += ` (${place.rating})`;
 
           let content = `
-              <img src="${photoUrl}" alt="${place.name}" class="place-image" style="width: 200px; height: auto; border-radius: 10px;">
-              <h2><b>${place.name}</b></h2>`;
+              <img src="${photoUrl}" alt="${place.name}" class="place-image">
+              <div class="infobox-place-container">
+                <h2><b>${place.name}</b></h2>
+                <div><b>Type:</b> ${place.types[0].substring(0,1).toUpperCase()+place.types[0].substring(1)}</div>
+                <div><b>Address:</b> ${place.adr_address}</div>
+                <div><b>Phone:</b> ${place.formatted_phone_number}</div>
+                <div><b>Opening Hours:</b>
+                  <ul>
+                    <li>${place.opening_hours.weekday_text.map(text => text.substring(0,1).toUpperCase()+text.substring(1)).join('</li><li>')}</li>
+                  </ul>
+                </div>
+                <div>${scoreHtml}</div>
+              </div>`;
+              console.log(place);
           infowindow.setContent(content);
         } else {
           infowindow.setContent(place.name);
