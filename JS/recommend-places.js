@@ -188,7 +188,7 @@ let preferences, placesRecommendationStats;
 
 function loadPreferences(user) {
   return new Promise((resolve, _) => {
-    let preferencesRef = doc(db, "preferences", user.uid);
+    let preferencesRef = doc(db, `users/${user.uid}/recommend-places/preferences`);
     getDoc(preferencesRef).then((docSnap) => {
       if (docSnap.exists()) {
         preferences = docSnap.data();
@@ -276,11 +276,7 @@ function loadPreferences(user) {
 
 function loadUserPlacesStats(user, places) {
   return new Promise((resolve, _) => {
-    let placesRecommendationStatsRef = doc(
-      db,
-      "placesRecommendationStats",
-      user.uid,
-    );
+    let placesRecommendationStatsRef = doc(db, `users/${user.uid}/recommend-places/stats`);
     getDoc(placesRecommendationStatsRef).then((docSnap) => {
       if (docSnap.exists()) {
         placesRecommendationStats = docSnap.data();
@@ -313,11 +309,7 @@ function loadUserPlacesStats(user, places) {
 
 function updateUserPlacesStats(user) {
   return new Promise((_, __) => {
-    let placesRecommendationStatsRef = doc(
-      db,
-      "placesRecommendationStats",
-      user.uid,
-    );
+    let placesRecommendationStatsRef = doc(db, `users/${user.uid}/recommend-places/stats`);
     setDoc(placesRecommendationStatsRef, placesRecommendationStats);
   });
 }
