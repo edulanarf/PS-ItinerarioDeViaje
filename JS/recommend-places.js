@@ -79,10 +79,6 @@ window.addEventListener("load", () => {
         );
         map.panTo(center);
 
-        // Log the result.
-        console.log(place.name);
-        console.log(place.formatted_address);
-
         if (marker !== undefined) marker.setMap(null);
 
         // Add a marker for the place.
@@ -118,6 +114,7 @@ window.addEventListener("load", () => {
         timeout = undefined;
         geocoder.geocode({ address: this.value }, (results, status) => {
           if (status === "OK") {
+            results = results.filter(result => result.types.includes('locality'));
             setFoundLocations(
               results.map((result) => ({
                 name: result.formatted_address,
