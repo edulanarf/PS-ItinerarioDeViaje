@@ -189,10 +189,8 @@ body {
     object-fit: cover;
 }
 .infobox-place-container {
-    margin: 0.7rem 0 1rem;
     padding: 0.5rem 0.5rem 1rem;
     background-color: var(--oro-suave);
-    max-width: calc(100% - 0.8rem);
     border-bottom-left-radius: 2rem;
     border-bottom-right-radius: 2rem;
     min-height: 8rem;
@@ -203,6 +201,24 @@ body {
 .infobox-place-container ul {
     list-style-type: disc;
     list-style: inside;
+}
+.infobox-place-container .star:before {
+    -webkit-text-stroke: 1px black;
+}
+.infobox-score {
+    text-align: center;
+}
+.infobox-controls {
+    text-align: center;
+    padding-top: 0.5rem;
+}
+.infobox-controls button {
+    border: 0;
+    background-color: var(--rojo-oxido);
+    color: white;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
 }
 .gm-style-iw-chr {
     display: none;

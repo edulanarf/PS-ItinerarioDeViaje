@@ -3,6 +3,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  deleteDoc,
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { request } from "/JS/places.js";
 import { priceLevels } from "/JS/price-levels.js";
@@ -10,7 +11,8 @@ import { auth, db } from "./firebase-config.js";
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    await loadPreferences(user);
+    currentUser = user;
+    await Promise.all([loadPreferences(user),loadFavoritesPlaces(user)]);
     let places = await loadPreferencesData(preferences);
     await loadUserPlacesStats(user, places);
     updateSectionsInfo(user, preferences, places);
@@ -21,7 +23,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-let map, service, marker, infowindow, geocoder;
+let map, service, marker, infowindow, geocoder, currentUser;
 
 window.addEventListener("load", () => {
   document.querySelectorAll(".nav-tabs > a").forEach((el) => {
@@ -103,6 +105,8 @@ window.addEventListener("load", () => {
           }
           scoreHtml += ` (${place.rating})`;
 
+          let favorite = favoritesPlaces[place.place_id]!==undefined;
+
           let content = `
               <img src="${photoUrl}" alt="${place.name}" class="place-image">
               <div class="infobox-place-container">
@@ -115,9 +119,12 @@ window.addEventListener("load", () => {
                     <li>${place.opening_hours.weekday_text.map(text => text.substring(0,1).toUpperCase()+text.substring(1)).join('</li><li>')}</li>
                   </ul>
                 </div>
-                <div>${scoreHtml}</div>
+                <div class="infobox-score">${scoreHtml}</div>
+                <div class="infobox-controls">
+                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()})" type="button">Añadir Favorito</button>
+                  <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
+                </div>
               </div>`;
-              console.log(place);
           infowindow.setContent(content);
         } else {
           infowindow.setContent(place.name);
@@ -204,7 +211,38 @@ function setFoundLocations(results) {
   document.querySelector("#preferences .found-locations").innerHTML = html;
 }
 
-let preferences, placesRecommendationStats;
+let preferences, placesRecommendationStats, favoritesPlaces;
+
+function loadFavoritesPlaces(user) {
+  return new Promise((resolve, _) => {
+    let favoritesPlacesRef = doc(db, `users/${user.uid}/favorites/places`);
+    getDoc(favoritesPlacesRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        favoritesPlaces = docSnap.data();
+      } else {
+        favoritesPlaces = {};
+      }
+      resolve(favoritesPlaces);
+    });
+  });
+}
+
+window.addToFavorites = (place_id, name, lat, lng) => {
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorites/places`,place_id);
+  let place = {place_id,name,lat,lng};
+  setDoc(favoritePlaceRef,place).then(()=>{
+    favoritesPlaces[place_id] = place;
+    document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+  });
+}
+
+window.removeFromFavorites = (place_id) => {
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorites/places`,place_id);
+  deleteDoc(favoritePlaceRef).then(()=>{
+    delete favoritesPlaces[place_id];
+    document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+  });
+}
 
 function loadPreferences(user) {
   return new Promise((resolve, _) => {
@@ -349,6 +387,8 @@ async function loadPreferencesData(preferences) {
         new Promise((resolve, reject) => {
           let fullResults = [];
           service.nearbySearch(requests, (results, status, pagination) => {
+            console.log(status);
+            if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) return resolve([]);
             if (status !== google.maps.places.PlacesServiceStatus.OK)
               return reject(status);
             results = results
