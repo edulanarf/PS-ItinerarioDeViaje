@@ -1,7 +1,9 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import {
   doc,
+  collection,
   getDoc,
+  getDocs,
   setDoc,
   deleteDoc,
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
@@ -215,20 +217,19 @@ let preferences, placesRecommendationStats, favoritesPlaces;
 
 function loadFavoritesPlaces(user) {
   return new Promise((resolve, _) => {
-    let favoritesPlacesRef = doc(db, `users/${user.uid}/favorites/places`);
-    getDoc(favoritesPlacesRef).then((docSnap) => {
-      if (docSnap.exists()) {
-        favoritesPlaces = docSnap.data();
-      } else {
-        favoritesPlaces = {};
-      }
+    let favoritesPlacesRef = collection(db, `users/${user.uid}/favorite-places`);
+    favoritesPlacesRef
+    getDocs(favoritesPlacesRef).then((querySnap) => {
+      console.log(querySnap.docs);
+      favoritesPlaces = {};
+      querySnap.docs.forEach(docSnap => favoritesPlaces[docSnap.id]=docSnap.data());
       resolve(favoritesPlaces);
     });
   });
 }
 
 window.addToFavorites = (place_id, name, lat, lng) => {
-  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorites/places`,place_id);
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
   let place = {place_id,name,lat,lng};
   setDoc(favoritePlaceRef,place).then(()=>{
     favoritesPlaces[place_id] = place;
@@ -237,7 +238,7 @@ window.addToFavorites = (place_id, name, lat, lng) => {
 }
 
 window.removeFromFavorites = (place_id) => {
-  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorites/places`,place_id);
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
   deleteDoc(favoritePlaceRef).then(()=>{
     delete favoritesPlaces[place_id];
     document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
