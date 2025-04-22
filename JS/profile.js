@@ -21,9 +21,6 @@ onAuthStateChanged(auth, async (user) => {
     const img = document.createElement("img");
     img.src = docSnap.data().photoURL;
     img.alt = "Perfil";
-    img.style.width = "60px";
-    img.style.height = "60px";
-    img.style.borderRadius = "50%";
     img.style.objectFit = "cover";
 
     //Nombre de usuario
@@ -31,7 +28,6 @@ onAuthStateChanged(auth, async (user) => {
     username.textContent = docSnap.data().username || "Usuario";
     username.style.fontWeight = "bold";
     username.style.textAlign = "center";
-    username.style.fontSize="40px";
     username.style.fontFamily = "Montserrat, sans-serif";
 
     // Menú desplegable
@@ -61,8 +57,8 @@ onAuthStateChanged(auth, async (user) => {
     profileWrapper.style.zIndex = "1000";
     profileWrapper.appendChild(img);
     profileWrapper.appendChild(dropdownMenu);
-    profileContainer.appendChild(username);
     profileContainer.appendChild(profileWrapper);
+    profileContainer.appendChild(username);
   } else {
     console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html";
