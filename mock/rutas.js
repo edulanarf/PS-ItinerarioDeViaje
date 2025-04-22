@@ -31,7 +31,7 @@ function initMap() {
     destination: final,
     waypoints: waypoints,
     travelMode: google.maps.TravelMode.DRIVING, //DRIVING(solo en coche/moto), WALKING, BICYCLING, TRANSIT(transporte público)
-    //optimizeWaypoints: true //para ruta optima.
+    optimizeWaypoints: true //para ruta optima.
   };
 
   //Se pueden editar los puntos A, B, C ... Etc
