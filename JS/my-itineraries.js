@@ -1,8 +1,10 @@
 import { auth, getPlans } from './firebase-config.js';
 import { onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { ItineraryPlan } from './types.js';
+import { galleryView } from './my-itineraries-gallery.js';
 
-const main = document.querySelector("main")
+
+export const list = document.getElementById("itinerary-list-container")
 const template = document.getElementById("itinerary-container");
 const dayButton = document.getElementById("day-button");
 let session = null
@@ -10,16 +12,22 @@ let session = null
 /**
  * @type {Record<string,ItineraryPlan>}
  */
-const itineraries = {}
-let currentItinerary = ""
+export const itineraries = {}
+export let currentItinerary = ""
 let currentDay = ""
-
-console.log("start");
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     session = user
-    init(user).then(() => console.log("changed, and finished"))
+    init(user).then(() => {
+      listView().then(() => {
+        console.log("list ready");
+
+      });
+      galleryView().then(() => {
+        console.log("gallery ready");});
+    }).then(() => console.log("changed, and finished"))
+
   }
   else {
     console.log("not authenticated!!!!");
@@ -36,9 +44,8 @@ function switchDay(container, day) {
 }
 
 function addDaysListeners() {
-
   Object.values(itineraries).forEach(itinerary => {
-    const container = document.getElementById(itinerary.title)
+    const container = document.querySelector(`[data-name="${itinerary.title}"][data-type=list]`)
     const days = container.querySelector('.days').querySelectorAll(".day-button")
     days.forEach(day => {
       day.addEventListener("click", (_) => switchDay(container, day));
@@ -47,7 +54,7 @@ function addDaysListeners() {
 }
 
 function nextDay() {
-  let it = document.getElementById(currentItinerary)
+  let it = document.querySelector(`[data-name="${currentItinerary}"][data-type=list]`)
   switchDay(it,
     it.querySelector(`button[data-day="${currentDay}"]`).nextElementSibling ?
       it.querySelector(`button[data-day="${currentDay}"]`).nextElementSibling :
@@ -56,7 +63,7 @@ function nextDay() {
 }
 
 function prevDay() {
-  let it = document.getElementById(currentItinerary)
+  let it = document.querySelector(`[data-name="${currentItinerary}"][data-type=list]`)
   switchDay(it,
     it.querySelector(`button[data-day="${currentDay}"]`).previousElementSibling ?
       it.querySelector(`button[data-day="${currentDay}"]`).previousElementSibling :
@@ -64,89 +71,92 @@ function prevDay() {
   )
 }
 
+async function listView() {
+  currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
+  renderAllItineraries(itineraries)
+    .then(_ => {
+      showItinerary(currentItinerary, currentItinerary).then(_ => console.log('showed'));
+    })
+    .then((_) => {
+      document.getElementById('next-itinerary').addEventListener('click', () => {
+        nextItinerary(currentItinerary).then(data => {
+          currentItinerary = data;
+        });
+      });
+      document.getElementById('previous-itinerary').addEventListener('click', () => {
+        previousItinerary(currentItinerary).then(data => {
+          currentItinerary = data;
+        });
+      });
+      addDaysListeners();
+      document.addEventListener('keydown', (event) => {
+        switch (event.key) {
+          case 'ArrowDown':
+            nextDay();
+            break;
+          case 'ArrowUp':
+            prevDay();
+            break;
+          case 'ArrowLeft':
+            previousItinerary(currentItinerary).then(data => {
+              currentItinerary = data;
+            });
+            break;
+          case 'ArrowRight':
+            nextItinerary(currentItinerary).then(data => {
+              currentItinerary = data;
+            });
+            break;
+        }
+      });
+    });
+}
+
 async function init(user) {
   await getPlans(user.uid).then(data => {
-    console.log("someone")
-    console.log(user.uid)
-    console.log("data")
-    console.log(data)
-    console.log(data.length);
     data.forEach((it) => {
       itineraries[it.title] = it
     });
-  }).catch(err => console.error(err)).then(() => {
-    console.log(itineraries);
-    currentItinerary = Object.keys(itineraries).at(0);
-    currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
-    console.log("current: " + currentItinerary);
-    renderAllItineraries(itineraries)
-      .then(_ => {
-        console.log("all rendered");
-        showItinerary(currentItinerary, currentItinerary).then(_=>console.log("showed"));
-      })
-      .then((_) => {
-        document.getElementById("next-itinerary").addEventListener('click', () => {
-          console.log("showing next");
-          nextItinerary(currentItinerary).then(data => {currentItinerary = data});
-        })
-        document.getElementById("previous-itinerary").addEventListener('click', () => {
-          console.log("showing previous");
-          previousItinerary(currentItinerary).then(data => {currentItinerary = data});
-        })
-        addDaysListeners()
-        document.addEventListener("keydown", (event) => {
-          switch (event.key) {
-            case "ArrowDown":
-              nextDay()
-              break;
-            case "ArrowUp":
-              prevDay()
-              break;
-            case "ArrowLeft":
-              previousItinerary(currentItinerary).then(data => {currentItinerary = data});
-              break;
-            case "ArrowRight":
-              nextItinerary(currentItinerary).then(data => {currentItinerary = data});
-              break;
-          }
-        })
-      });
   })
+    .catch(err => console.error(err))
+    .then(() => currentItinerary = Object.keys(itineraries).at(0))
 }
 
 
 /**
- *
  * @param {string} before
  * @param {string} after
  * @returns {Promise<void>}
  */
 async function showItinerary(before, after){
-  let from = document.getElementById(before)
+  console.log(after);
+  let from = document.querySelector(`[data-name="${before}"][data-type=list]`)
   from.style.display = "none";
   from.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
   from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up","down")
-  let to = document.getElementById(after)
+  let to = document.querySelector(`[data-name="${after}"][data-type=list]`)
   // visible day 1
   currentDay = itineraries[before].itineraries.at(0).name
+  console.log("to",to);
+  console.log("day",currentDay);
+  console.log("to.ul",to.querySelector(`ul[data-day="${currentDay}"]`));
   to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
   to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
   // then show
   to.style.display = "grid";
   //my-itineraries class is a grid display
-  console.log("switch:" + before + " - " + after + " " + currentDay);
 }
 
 async function nextItinerary(current) {
-  let next = document.getElementById(current).nextElementSibling || main.firstElementChild;
-  next = next.id
+  let next = document.querySelector(`[data-name="${current}"][data-type=list]`).nextElementSibling || list.firstElementChild;
+  next = next.dataset.name
   await showItinerary(current, next)
   return next
 }
 
 async function previousItinerary(current) {
-  let previous = document.getElementById(current).previousElementSibling || main.lastElementChild;
-  previous = previous.id
+  let previous = document.querySelector(`[data-name="${current}"][data-type=list]`).previousElementSibling || list.lastElementChild;
+  previous = previous.dataset.name
   await showItinerary(current, previous)
   return previous
 }
@@ -162,7 +172,6 @@ async function renderAllItineraries(itineraries) {
       if (itinerary instanceof ItineraryPlan){
         const container = await renderItinerary(itinerary);
         await appendItinerary(container);
-        console.log("added one day");
       }
     })
   );
@@ -170,7 +179,6 @@ async function renderAllItineraries(itineraries) {
 
 
 async function renderDay(itinerary, daysContainer, listContainer) {
-  console.log("day render");
   let button = await document.importNode(dayButton.content, true).querySelector('button');
   button.innerText = itinerary.name;
   button.dataset.day = itinerary.name
@@ -182,7 +190,6 @@ async function renderDay(itinerary, daysContainer, listContainer) {
       let li = await document.createElement('li');
       li.innerText = place.toString();
       await ul.appendChild(li);
-    console.log(ul);
     })
   )
   ul.style.display = 'none';
@@ -201,34 +208,23 @@ async function renderItinerary(plan) {
   intro.alt = plan.title
   container.querySelector(".title").innerText = plan.title
   const listContainer = container.querySelector(".list-container")
-  console.log(listContainer);
   const daysContainer = container.querySelector(".days");
 
-  console.log("about to render day");
-  console.log(plan.itineraries);
   for (const itinerary of plan.itineraries) {
     await renderDay(itinerary, daysContainer, listContainer);
-    console.log("finished?");
-    console.log(listContainer)
-    console.log(itinerary);
   }
 
-  console.log(listContainer);
-  container.id = plan.title
+  container.dataset.name = plan.title
   container.style.display = "none"
-  console.log("container", plan.title, container);
-  console.log(container);
   return container
 }
 
 async function appendItinerary(container) {
-  let exist = document.getElementById(container.id)
+  let exist = document.querySelector(`[data-name="${container.dataset.name}"][data-type=list]`)
   if (exist) {
-    main.replaceChild(container, exist)
-    console.log("replacing", exist.id);
+    list.replaceChild(container, exist)
   } else {
-    main.appendChild(container)
-    console.log("adding", container.id);
+    list.appendChild(container)
   }
 }
 
@@ -242,9 +238,9 @@ async function appendItinerary(container) {
 async function renderModified(itinerary, previousName){
   let old;
   if (previousName) {
-    old = document.getElementById(previousName)
+    old = document.querySelector(`[data-name="${previousName}"][data-type=list]`)
   } else {
-    old = document.getElementById(itinerary.name)
+    old = document.querySelector(`[data-name="${itinerary.title}"][data-type=list]`)
   }
-  main.replaceChild(await renderItinerary(itinerary),old)
+  list.replaceChild(await renderItinerary(itinerary),old)
 }

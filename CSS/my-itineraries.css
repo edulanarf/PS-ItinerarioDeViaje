@@ -37,29 +37,13 @@ button {
     gap: 6rem;
     padding: 1rem 0;
 }
-
-#user {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 2em;
-    flex: 1;
+#switch-view {
+    background-color: var(--marron-claro);
+    border-color: var(--marron-oscuro);
+    box-shadow: 0 0 0.5rem var(--marron-oscuro);
 }
-
-#user-pfp {
-    border-radius: 100%;
-    height: 4em;
-    width: 4em;
-}
-
-#user-name {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    background-color: var(--beige-calido);
-    border-radius: 1rem;
-    padding: 0.5rem 1rem;
-    width: fit-content;
+#switch-view:hover {
+    background-color: var(--marron-medio);
 }
 
 #actions {
@@ -160,6 +144,8 @@ main {
     background-color: var(--marron-medio);
 }
 
+
+/* list view*/
 .my-itineraries {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -188,7 +174,7 @@ main {
 
 .intro {
     width: 100%;
-    max-width: 380px !important; /* La imagen nunca será más ancha que su contenedor */
+    max-width: 380px; /* La imagen nunca será más ancha que su contenedor */
     height: auto; /* Mantiene la proporción de la imagen */
     border-radius: 2em;
 }
@@ -260,3 +246,35 @@ main {
     overflow-y: auto;
 }
 
+/* gallery view */
+#itinerary-gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 16px; /* opcional, espacio entre tarjetas */
+    padding: 16px; /* opcional */
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+#itinerary-gallery-container .image-preview {
+    aspect-ratio: 1 / 2;
+    height: 100%;
+    padding: 0;
+    object-fit: contain;
+}
+#itinerary-gallery-container .preview {
+    background-color: inherit;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#itinerary-gallery-container .intro {
+    max-width: 300px !important; /* La imagen nunca será más ancha que su contenedor */
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
