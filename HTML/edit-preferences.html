@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editar Perfil</title>
+  <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
+  <link rel="stylesheet" href="../CSS/colors.css" />
+  <link rel="stylesheet" href="../CSS/edit-preferences.css" />
+  <link rel="stylesheet" href="../CSS/navigation.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <script type="module" src="/JS/firebase-config.js"></script>
+  <script type="module" src="/JS/types.js"></script>
+</head>
+<body>
+
+<header id="navigation">
+  <nav id="session-navbar">
+    <div id="us">
+      <img id="logo" src="../mockups/logo.png" alt="logo" />
+      <div id="brand-name">Itineraries</div>
+    </div>
+    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+  </nav>
+  <section id="links-section">
+    <div id="links">
+      <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+      <a class="nav-button" onclick="location.href='user-logout.html'">Cerrar sesión</a>
+    </div>
+  </section>
+</header>
+
+<main>
+  <div class="edit-profile-container">
+    <h2>Editar Preferencias</h2>
+    <form id="edit-profile-form">
+
+      <div class="form-group">
+        <label>Categorías</label>
+        <div class="categories">
+          <label>
+            <input type="checkbox" name="categories[]" value="Hotel">
+            <span>Hotel</span>
+          </label>
+          <label>
+           <input type="checkbox" name="categories[]" value="Restaurante">
+           <span>Restaurante</span>
+          </label>
+          <label>
+           <input type="checkbox" name="categories[]" value="Cafetería">
+           <span>Cafetería</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Museo">
+            <span>Museo</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Parque">
+            <span>Parque</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Centro comercial">
+            <span>Centro comercial</span>
+          </label>
+          <label>
+            <input type="checkbox" name="categories[]" value="Aeropuerto">
+            <span>Aeropuerto</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Duración</label>
+        <div>
+          <label for="from-duration">Desde</label>
+          <input type="number" name="from-duration">
+        </div>
+        <div>
+          <label for="to-duration">Hasta</label>
+          <input type="number" name="to-duration">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Localizaciones</label>
+        <input type="text" name="search">
+        <div class="selected-locations">
+
+        </div>
+      </div>
+
+      <button type="submit" id="save-button">Guardar cambios</button>
+    </form>
+  </div>
+</main>
+
+<script type="module" src="/JS/edit-profile.js"></script>
+
+</body>
+</html>

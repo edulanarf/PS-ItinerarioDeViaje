@@ -1,0 +1,140 @@
+@import "colors.css";
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+
+
+#us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logo {
+    height: 60px;
+}
+
+
+#links {
+    display: flex;
+    gap: 1rem;
+}
+
+
+
+/* Usuario info */
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #000;
+}
+
+/* MAIN */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: calc(100vh - 100px);
+}
+
+/* CONTENEDOR DEL FORMULARIO */
+.edit-profile-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* TÍTULO */
+.edit-profile-container h2 {
+    color:#d9534f;
+    margin-bottom: 1.5rem;
+}
+
+/* FORMULARIO */
+.form-group {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    background-color: #d9534f;
+    outline: none;
+}
+
+/* FOTO DE PERFIL ACTUAL */
+#current-photo {
+    margin: 10px auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--crema-ligera);
+    display: block;
+}
+
+/* BOTÓN GUARDAR */
+#save-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#save-button:hover {
+    background-color: #c9302c;
+}
