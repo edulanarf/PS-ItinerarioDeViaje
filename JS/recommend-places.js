@@ -220,7 +220,6 @@ function loadFavoritesPlaces(user) {
     let favoritesPlacesRef = collection(db, `users/${user.uid}/favorite-places`);
     favoritesPlacesRef
     getDocs(favoritesPlacesRef).then((querySnap) => {
-      console.log(querySnap.docs);
       favoritesPlaces = {};
       querySnap.docs.forEach(docSnap => favoritesPlaces[docSnap.id]=docSnap.data());
       resolve(favoritesPlaces);
@@ -388,7 +387,6 @@ async function loadPreferencesData(preferences) {
         new Promise((resolve, reject) => {
           let fullResults = [];
           service.nearbySearch(requests, (results, status, pagination) => {
-            console.log(status);
             if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) return resolve([]);
             if (status !== google.maps.places.PlacesServiceStatus.OK)
               return reject(status);
