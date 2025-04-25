@@ -47,28 +47,38 @@
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer();
 
-      // Crear un contenedor único para cada mapa dentro del popup
+      // Crear un contenedor único para el día que contenga tanto el mapa como el texto
+      const dayContainer = document.createElement("div");
+      dayContainer.classList.add('day-container'); // Clase para el contenedor del día
+
+      // Crear un contenedor para el mapa
       const mapContainer = document.createElement("div");
-      mapContainer.id = `map-day-${dayIndex}`; // Asignar un ID único para cada día
-      mapContainer.classList.add('map-container'); // Añadir la clase map-container para poder seleccionarlo y eliminarlo luego
-      mapContainer.style.height = "400px"; // Ajustar el tamaño del mapa
-      mapContainer.style.marginBottom = "20px"; // Añadir espacio entre mapas
-      mapContainer.style.display = "block"; // De forma predeterminada, cada mapa sigue siendo bloque
+      mapContainer.id = `map-day-${dayIndex}`;
+      mapContainer.classList.add('map-container');
+      mapContainer.style.height = "400px";
+      mapContainer.style.marginBottom = "10px";
 
+      // Crear el contenedor del texto que va debajo del mapa
+      const dayLabel = document.createElement("div");
+      dayLabel.textContent = `DÍA ${dayIndex + 1}`;
+      dayLabel.style.textAlign = "center";
+      dayLabel.style.marginTop = "10px";
+
+      dayContainer.appendChild(mapContainer);
+      dayContainer.appendChild(dayLabel);
+
+      // Obtener el contenedor del popup
       const popup = document.getElementById('popup');
-      const popupContent = popup.querySelector('.popup-content'); // Asumimos que tienes un contenedor de mapas dentro del popup
+      const popupContent = popup.querySelector('.popup-content');
 
-      // Asegúrate de agregar el mapa dentro del popup
-      popupContent.appendChild(mapContainer);
       popup.appendChild(closeButton);
+      popupContent.appendChild(dayContainer);
 
-      // Si es la primera vez que cargas los mapas, configura el estilo de la cuadrícula
       if (!popupContent.style.gridTemplateColumns) {
-        popupContent.style.display = "grid"; // Establecer display como grid
-        popupContent.style.gridTemplateColumns = "repeat(auto-fill, minmax(300px, 1fr))"; // Establecer las columnas de la cuadrícula
-        popupContent.style.gap = "20px"; // Espacio entre las celdas de la cuadrícula
+        popupContent.style.display = "grid";
+        popupContent.style.gridTemplateColumns = "repeat(auto-fill, minmax(300px, 1fr))";
+        popupContent.style.gap = "20px";
       }
-
       const map = new google.maps.Map(mapContainer, {
         zoom: 14
       });
@@ -182,12 +192,11 @@
 
 
     function clearMaps() {
-      // Obtener todos los contenedores de mapas
-      const mapContainer = document.querySelectorAll('.popup-content .map-container');
+      const dayContainers = document.querySelectorAll('.popup-content .day-container');
 
-      // Eliminar cada contenedor de mapa
-      mapContainer.forEach(container => {
-        container.remove();  // Elimina el contenedor del DOM
+      // Eliminar cada contenedor de día (que incluye tanto el mapa como el texto)
+      dayContainers.forEach(container => {
+        container.remove();  // Elimina el contenedor completo (mapa + texto)
       });
     }
 
