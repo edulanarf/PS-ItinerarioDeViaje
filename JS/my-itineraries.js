@@ -2,6 +2,7 @@ import { auth, getPlans } from './firebase-config.js';
 import { onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { ItineraryPlan } from './types.js';
 import { galleryView } from './my-itineraries-gallery.js';
+import { verRutaBtn} from './rutas.js';
 
 
 export const list = document.getElementById("itinerary-list-container")
@@ -15,6 +16,8 @@ let session = null
 export const itineraries = {}
 export let currentItinerary = ""
 let currentDay = ""
+export let currentRoutes;
+
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -50,6 +53,8 @@ function addDaysListeners() {
     days.forEach(day => {
       day.addEventListener("click", (_) => switchDay(container, day));
     })
+
+
   })
 }
 
@@ -73,6 +78,7 @@ function prevDay() {
 
 async function listView() {
   currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
+  currentRoutes = Object.values(itineraries).at(0);
   renderAllItineraries(itineraries)
     .then(_ => {
       showItinerary(currentItinerary, currentItinerary).then(_ => console.log('showed'));
@@ -137,11 +143,16 @@ async function showItinerary(before, after){
   let to = document.querySelector(`[data-name="${after}"][data-type=list]`)
   // visible day 1
   currentDay = itineraries[before].itineraries.at(0).name
+
+
+  currentRoutes = itineraries[after].itineraries;
+
   console.log("to",to);
   console.log("day",currentDay);
   console.log("to.ul",to.querySelector(`ul[data-day="${currentDay}"]`));
   to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
   to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
+  to.appendChild(verRutaBtn);
   // then show
   to.style.display = "grid";
   //my-itineraries class is a grid display
@@ -244,3 +255,8 @@ async function renderModified(itinerary, previousName){
   }
   list.replaceChild(await renderItinerary(itinerary),old)
 }
+
+
+
+
+
