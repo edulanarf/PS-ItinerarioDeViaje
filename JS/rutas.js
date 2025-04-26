@@ -44,6 +44,8 @@
     }
 
     function initMap(dayIndex, selectedTravelMode, dayRoute) {
+
+
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer();
 
@@ -60,6 +62,8 @@
       dayLabel.textContent = `DÍA ${dayIndex + 1}`;
       dayLabel.style.textAlign = "center";
       dayLabel.style.marginTop = "10px";
+      dayLabel.style.color = "black";
+      dayLabel.style.fontSize = "16px";
 
       dayContainer.appendChild(mapContainer);
       dayContainer.appendChild(dayLabel);
@@ -67,14 +71,9 @@
       const popup = document.getElementById('popup');
       const popupContent = popup.querySelector('.popup-content');
 
-      popup.appendChild(closeButton);
       popupContent.appendChild(dayContainer);
+      popup.appendChild(closeButton);
 
-      if (!popupContent.style.gridTemplateColumns) {
-        popupContent.style.display = "grid";
-        popupContent.style.gridTemplateColumns = "repeat(auto-fill, minmax(300px, 1fr))";
-        popupContent.style.gap = "20px";
-      }
       const map = new google.maps.Map(mapContainer, {
         zoom: 14
       });
@@ -89,9 +88,9 @@
 
       const request = {
         origin: dayRoute[0],
-        destination: dayRoute[dayRoute.length - 1], // Cambiar para que sea la última dirección como destino
+        destination: dayRoute[dayRoute.length - 1],
         waypoints: waypoints,
-        travelMode: selectedTravelMode, // Modo de transporte (DRIVING, WALKING, etc.)
+        travelMode: selectedTravelMode,
         optimizeWaypoints: true // Para ruta óptima
       };
 
@@ -101,6 +100,11 @@
           directionsRenderer.setDirections(result);
           console.log(result.routes[0].legs); // Tiempos, distancias, etc.
 
+          if (dayRoute.length <= 1) {
+            console.log("Solo hay un lugar, no se calcula la ruta.");
+            return; // Salir de la función si solo hay un lugar
+          }
+
           // Mostrar la distancia y tiempo de cada ruta por separado
           result.routes[0].legs.forEach((leg, index) => {
             const distancia = leg.distance.text;
@@ -109,15 +113,20 @@
             const letraInicio = letras[index];
             const letraFin = letras[index + 1];
 
-            console.log(`Ruta ${letraInicio} ➝ ${letraFin}`);
-            console.log(`  Desde: ${leg.start_address}`);
-            console.log(`  Hasta: ${leg.end_address}`);
-            console.log(`  Tiempo estimado: ${tiempo}`);
-            console.log(`  Distancia: ${distancia}`);
+
+            const infoContainer = document.createElement("div");
+            infoContainer.innerHTML = `
+            <strong>Ruta ${letraInicio} ➝ ${letraFin}</strong><br>
+            Tiempo estimado: ${tiempo}<br>
+            Distancia: ${distancia}
+            `;
+            infoContainer.style.color = "black";
+            dayContainer.appendChild(infoContainer);
           });
         } else {
           console.error("No se pudo calcular la ruta:", status);
         }
+
       });
     }
 
