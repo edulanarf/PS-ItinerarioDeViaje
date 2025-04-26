@@ -9,8 +9,23 @@
     border-radius: 10px;
     z-index: 1000;
     display: none; /* Asegúrate de que esté oculto por defecto */
-    width: 90%;
+    width: 80%;
+    height: 95vh;
+    overflow: hidden;
+    overflow-y: auto; /* SCROLL vertical solo en el contenido */
+
 }
+
+
+
+.popup-content {
+    flex: 1;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
 
 .popup.show {
     display: block; /* Se muestra cuando se le agrega la clase 'show' */

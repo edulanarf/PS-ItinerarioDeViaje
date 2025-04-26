@@ -47,18 +47,15 @@
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer();
 
-      // Crear un contenedor único para el día que contenga tanto el mapa como el texto
       const dayContainer = document.createElement("div");
-      dayContainer.classList.add('day-container'); // Clase para el contenedor del día
+      dayContainer.classList.add('day-container');
 
-      // Crear un contenedor para el mapa
       const mapContainer = document.createElement("div");
       mapContainer.id = `map-day-${dayIndex}`;
       mapContainer.classList.add('map-container');
       mapContainer.style.height = "400px";
       mapContainer.style.marginBottom = "10px";
 
-      // Crear el contenedor del texto que va debajo del mapa
       const dayLabel = document.createElement("div");
       dayLabel.textContent = `DÍA ${dayIndex + 1}`;
       dayLabel.style.textAlign = "center";
@@ -67,7 +64,6 @@
       dayContainer.appendChild(mapContainer);
       dayContainer.appendChild(dayLabel);
 
-      // Obtener el contenedor del popup
       const popup = document.getElementById('popup');
       const popupContent = popup.querySelector('.popup-content');
 
