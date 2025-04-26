@@ -1,8 +1,10 @@
-import { auth, getPlans } from './firebase-config.js';
+import { auth, db, getPlans, storage } from './firebase-config.js';
 import { onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { ItineraryPlan } from './types.js';
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn} from './rutas.js';
+import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
+import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 
 export const list = document.getElementById("itinerary-list-container")
@@ -217,6 +219,35 @@ async function renderItinerary(plan) {
   const intro = container.querySelector(".intro");
   intro.src = plan.photo
   intro.alt = plan.title
+  intro.style.cursor = "pointer";
+
+  const inputFile = document.createElement("input");
+  inputFile.type = "file";
+  inputFile.style.display = "none";
+
+  inputFile.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
+      const itineraryName = currentContainer.dataset.name;
+      const itinerary = itineraries[itineraryName];
+
+      const storageRef = ref(storage, `Users/${session.uid}/itineraries/${itinerary.title}/photo.jpg`);
+      await uploadBytes(storageRef, file);
+      const photoURL = await getDownloadURL(storageRef);
+
+      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
+      await updateDoc(itineraryDocRef, {
+        photo: photoURL
+      });
+      intro.src = photoURL;
+    }
+  });
+
+  intro.addEventListener("click", () => {
+    inputFile.click();
+  });
+
   container.querySelector(".title").innerText = plan.title
   const listContainer = container.querySelector(".list-container")
   const daysContainer = container.querySelector(".days");
