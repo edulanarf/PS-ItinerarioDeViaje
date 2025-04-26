@@ -312,6 +312,24 @@ document.getElementById("select-container").addEventListener("change", (e) => {
 });
 
 document.getElementById("save-day-button").addEventListener("click", (_) => {
+  if (listPlaces.length === 0) {
+    // Si está vacía, mostramos el mensaje de advertencia
+    const warning = document.getElementById("warning");
+    warning.innerText = "No puedes guardar un día vacío.";
+    warning.style.color = "red"; // Puedes cambiar el color si prefieres
+    warning.style.marginTop = "10px";
+    warning.style.display = "block"; // Aseguramos que el mensaje se muestre
+
+    // Opcional: borrar el mensaje después de 3 segundos
+    setTimeout(() => {
+      warning.innerText = "";
+      warning.style.display = "none"; // Lo ocultamos de nuevo
+    }, 5000);
+
+    // Salimos de la función para evitar que se guarde el día vacío
+    return;
+  }
+
   const key = `Día ${counterDay}`;
 
   const existingItineraryIndex = plan.itineraries.findIndex(itinerary => itinerary.name === key);

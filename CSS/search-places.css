@@ -239,6 +239,7 @@ h3 {
     border: 2px solid transparent;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
 }
 
 #itinerary-title:focus {
@@ -257,6 +258,7 @@ h3 {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
 #save-itinerary:hover {
@@ -331,4 +333,10 @@ h3 {
 #km-range {
     height: 8px;
     width: 100%;
+}
+
+#warning {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
 }
