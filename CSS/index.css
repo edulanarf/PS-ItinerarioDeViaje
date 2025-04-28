@@ -92,11 +92,51 @@ footer {
   border-radius: 0 0 16px 16px;
 }
 
+/* BOTÓN ROJO CON ZOOM */
+.cta-button-container {
+  text-align: center;
+  margin-top: 30px;
+}
 
+.cta-button {
+  background-color: #e63946; /* Rojo intenso */
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cta-button:hover {
+  transform: scale(1.1); /* Zoom al pasar el ratón */
+  background-color: #d62828; /* Un rojo aún más fuerte al hacer hover */
+}
+
+/* Botones de navegación */
+.nav-button {
+  background-color: transparent;
+  color: #008cff;
+  padding: 10px 20px;
+  border: 2px solid #008cff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: #008cff;
+  color: #fff;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .gallery-box, .team-member {
     flex: 1 1 100%;
   }
 }
-
-

@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
   <link rel="stylesheet" href="../CSS/index.css" />
   <link rel="stylesheet" href="../CSS/navigation.css" />
-  <link rel="stylesheet" href="../CSS/index.css"/>
 </head>
 <body>
 <header id="navigation">
@@ -26,7 +25,6 @@
     </div>
   </section>
 </header>
-
 
 <main>
   <section class="section">
@@ -64,7 +62,12 @@
       ⭐⭐⭐⭐☆ <strong>4.0</strong> de 5 estrellas basado en <strong>200 opiniones</strong>
     </p>
 
-    <div style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- 🔴 Botón añadido aquí -->
+    <div class="cta-button-container">
+      <button class="cta-button" onclick="location.href='user-register.html'">Crea tu cuenta</button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
       <div class="review">
         <strong>Carla M. ⭐⭐⭐⭐⭐</strong>
         <p>"La app me ayudó a encontrar lugares increíbles en mi viaje por Italia. Muy intuitiva y rápida."</p>
