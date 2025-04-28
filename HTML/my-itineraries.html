@@ -12,11 +12,17 @@
     <link rel="stylesheet" href="../CSS/reset-stylesheet.css">
     <link rel="stylesheet" href="../CSS/colors.css">
     <link rel="stylesheet" href="../CSS/my-itineraries.css">
+    <link rel="stylesheet" href="../CSS/itinerary-gallery-card.css">
     <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/carousel.css">
+    <link rel="stylesheet" href="../CSS/routes.css">
     <script type="module" src="../JS/my-itineraries.js"></script>
+    <script type="module" src="../JS/my-itineraries-gallery.js"></script>
     <script type="module" src="/JS/firebase-config.js"></script>
     <script type="module" src="/JS/types.js"></script>
     <script type="module" src="/JS/profile.js"></script>
+    <script type="module" src="/JS/rutas.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
 </head>
 <body>
 <header id="navigation">
@@ -40,7 +46,7 @@
 
 
 <header id="tools">
-
+    <div id="switch-view">switch view</div>
 
     <div id="actions">
         <button id="previous-itinerary">
@@ -54,27 +60,36 @@
                 <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
-      <script>
-                // Selecciona el SVG y el path dentro de él
-                const actions = document.getElementById('actions');
-                const svgs = actions.querySelectorAll('svg');
+        <script>
+            // Selecciona el SVG y el path dentro de él
+            const actions = document.getElementById('actions');
+            const svgs = actions.querySelectorAll('svg');
 
-                // Obtiene las dimensiones del path usando getBBox
-                svgs.forEach(function(svg) {
-                    const bbox = svg.querySelector('path').getBBox();
-                    svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
-                });
-                // Ajusta el viewBox del SVG para ajustarse al tamaño del path
-            </script>
+            // Obtiene las dimensiones del path usando getBBox
+            svgs.forEach(function(svg) {
+                const bbox = svg.querySelector('path').getBBox();
+                svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
+            });
+            // Ajusta el viewBox del SVG para ajustarse al tamaño del path
+        </script>
+    </div>
+    <div id="search-actions">
+        <label for="search"></label>
+        <input id="search" type="text" placeholder="search in your itineraries">
+        <button id="reload-button">
+            <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="" class="">
+        </button>
+    </div>
+
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <p></p>
+            <button id="closePopup">Cerrar</button>
         </div>
-        <div id="search-actions">
-            <label for="search"></label>
-            <input id="search" type="text" placeholder="search in your itineraries">
-            <button id="reload-button">
-                <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="" class="">
-            </button>
-        </div>
+    </div>
 </header>
+
 
 <template id="day-button">
     <button tabindex="0" class="day-button down"></button>
@@ -83,7 +98,7 @@
     <ul class="places"></ul>
 </template>
 <template id="itinerary-container">
-    <div class="my-itineraries">
+    <section class="my-itineraries" data-name="" data-type="list">
         <article class="preview">
             <div class="image-preview">
                 <img class="intro" src="" alt=""/>
@@ -107,10 +122,30 @@
                 </div>
             </div>
         </section>
-    </div>
+    </section>
 </template>
 
-<main></main>
+<template id="gallery-container">
+
+</template>
+<template id="itinerary-card">
+    <article class="preview" data-type="gallery">
+        <div class="image-preview itinerary-gallery-card">
+            <img class="intro " src="" alt="">
+            <div class="tooltip">
+                <div class="summary">
+                    <div class="title"></div>
+                    <div class="description">description</div>
+                </div>
+            </div>
+        </div>
+    </article>
+</template>
+
+<main>
+    <section id="itinerary-list-container"></section>
+    <section id="itinerary-gallery-container"></section>
+</main>
 
 </body>
 </html>
