@@ -38,6 +38,7 @@ onAuthStateChanged(auth, async (user) => {
     // Opciones del menú
     dropdownMenu.innerHTML = `
       <a onclick="location.href='edit-profile.html'">Editar Perfil</a>
+      <a onclick="location.href='edit-preferences.html'">Editar Preferencias</a>
       <a onclick="location.href='my-itineraries.html'">Mis Itinerarios</a>
       <a onclick="location.href='user-logout.html'">Cerrar Sesión</a>
     `;

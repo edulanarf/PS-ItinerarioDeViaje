@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Editar Perfil</title>
   <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
   <link rel="stylesheet" href="../CSS/colors.css" />
   <link rel="stylesheet" href="../CSS/edit-preferences.css" />
   <link rel="stylesheet" href="../CSS/navigation.css" />
@@ -20,7 +21,7 @@
       <img id="logo" src="../mockups/logo.png" alt="logo" />
       <div id="brand-name">Itineraries</div>
     </div>
-    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+    <div id="preferences-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
   <section id="links-section">
     <div id="links">
@@ -31,9 +32,9 @@
 </header>
 
 <main>
-  <div class="edit-profile-container">
+  <div class="edit-preferences-container">
     <h2>Editar Preferencias</h2>
-    <form id="edit-profile-form">
+    <form id="edit-preferences-form">
 
       <div class="form-group">
         <label>Categorías</label>
@@ -71,21 +72,22 @@
 
       <div class="form-group">
         <label>Duración</label>
-        <div>
-          <label for="from-duration">Desde</label>
-          <input type="number" name="from-duration">
-        </div>
-        <div>
-          <label for="to-duration">Hasta</label>
-          <input type="number" name="to-duration">
+        <div class="">
+          <span>Entre </span>
+          <input class="duration-input" type="number" name="from-duration">
+          <span> y </span>
+          <input class="duration-input" type="number" name="to-duration">
+          <span> horas.</span>
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group relative">
         <label>Localizaciones</label>
-        <input type="text" name="search">
         <div class="selected-locations">
 
+        </div>
+        <input id="locations-search" type="text" name="search">
+        <div class="locations-list hidden">
         </div>
       </div>
 
@@ -94,7 +96,7 @@
   </div>
 </main>
 
-<script type="module" src="/JS/edit-profile.js"></script>
+<script type="module" src="/JS/edit-preferences.js"></script>
 
 </body>
 </html>
