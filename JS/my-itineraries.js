@@ -4,7 +4,7 @@ import { ItineraryPlan } from './types.js';
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn} from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
-import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {shareItinerary} from './shareItinerary.js';
 
 export const list = document.getElementById("itinerary-list-container")
@@ -19,7 +19,8 @@ export const itineraries = {}
 export let currentItinerary = ""
 let currentDay = ""
 export let currentRoutes;
-
+let currentItineraryTitle;
+let currentItineraryPhoto;
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -90,6 +91,7 @@ async function listView() {
         nextItinerary(currentItinerary).then(data => {
           currentItinerary = data;
         });
+
       });
       document.getElementById('previous-itinerary').addEventListener('click', () => {
         previousItinerary(currentItinerary).then(data => {
@@ -156,13 +158,18 @@ async function showItinerary(before, after){
   to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
   to.appendChild(verRutaBtn);
 
-
   const shareButton = document.createElement("buton");
   shareButton.innerText = "publicar";
   shareButton.style.cursor = "pointer";
 
   shareButton.addEventListener("click", async () => {
-    await shareItinerary(currentRoutes);
+    const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
+    currentItineraryTitle = currentContainer.dataset.name;
+    const itinerary = itineraries[currentItineraryTitle];
+    const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
+    const itineraryPhotoRef = await getDoc(itineraryDocRef)
+    currentItineraryPhoto = itineraryPhotoRef.data().photo
+    await shareItinerary(currentRoutes,currentItineraryTitle, currentItineraryPhoto);
   })
   to.appendChild(shareButton);
 
@@ -230,6 +237,10 @@ async function renderItinerary(plan) {
   intro.src = plan.photo
   intro.alt = plan.title
   intro.style.cursor = "pointer";
+
+
+
+
 
   const inputFile = document.createElement("input");
   inputFile.type = "file";
