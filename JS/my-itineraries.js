@@ -5,7 +5,7 @@ import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn} from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
 import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-
+import {shareItinerary} from './shareItinerary.js';
 
 export const list = document.getElementById("itinerary-list-container")
 const template = document.getElementById("itinerary-container");
@@ -155,7 +155,17 @@ async function showItinerary(before, after){
   to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
   to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
   to.appendChild(verRutaBtn);
-  // then show
+
+
+  const shareButton = document.createElement("buton");
+  shareButton.innerText = "publicar";
+  shareButton.style.cursor = "pointer";
+
+  shareButton.addEventListener("click", async () => {
+    await shareItinerary(currentRoutes);
+  })
+  to.appendChild(shareButton);
+
   to.style.display = "grid";
   //my-itineraries class is a grid display
 }
