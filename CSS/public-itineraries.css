@@ -16,6 +16,7 @@ body{
 }
 .itinerary-name{
     font-size: 20px;
+    font-weight: bold;
 }
 
 .itinerary-image{
@@ -25,6 +26,17 @@ body{
     min-height: 400px;
     border-radius:10px;
     object-fit: cover;
+}
+
+.popup-favorite{
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: #f4c500;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    align-self: center;
+    margin-top: 20px;
 }
 
 body {
@@ -86,6 +98,8 @@ body {
     padding: 20px;
     border-radius: 10px;
     color: white;
+    display:flex;
+    flex-direction: column;
 }
 
 
@@ -137,4 +151,28 @@ body {
     margin-top: 20px;
     border-radius: 10px;
     overflow: hidden;
+}
+
+/* Estilo del scroll dentro del popup */
+.popup::-webkit-scrollbar {
+    width: 16px;
+}
+
+.popup::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.popup::-webkit-scrollbar-thumb {
+    background-color: #09f;
+    border-radius: 10px;
+    border: 2px solid #333;
+}
+
+.popup::-webkit-scrollbar-thumb:hover {
+    background-color: #005fa3;
+}
+
+.popup::-webkit-scrollbar-button {
+    display: none;
 }
