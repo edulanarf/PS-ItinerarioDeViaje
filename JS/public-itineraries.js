@@ -6,7 +6,7 @@ async function loadItineraries() {
   itinerariesContainer.innerHTML = "";
 
   //Contenedor de itinerarios
-  const itinerariesSnapshot = await getDocs(collection(db, "ItinerariesExamples"));
+  const itinerariesSnapshot = await getDocs(collection(db, "publicItineraries"));
 
   //Recorro el numero de documentos (itinerarios)
   for (const itineraryDoc of itinerariesSnapshot.docs) {

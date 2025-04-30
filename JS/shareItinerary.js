@@ -1,13 +1,22 @@
 import {db} from './firebase-config.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { addDoc, collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  setDoc, updateDoc
+} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 export async function shareItinerary(itinerary, itineraryTitle, itineraryPhoto) {
   const user = getAuth().currentUser;
-  console.log(itineraryTitle);
-  console.log(itineraryPhoto);
+  const userRef = user.uid;
+  if (await isPublic(userRef, itineraryTitle)) {
+    console.log('El itinerario ya está publicado')
+    return;
+  }
   const publicItineraryRef = await addDoc(collection(db, 'publicItineraries'), {
-    userRef:user.uid,
+    userRef:userRef,
     photo: itineraryPhoto,
     title: itineraryTitle,
   });
@@ -34,4 +43,17 @@ async function saveItineraryInfo(itinerary, publicItineraryRefId) {
       }))
     });
   }
+}
+
+async function isPublic(userRef, itineraryTitle) {
+  console.log(userRef, itineraryTitle);
+  const itineraryRef = doc(db, 'users', userRef, 'itineraries', itineraryTitle);
+  const itinerary = await getDoc(itineraryRef);
+
+  if (!itinerary.data().hasOwnProperty('published')) {
+    await updateDoc(itineraryRef, { published: true });
+    return false;
+  }
+
+  return itinerary.data().published === true;
 }
