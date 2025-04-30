@@ -1,10 +1,11 @@
 import { db } from "./firebase-config.js";
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import{addFavoriteItinerary} from './addFavorite.js'
 
 async function loadItineraries() {
   const itinerariesContainer = document.getElementById("itineraries-container");
   itinerariesContainer.innerHTML = "";
-  const itinerariesRef = [];
+  let currentItinerary;
 
   //Contenedor de itinerarios
   const itinerariesSnapshot = await getDocs(collection(db, "publicItineraries"));
@@ -12,7 +13,6 @@ async function loadItineraries() {
   //Recorro el numero de documentos (itinerarios)
   for (const itineraryDoc of itinerariesSnapshot.docs) {
     const itineraryData = itineraryDoc.data();
-    itinerariesRef.push(itineraryDoc.id)
     //Creo div para cada uno
     const itineraryDiv = document.createElement("div");
     itineraryDiv.classList.add("itinerary-item");
@@ -26,7 +26,7 @@ async function loadItineraries() {
 
     img.addEventListener("click", async () => {
       document.querySelector(".popup-title").textContent = itineraryData.title;
-
+      currentItinerary = itineraryData.title
       const popupDaysContainer = document.getElementById("popup-days");
       popupDaysContainer.innerHTML = "";
 
@@ -53,6 +53,12 @@ async function loadItineraries() {
           if (!firstPlaceForMap) {
             firstPlaceForMap = place;
           }
+
+          const favoriteBtn = document.querySelector(".popup-favorite");
+          favoriteBtn.onclick = () => {
+            addFavoriteItinerary(itineraryDoc.id);
+
+          };
 
           // Imagen
           const img = document.createElement("img");
