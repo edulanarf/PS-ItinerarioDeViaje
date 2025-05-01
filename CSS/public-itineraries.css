@@ -7,6 +7,8 @@ body{
     display:flex;
     gap:50px;
     align-self: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .itinerary-item{
     display: flex;
@@ -27,6 +29,11 @@ body{
     min-height: 400px;
     border-radius:10px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.itinerary-image:hover {
+    transform: scale(1.05); /* Aumenta el tamaño en un 5% */
 }
 
 .popup-favorite{
