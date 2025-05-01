@@ -156,10 +156,24 @@ async function showItinerary(before, after){
   console.log("to.ul",to.querySelector(`ul[data-day="${currentDay}"]`));
   to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block"
   to.querySelector(`button[data-day="${currentDay}"]`).classList.replace("down","up")
-  to.appendChild(verRutaBtn);
 
-  const shareButton = document.createElement("buton");
+  let buttonGroup = to.querySelector(".button-group");
+  if (!buttonGroup) {
+    buttonGroup = document.createElement("div");
+    buttonGroup.classList.add("button-group");
+    to.appendChild(buttonGroup);
+  }
+
+// Limpia botones anteriores para evitar duplicados o cambio de orden
+  buttonGroup.innerHTML = "";
+
+// Añade los botones en orden deseado
+  buttonGroup.appendChild(verRutaBtn);
+
+// Crear botón "publicar" si aún no existe
+  const shareButton = document.createElement("button");
   shareButton.innerText = "publicar";
+  shareButton.classList.add("publicar");
   shareButton.style.cursor = "pointer";
 
   shareButton.addEventListener("click", async () => {
@@ -167,11 +181,12 @@ async function showItinerary(before, after){
     currentItineraryTitle = currentContainer.dataset.name;
     const itinerary = itineraries[currentItineraryTitle];
     const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
-    const itineraryPhotoRef = await getDoc(itineraryDocRef)
-    currentItineraryPhoto = itineraryPhotoRef.data().photo
-    await shareItinerary(currentRoutes,currentItineraryTitle, currentItineraryPhoto);
-  })
-  to.appendChild(shareButton);
+    const itineraryPhotoRef = await getDoc(itineraryDocRef);
+    currentItineraryPhoto = itineraryPhotoRef.data().photo;
+    await shareItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
+  });
+
+  buttonGroup.appendChild(shareButton);
 
   to.style.display = "grid";
   //my-itineraries class is a grid display

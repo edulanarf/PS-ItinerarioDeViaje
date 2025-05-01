@@ -186,7 +186,7 @@
     });
 
     export const verRutaBtn = document.createElement("button");
-    verRutaBtn.textContent = "Ver ruta";
+    verRutaBtn.textContent = "Ver rutas";
     verRutaBtn.classList.add("ver-ruta-btn");
 
     verRutaBtn.addEventListener("click", () => {
