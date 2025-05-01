@@ -17,6 +17,7 @@ body{
 .itinerary-name{
     font-size: 20px;
     font-weight: bold;
+    margin-top: 10px;
 }
 
 .itinerary-image{
