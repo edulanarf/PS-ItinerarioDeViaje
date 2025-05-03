@@ -172,6 +172,13 @@ main {
     aspect-ratio: 4 / 2;
 }
 
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-self: center;
+}
+
 .intro {
     width: 100%;
     max-width: 380px; /* La imagen nunca será más ancha que su contenedor */
@@ -209,6 +216,39 @@ main {
 
 }
 
+.days  {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.days button {
+    flex: 0 0 70px;
+    height: 40px;
+    background-color: #ccc;
+    color: #333;
+    border: 2px solid #bbb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: left;
+}
+
+.days button:hover {
+    background-color: #bbb;
+    border-color: #999;
+    color: black;
+}
+
+.days button:active {
+    background-color: #aaa;
+}
+
 .content {
     display: flex;
     max-height: 100%;
@@ -224,13 +264,7 @@ main {
 .day-button {
     border-radius: 0;
 }
-.day-button.up {
-    background-color: var(--naranja-quemado);
-}
 
-.day-button.down {
-    background-color: inherit;
-}
 
 .side-bar {
     width: 0.5rem;

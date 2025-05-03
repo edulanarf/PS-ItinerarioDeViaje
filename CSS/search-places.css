@@ -222,12 +222,11 @@ h3 {
     text-align: center;
 }
 
+
 #separation-itinerary {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* Campo de título */
@@ -259,10 +258,65 @@ h3 {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 20px;
+    width: 50%;
+    align-self: center;
+}
+#itinerary-description {
+    width: 50%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+    color: black;
+    background-color: transparent;
+    cursor: text;
+    align-self: center;
+}
+
+#itinerary-description:focus {
+    outline: none;
+    border-color: var(--rojo-oxido);
+    box-shadow: 0 0 8px var(--rojo-oxido);
 }
 
 #save-itinerary:hover {
     background-color: var(--borgona-profundo);
+}
+
+#day-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+#day-buttons-container button {
+    flex: 0 0 70px;
+    height: 40px;
+    background-color: #ccc;
+    color: #333;
+    border: 2px solid #bbb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: left;
+}
+
+#day-buttons-container button:hover {
+    background-color: #bbb;
+    border-color: #999;
+    color: black;
+}
+
+#day-buttons-container button:active {
+    background-color: #aaa;
 }
 
 #day{
