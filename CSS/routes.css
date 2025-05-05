@@ -48,6 +48,10 @@
     transition: color 0.3s ease;
 }
 
+#travelMode {
+    color: #09f;
+}
+
 .close:hover {
     color: var(--cta-rojo-hover);
 }

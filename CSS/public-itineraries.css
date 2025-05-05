@@ -141,7 +141,6 @@ body {
 .popup-close {
     padding: 10px 20px;
     border-radius: 5px;
-    background: white;
     color: var(--azul-principal);
     font-weight: bold;
     border: none;
