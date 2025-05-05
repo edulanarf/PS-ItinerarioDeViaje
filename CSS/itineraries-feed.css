@@ -26,6 +26,9 @@ section.main {
 .destinations {
     margin-top: 3rem;
 }
+.destination {
+    margin-bottom: 1rem;
+}
 
 
 .itinerary-image {
@@ -191,14 +194,14 @@ section.main {
 .modal-content {
     padding: 1rem 3rem;
     border-bottom: 1px solid black;
-    max-height: 85vh;
-    overflow-y: scroll;
 }
 .itinerary-days {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-height: 55vh;
+    overflow-y: scroll;
 }
 .itinerary-day-header {
     font-size: 1.2rem;
@@ -277,4 +280,9 @@ section.main {
 }
 .total-cost {
     font-size: 1.2rem;
+}
+
+#map {
+    flex: 1;
+    min-height: 20rem;
 }

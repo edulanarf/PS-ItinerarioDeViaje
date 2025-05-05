@@ -246,7 +246,9 @@ function addToItinerary(place) {
     place.rating || '',
     place.vicinity || '',
     (++counter).toString(),
-    selectedCategory
+    selectedCategory,
+    place.geometry.location.lat(),
+    place.geometry.location.lng()
   )
 
   listPlaces.push(aPlace)
@@ -399,7 +401,9 @@ function loadDay(dayKey) {
         place.rating,
         place.address,
         (index + 1).toString(),
-        place.category
+        place.category,
+        place.lat,
+        place.lng
       );
     });
 

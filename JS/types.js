@@ -10,7 +10,7 @@ export class Place {
    * @param {string} date - should be Date
    * @param {string} category
    */
-  constructor(name,photo,price,rating,address,date,category) {
+  constructor(name,photo,price,rating,address,date,category,lat=undefined,lng=undefined) {
     this.name = name;
     this.photo = photo;
     this.price = price;
@@ -18,6 +18,8 @@ export class Place {
     this.address = address;
     this.date = date;
     this.category = category;
+    this.lat = lat;
+    this.lng = lng;
   }
 
   toString() {
@@ -32,7 +34,9 @@ export class Place {
       rating: this.rating,
       address: this.address,
       date: this.date,
-      category: this.category
+      category: this.category,
+      lat: this.lat,
+      lng: this.lng
     };
   }
 
@@ -74,7 +78,9 @@ export class Itinerary {
         placeData.rating,
         placeData.address,
         placeData.date,
-        placeData.category
+        placeData.category,
+        placeData.lat,
+        placeData.lng
       ))) : [];
       return new Itinerary(data.name, places)
     }

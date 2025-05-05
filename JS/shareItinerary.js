@@ -40,6 +40,8 @@ async function saveItineraryInfo(itinerary, publicItineraryRefId) {
         photo: place.photo,
         price: place.price,
         rating: place.rating,
+        lat: place.lat,
+        lng: place.lng
       }))
     });
   }

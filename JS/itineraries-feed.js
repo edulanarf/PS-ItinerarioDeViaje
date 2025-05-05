@@ -32,11 +32,11 @@ async function loadItineraries() {
     },0);
     itineraries.push(itineraryData);
   }
-  console.log(itineraries);
   return itineraries;
 }
 
-let currentUser, users, preferences, itineraries, geocoder, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [];
+let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [];
+let map, service, geocoder, marker;
 const allCategories = ['Hotel','Restaurante','Cafetería','Museo','Parque','Centro comercial','Aeropuerto'];
 
 onAuthStateChanged(auth, async (user) => {
@@ -319,7 +319,6 @@ function drawFilters() {
 }
 
 window.addEventListener("load", () => {
-  //geocoder = new google.maps.Geocoder();
   document.querySelector('.destinations').addEventListener('click',e => {
     let link = e.target.closest('a')
     if (!link) return;
@@ -332,7 +331,7 @@ window.addEventListener("load", () => {
     if (!e.target.classList.contains('modal')&&!e.target.classList.contains('close')) return;
     e.target.closest('.modal').classList.add('hidden');
   });
-  geocoder = new google.maps.Geocoder();
+  initMap();
   let timeout;
   document.querySelector('#search-input').addEventListener('keyup',e => {
     if (timeout !== undefined) {
@@ -442,6 +441,13 @@ window.addEventListener("load", () => {
       document.querySelector('.follow').classList.remove('hidden');
     });
   });
+  document.querySelector('.itinerary-days').addEventListener('click',e=>{
+    let link = e.target.closest('a');
+    if (!link) return;
+    e.preventDefault();
+    e.stopPropagation();
+    placeMarker(link.dataset.name,link.dataset.lat,link.dataset.lng);
+  });
 });
 
 function showModal(itinerary) {
@@ -458,7 +464,7 @@ function showModal(itinerary) {
     </div>
   `;
   const placeTemplate = `
-    <div class="itinerary-day-place">
+    <a href="#" class="itinerary-day-place" data-name="{{name}}" data-lat="{{lat}}" data-lng="{{lng}}">
       <img class="itinerary-day-place-img" src="{{photo}}" alt="">
       <div class="itinerary-day-place-data">
         <div class="itinerary-day-place-name">{{name}}</div>
@@ -475,17 +481,19 @@ function showModal(itinerary) {
           Rating: <span class="value">{{rating}}</span> ★
         </div>
       </div>
-    </div>
+    </a>
   `;
   let html = `<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>`.replace('{{totalCost}}',itinerary.totalCost)+itinerary.days.map(day => {
     let placesHtml = day.places.map(place => {
       return placeTemplate
         .replace('{{photo}}',place.photo)
-        .replace('{{name}}',place.name)
+        .replace(/{{name}}/g,place.name)
         .replace('{{address}}',place.address)
         .replace('{{category}}',place.category)
         .replace('{{price}}',place.price)
         .replace('{{rating}}',place.rating)
+        .replace('{{lat}}',place.lat)
+        .replace('{{lng}}',place.lng)
       ;
     }).join('');
     return dayTemplate
@@ -516,5 +524,34 @@ function showModal(itinerary) {
     addToFolloedBtn.classList.remove('hidden');
     removeFromFollowedBtn.classList.add('hidden');
   }
+  let place = itinerary.days[0].places[0];
+  placeMarker(place.name,place.lat,place.lng);
   modal.classList.remove('hidden');
+}
+
+function placeMarker(name,lat,lng) {
+  const center = new google.maps.LatLng(
+    lat,
+    lng,
+  );
+  map.panTo(center);
+
+  if (marker !== undefined) marker.setMap(null);
+
+  // Add a marker for the place.
+  marker = new google.maps.Marker({
+    map,
+    position: center,
+    title: name,
+  });
+}
+
+function initMap() {
+  const defaultLocation = { lat: 28.1235, lng: -15.4363 }; // Coordenadas de Las Palmas GC
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: defaultLocation,
+    zoom: 12,
+  });
+  service = new google.maps.places.PlacesService(map);
+  geocoder = new google.maps.Geocoder();
 }
