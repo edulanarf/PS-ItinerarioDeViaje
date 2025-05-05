@@ -131,12 +131,69 @@ function drawItineraries() {
       });
     });
     followed.forEach(userId => {
-      let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
-      if (f2Itineraries.length === 0) return;
-      itinerariesGroups.push({
-        name: `Creados por ${users[userId].username}`,
-        itineraries: f2Itineraries
-      });
+      if (searchCategories.length > 0 && searchLocalities.length > 0) {
+        cities.forEach(city => {
+          categories.forEach(category => {
+            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+              return itinerary.days.findIndex(day => {
+                return day.places.findIndex(place => {
+                  return (
+                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
+                    &&
+                    place.category === category
+                  );
+                }) !== -1;
+              }) !== -1;
+            });
+            if (f2Itineraries.length === 0) return;
+            itinerariesGroups.push({
+              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
+              itineraries: f2Itineraries
+            });
+          });
+        });
+      } else if (searchCategories.length) {
+        categories.forEach(category => {
+          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+            return itinerary.days.findIndex(day => {
+              return day.places.findIndex(place => {
+                return (
+                  place.category === category
+                );
+              }) !== -1;
+            }) !== -1;
+          });
+          if (f2Itineraries.length === 0) return;
+          itinerariesGroups.push({
+            name: `Creados por ${users[userId].username} con visita a ${category}`,
+            itineraries: f2Itineraries
+          });
+        });
+      } else if (searchLocalities.length) {
+        cities.forEach(city => {
+          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+            return itinerary.days.findIndex(day => {
+              return day.places.findIndex(place => {
+                return (
+                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
+                );
+              }) !== -1;
+            }) !== -1;
+          });
+          if (f2Itineraries.length === 0) return;
+          itinerariesGroups.push({
+            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
+            itineraries: f2Itineraries
+          });
+        });
+      } else {
+        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
+        if (f2Itineraries.length === 0) return;
+        itinerariesGroups.push({
+          name: `Creados por ${users[userId].username}`,
+          itineraries: f2Itineraries
+        });
+      }
     });
   } else {
     searchCreators.forEach(userId => {
