@@ -249,6 +249,16 @@ main {
     background-color: #aaa;
 }
 
+#closePopup {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #09f;
+    border: none;
+    cursor: pointer;
+}
+
+
 .content {
     display: flex;
     max-height: 100%;
