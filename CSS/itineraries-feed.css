@@ -1,17 +1,12 @@
-@import "colors.css";
-
-/* Reset básico */
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
 }
 
-/* Navegación */
 navbar {
     background-color: var(--beige-calido);
 }
 
-/* Contenedor principal */
 section.main {
     background-color: white;
     height: 100%;
@@ -26,49 +21,45 @@ section.main {
 
 .destination-header {
     font-size: 1.5rem;
-    color: #008cff;
 }
 
-/* Tarjetas de destino */
 .destinations {
     margin-top: 3rem;
 }
-
 .destination {
     margin-bottom: 1rem;
 }
 
-/* Imagen e itinerario */
+
 .itinerary-image {
     width: 320px;
     height: 400px;
     object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .itinerary {
     display: block;
     position: relative;
-    transition: transform 0.3s;
 }
 
+.itinerary {
+    position: relative;
+    transition: transform .2s;
+}
 .itinerary:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .itinerary-content {
     position: absolute;
     bottom: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 320px;
+    background-color: rgba(0, 0, 0, 50%);
     color: white;
     padding: 1rem;
     visibility: hidden;
-    transition: visibility 0.2s;
-    border-radius: 0 0 10px 10px;
+    transition: transform .2s;
 }
-
 .itinerary:hover .itinerary-content {
     visibility: visible;
 }
@@ -76,6 +67,201 @@ section.main {
 .itinerary-title {
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+.destination-content {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: flex;
+    gap: 1rem;
+    margin: 0 auto;
+    padding: 1.1rem 0;
+}
+.destination-content::before,
+.destination-content::after {
+  content: '';
+  width: 100%;
+}
+.search-container {
+    display: flex;
+    justify-content: center;
+}
+#search-input {
+    padding: 12px 20px;
+    font-size: 15px;
+    height: 54px;
+    width: 100%;
+    max-width: 40rem;
+    border: 1px solid lightgray;
+    transition: all 0.3s ease;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+#reload-button {
+    padding: 0;
+    height: 54px;
+    width: 54px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--rojo-oscuro);
+    cursor: pointer;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+#reload-button img {
+    width: 30px;
+    height: auto;
+}
+.config-button {
+    padding: 0;
+    height: 54px;
+    width: 54px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightgray;
+    cursor: pointer;
+}
+.config-button img {
+    width: 30px;
+    height: auto;
+}
+.current-filters {
+    width: 100%;
+    max-width: 45rem;
+    margin: 0 auto 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.search-filter {
+    border: 1px solid var(--google-blue);
+    background-color: aliceblue;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.search-results {
+    width: 100%;
+    max-width: 46.5rem;
+    margin: 0 auto;
+    border: 1px solid lightgray;
+}
+
+.result-category-header {
+    background-color: var(--marron-beige);
+    padding: 0.5rem;
+    font-weight: bold;
+    color: gray;
+}
+
+.result-category-item {
+    display: block;
+    padding: 1rem;
+    border-bottom: 1px solid lightgray;
+}
+.result-category-item:hover {
+    background-color: var(--azul-brillante);
+    color: white;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-container {
+    width: 100%;
+    max-width: 60rem;
+    background-color: var(--beige-calido);
+    border-radius: 10px;
+}
+.modal-header {
+    padding: 1rem 3rem 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+.modal-content {
+    padding: 1rem 3rem;
+    border-bottom: 1px solid black;
+}
+.itinerary-days {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 55vh;
+    overflow-y: scroll;
+}
+.itinerary-day-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.itinerary-day-place {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid black;
+}
+.itinerary-day-place-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.itinerary-day-place-name {
+    font-weight: bold;
+}
+.modal-itinerary-created-by {
+    text-align: right;
+    margin-bottom: 0.8rem;
+}
+.modal-itinerary-created-by .value {
+    font-weight: bold;
+}
+.modal-itinerary-created-by button {
+    cursor: pointer;
+    background-color: var(--rojo-oxido);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    font-weight: bold;
+    margin-left: 0.2rem;
+}
+.modal-controls {
+    padding: 1rem 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 3rem;
+}
+.modal-controls button {
+    border: none;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.7rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal-controls button.add-to-favortites, .modal-controls button.remove-from-favortites {
+    background-color: var(--rojo-oxido);
+    color: white;
+}
+
+.hidden {
+    display: none!important;
 }
 
 .itinerary-description {
@@ -89,271 +275,13 @@ section.main {
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
-
 .itinerary-created-by .value {
     font-weight: bold;
 }
-
 .total-cost {
     font-size: 1.2rem;
 }
 
-/* Scroll horizontal de destinos */
-.destination-content {
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: flex;
-    gap: 1rem;
-    margin: 0 auto;
-    padding: 1.1rem 0;
-}
-
-.destination-content::before,
-.destination-content::after {
-    content: '';
-    width: 100%;
-}
-
-/* Buscador */
-.search-container {
-    display: flex;
-    justify-content: center;
-}
-
-#search-input {
-    padding: 12px 20px;
-    font-size: 15px;
-    height: 54px;
-    width: 100%;
-    max-width: 40rem;
-    border: 2px solid #ccc;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    transition: border-color 0.3s ease;
-}
-
-#search-input:focus {
-    border-color: #008cff;
-    outline: none;
-}
-
-/* Botón de recargar */
-#reload-button {
-    height: 54px;
-    width: 54px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #e63946;
-    cursor: pointer;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    transition: background-color 0.3s ease;
-}
-
-#reload-button:hover {
-    background-color: #d62828;
-}
-
-#reload-button img {
-    width: 30px;
-    height: auto;
-}
-
-/* Botón de configuración */
-.config-button {
-    height: 54px;
-    width: 54px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ddd;
-    cursor: pointer;
-}
-
-.config-button img {
-    width: 30px;
-    height: auto;
-}
-
-/* Filtros activos */
-.current-filters {
-    width: 100%;
-    max-width: 45rem;
-    margin: 0 auto 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.search-filter {
-    border: 1px solid #008cff;
-    background-color: #e6f2ff;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: #333;
-}
-
-/* Resultados */
-.search-results {
-    width: 100%;
-    max-width: 46.5rem;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.result-category-header {
-    background-color: var(--marron-beige);
-    padding: 0.5rem;
-    font-weight: bold;
-    color: #555;
-}
-
-.result-category-item {
-    display: block;
-    padding: 1rem;
-    border-bottom: 1px solid #ccc;
-    transition: background-color 0.3s;
-}
-
-.result-category-item:hover {
-    background-color: #008cff;
-    color: white;
-}
-
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-
-.modal-container {
-    width: 100%;
-    max-width: 60rem;
-    background-color: var(--beige-calido);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.modal-header {
-    padding: 1rem 3rem 0.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-    border-bottom: 1px solid black;
-}
-
-.modal-content {
-    padding: 1rem 3rem;
-    border-bottom: 1px solid black;
-}
-
-/* Días del itinerario */
-.itinerary-days {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 55vh;
-    overflow-y: scroll;
-    padding-right: 1rem;
-}
-
-.itinerary-day-header {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.itinerary-day-place {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid black;
-}
-
-.itinerary-day-place-img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.itinerary-day-place-name {
-    font-weight: bold;
-}
-
-/* Autor del itinerario en modal */
-.modal-itinerary-created-by {
-    text-align: right;
-    margin-bottom: 0.8rem;
-}
-
-.modal-itinerary-created-by .value {
-    font-weight: bold;
-}
-
-.modal-itinerary-created-by button {
-    cursor: pointer;
-    background-color: #e63946;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.2rem 0.5rem;
-    font-weight: bold;
-    margin-left: 0.2rem;
-    transition: background-color 0.3s;
-}
-
-.modal-itinerary-created-by button:hover {
-    background-color: #d62828;
-}
-
-/* Controles del modal */
-.modal-controls {
-    padding: 1rem 3rem;
-    display: flex;
-    justify-content: end;
-    gap: 1rem;
-}
-
-.modal-controls button {
-    border: none;
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 0.7rem 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.modal-controls button.add-to-favortites,
-.modal-controls button.remove-from-favortites {
-    background-color: #e63946;
-    color: white;
-}
-
-.modal-controls button:hover {
-    background-color: #f0f0f0;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Mapa */
 #map {
     flex: 1;
     min-height: 20rem;
