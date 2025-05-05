@@ -35,8 +35,8 @@ async function loadItineraries() {
   return itineraries;
 }
 
-let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [];
-let map, service, geocoder, marker;
+let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [], previousDay = null;
+let map, service, directionsService, directionsRenderer, geocoder, marker;
 const allCategories = ['Hotel','Restaurante','Cafetería','Museo','Parque','Centro comercial','Aeropuerto'];
 
 onAuthStateChanged(auth, async (user) => {
@@ -446,7 +446,12 @@ window.addEventListener("load", () => {
     if (!link) return;
     e.preventDefault();
     e.stopPropagation();
-    placeMarker(link.dataset.name,link.dataset.lat,link.dataset.lng);
+    panTo(link.dataset.lat,link.dataset.lng);
+    let container = link.closest('.itinerary-day-places');
+    let previousDayOld = previousDay;
+    previousDay = container.dataset.day;
+    if (previousDay===previousDayOld) return;
+    placeWaypoints(JSON.parse(container.dataset.waypoints));
   });
 });
 
@@ -458,7 +463,7 @@ function showModal(itinerary) {
   const dayTemplate = `
     <div class="itinerary-day">
       <div class="itinerary-day-header">{{name}}</div>
-      <div class="itinerary-day-places">
+      <div class="itinerary-day-places" data-day="{{name}}" data-waypoints='{{waypoints}}'>
         {{placesHtml}}
       </div>
     </div>
@@ -484,7 +489,9 @@ function showModal(itinerary) {
     </a>
   `;
   let html = `<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>`.replace('{{totalCost}}',itinerary.totalCost)+itinerary.days.map(day => {
+    let waypoints = [];
     let placesHtml = day.places.map(place => {
+      waypoints.push({lat:place.lat,lng:place.lng});
       return placeTemplate
         .replace('{{photo}}',place.photo)
         .replace(/{{name}}/g,place.name)
@@ -497,8 +504,9 @@ function showModal(itinerary) {
       ;
     }).join('');
     return dayTemplate
-      .replace('{{name}}',day.name)
+      .replace(/{{name}}/g,day.name)
       .replace('{{placesHtml}}',placesHtml)
+      .replace('{{waypoints}}',JSON.stringify(waypoints))
     ;
   }).join('');
   modal.querySelector('.itinerary-days').innerHTML = html;
@@ -525,25 +533,40 @@ function showModal(itinerary) {
     removeFromFollowedBtn.classList.add('hidden');
   }
   let place = itinerary.days[0].places[0];
-  placeMarker(place.name,place.lat,place.lng);
+  previousDay = itinerary.days[0].name;
+  panTo(place.lat,place.lng);
+  placeWaypoints(itinerary.days[0].places);
   modal.classList.remove('hidden');
 }
 
-function placeMarker(name,lat,lng) {
+function placeWaypoints(waypoints) {
+  if (isNaN(waypoints[0].lat)) return;
+  let origin = new google.maps.LatLng(waypoints[0].lat,waypoints[0].lng);
+  let destination = new google.maps.LatLng(waypoints.slice(-1)[0].lat,waypoints.slice(-1)[0].lng);
+  let wps = [];
+  for(let i = 1; i < waypoints.length-1; i++) {
+    wps.push({ location: new google.maps.LatLng(waypoints[i].lat,waypoints[i].lng)});
+  }
+  let request = {
+    origin,
+    destination,
+    waypoints: wps,
+    travelMode: 'DRIVING'
+  };
+  directionsService.route(request,(result, status)=>{
+    if (status == 'OK') {
+      directionsRenderer.setDirections(result);
+    }
+  });
+}
+
+function panTo(lat,lng) {
+  if(isNaN(lat)) return;
   const center = new google.maps.LatLng(
     lat,
     lng,
   );
   map.panTo(center);
-
-  if (marker !== undefined) marker.setMap(null);
-
-  // Add a marker for the place.
-  marker = new google.maps.Marker({
-    map,
-    position: center,
-    title: name,
-  });
 }
 
 function initMap() {
@@ -553,5 +576,8 @@ function initMap() {
     zoom: 12,
   });
   service = new google.maps.places.PlacesService(map);
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
   geocoder = new google.maps.Geocoder();
 }
