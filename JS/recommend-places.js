@@ -123,7 +123,7 @@ window.addEventListener("load", () => {
                 </div>
                 <div class="infobox-score">${scoreHtml}</div>
                 <div class="infobox-controls">
-                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()})" type="button">Añadir Favorito</button>
+                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},${place.adr_address},${photoUrl})" type="button">Añadir Favorito</button>
                   <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
                 </div>
               </div>`;
@@ -227,9 +227,9 @@ function loadFavoritesPlaces(user) {
   });
 }
 
-window.addToFavorites = (place_id, name, lat, lng) => {
+window.addToFavorites = (place_id, name, lat, lng, adr_address, photoUrl) => {
   let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
-  let place = {place_id,name,lat,lng};
+  let place = {place_id,name,lat,lng,adr_address,photoUrl};
   setDoc(favoritePlaceRef,place).then(()=>{
     favoritesPlaces[place_id] = place;
     document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));

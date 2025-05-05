@@ -6,9 +6,9 @@
   <link rel="stylesheet" href="/CSS/navigation.css">
   <link rel="stylesheet" href="/CSS/reset-stylesheet.css" />
   <link rel="stylesheet" href="/CSS/colors.css"/>
-  <link rel="stylesheet" href="/CSS/public-itineraries.css"/>
-  <link rel="stylesheet" href="/CSS/carousel.css"/>
-  <link rel="stylesheet" href="/CSS/itinerary-gallery-card.css"/>
+  <link rel="stylesheet" href="/CSS/itineraries-feed.css"/>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
@@ -32,115 +32,121 @@
     </div>
   </section>
 </header>
-<!--
-<div class="carousel-container ">
-  <div class="carousel-column section-padding section-max-width">
-    <div class="carousel-header">
-      <span class=" heading-1 carousel-text">Plan your perfect trip</span>
-      <p class=" text-body-large carousel-text">Travel anywhere you want</p>
+<section class="main">
+  <div class="main-container">
+    <div class="current-filters">
+    </div>
+    <div class="search-container">
+      <input id="search-input" type="text" autocomplete="off" placeholder="Busca localidades, categorias, lugares...">
+      <a class="nav-button config-button" onclick="location.href='edit-preferences.html'"><img src="https://www.freeiconspng.com/uploads/gear-icon-png-12.png" alt=""></a>
+      <button id="reload-button">
+        <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="">
+      </button>
+    </div>
+    <div class="search-results hidden">
+      <div class="result-category result-category-locality hidden">
+        <div class="result-category-header">LOCALIDAD</div>
+        <div class="result-category-content">
+        </div>
+      </div>
+      <div class="result-category result-category-category hidden">
+        <div class="result-category-header">CATEGORÍA</div>
+        <div class="result-category-content">
+        </div>
+      </div>
+    </div>
+    <div class="destinations">
     </div>
   </div>
-  <div class="carousel-gallery">
-    <template>
-      <div class="itinerary-gallery-card"><img alt="" src="" class="carousel-placeholder-image  img-scale"/></div>
-    </template>
-    <div class="carousel-container-horizontal">
-      <div class="carousel-horizontal">
-      <div class="itinerary-gallery-card">
-        <img alt="spain" src="https://i.pinimg.com/1200x/d2/6d/0a/d26d0a83cc90fd86335feaa68e7e7e3b.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
+</section>
+<div class="modal hidden">
+  <div class="modal-container">
+    <div class="modal-header">Title</div>
+    <div class="modal-content">
+      <div class="modal-itinerary-created-by">
+        Creado por <span class="value">Edu</span> <button type="button">Seguir</button>
       </div>
-      <div class="itinerary-gallery-card">
-        <img alt="japan" src="https://i.pinimg.com/1200x/47/55/ca/4755ca0523caf299505ae160c2a2ca8b.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
+      <div class="modal-itinerary-description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae malesuada leo, et aliquam orci. Pellentesque eget libero et magna lobortis egestas non eget eros.
       </div>
-      <div class="itinerary-gallery-card">
-        <img alt="brazil" src="https://i.pinimg.com/1200x/dc/48/c7/dc48c76e5dcf9bbd91de357a2209824e.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
-      </div>
-      <div class="itinerary-gallery-card">
-        <img alt="thailand" src="https://i.pinimg.com/1200x/15/25/02/152502b64f520bdca0f57deaa9273f98.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
-      </div>
-      <div class="itinerary-gallery-card">
-        <img alt="italy" src="https://i.pinimg.com/736x/4b/c9/4a/4bc94ac411d499939ba06ef672ebc565.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
-      </div>
-      <div class="itinerary-gallery-card">
-        <img alt="greece" src="https://i.pinimg.com/1200x/9d/15/d3/9d15d38b274b4980ed2c711a04245141.jpg" class="carousel-placeholder-image  img-scale"/>
-        <div class="tooltip">Mensaje para Imagen 2</div>
-      </div>
-
-        <div class="itinerary-gallery-card">
-          <img alt="spain" src="https://i.pinimg.com/1200x/d2/6d/0a/d26d0a83cc90fd86335feaa68e7e7e3b.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
+      <div class="itinerary-days">
+        <div class="itinerary-day">
+          <div class="itinerary-day-header">Día 1</div>
+          <div class="itinerary-day-places">
+            <div class="itinerary-day-place">
+              <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
+              <div class="itinerary-day-place-data">
+                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
+                <div class="itinerary-day-place-address">
+                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
+                </div>
+                <div class="itinerary-day-place-category">
+                  Categoría: <span class="value">Restaurante</span>
+                </div>
+                <div class="itinerary-day-place-price">
+                  Precio: <span class="value">20</span> €
+                </div>
+                <div class="itinerary-day-place-rating">
+                  Rating: <span class="value">4.9</span> ★
+                </div>
+              </div>
+            </div>
+            <div class="itinerary-day-place">
+              <div class="itinerary-day-place-img-container">
+                <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
+              </div>
+              <div class="itinerary-day-place-data">
+                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
+                <div class="itinerary-day-place-address">
+                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
+                </div>
+                <div class="itinerary-day-place-category">
+                  Categoría: <span class="value">Restaurante</span>
+                </div>
+                <div class="itinerary-day-place-price">
+                  Precio: <span class="value">20</span> €
+                </div>
+                <div class="itinerary-day-place-rating">
+                  Rating: <span class="value">4.9</span> ★
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="itinerary-gallery-card">
-          <img alt="japan" src="https://i.pinimg.com/1200x/47/55/ca/4755ca0523caf299505ae160c2a2ca8b.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="brazil" src="https://i.pinimg.com/1200x/dc/48/c7/dc48c76e5dcf9bbd91de357a2209824e.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="thailand" src="https://i.pinimg.com/1200x/15/25/02/152502b64f520bdca0f57deaa9273f98.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="italy" src="https://i.pinimg.com/736x/4b/c9/4a/4bc94ac411d499939ba06ef672ebc565.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="greece" src="https://i.pinimg.com/1200x/9d/15/d3/9d15d38b274b4980ed2c711a04245141.jpg" class="carousel-placeholder-image  img-scale"/>
-          <div class="tooltip">Mensaje para Imagen 2</div>
+        <div class="itinerary-day">
+          <div class="itinerary-day-header">Día 2</div>
+          <div class="itinerary-day-places">
+            <div class="itinerary-day-place">
+              <div class="itinerary-day-place-img-container">
+                <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
+              </div>
+              <div class="itinerary-day-place-data">
+                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
+                <div class="itinerary-day-place-address">
+                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
+                </div>
+                <div class="itinerary-day-place-category">
+                  Categoría: <span class="value">Restaurante</span>
+                </div>
+                <div class="itinerary-day-place-price">
+                  Precio: <span class="value">20</span> €
+                </div>
+                <div class="itinerary-day-place-rating">
+                  Rating: <span class="value">4.9</span> ★
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="itinerary-map"></div>
     </div>
-    <div class="carousel-container-horizontal">
-      <div class="carousel-horizontal carousel-horizontal-reverse">
-        <div class="itinerary-gallery-card">
-          <img alt="holland" src="https://i.pinimg.com/1200x/64/5a/99/645a99bf7f0ca14dc8120a277616202a.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="germany" src="https://i.pinimg.com/1200x/51/1f/54/511f5429f1902d7ea0358e1eaf6e94ef.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="egypt" src="https://i.pinimg.com/1200x/9b/7b/03/9b7b0387759ea3b8da1561ec111f3c7b.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="china" src="https://i.pinimg.com/1200x/f6/b1/4c/f6b14cf1897538ec1d260a072945a041.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="US" src="https://i.pinimg.com/1200x/56/27/c6/5627c61c1eebb6bfb38701c8e0db2c21.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="Colombia" src="https://i.pinimg.com/1200x/97/5b/87/975b87865b0e0f874dceec7ed0c14cdd.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-
-        <div class="itinerary-gallery-card">
-          <img alt="holland" src="https://i.pinimg.com/1200x/64/5a/99/645a99bf7f0ca14dc8120a277616202a.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="germany" src="https://i.pinimg.com/1200x/51/1f/54/511f5429f1902d7ea0358e1eaf6e94ef.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="egypt" src="https://i.pinimg.com/1200x/9b/7b/03/9b7b0387759ea3b8da1561ec111f3c7b.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="china" src="https://i.pinimg.com/1200x/f6/b1/4c/f6b14cf1897538ec1d260a072945a041.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="US" src="https://i.pinimg.com/1200x/56/27/c6/5627c61c1eebb6bfb38701c8e0db2c21.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-        <div class="itinerary-gallery-card">
-          <img alt="Colombia" src="https://i.pinimg.com/1200x/97/5b/87/975b87865b0e0f874dceec7ed0c14cdd.jpg" class="carousel-placeholder-image  img-scale"/>
-        </div>
-      </div>
+    <div class="modal-controls">
+      <button class="add-to-favortites" type="button">Añadir a favortios</button>
+      <button class="remove-from-favortites hidden" type="button">Quitar de favortios</button>
+      <button class="close" type="button">Cerrar</button>
     </div>
   </div>
 </div>
-<div id="itineraries-container"></div>
--->
 </body>
 </html>

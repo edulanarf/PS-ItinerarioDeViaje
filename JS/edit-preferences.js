@@ -32,12 +32,25 @@ function loadPreferences(user) {
         preferences = docSnap.data();
       } else {
         preferences = {
-          categories: [],
+          categories: ["Restaurante", "Cafetería"],
           duration: {
-            from: 0,
-            to: 24
+            from: 1,
+            to: 3
           },
-          cities: []
+          cities: [
+            {
+              name: "Madrid, España",
+              place_id: "ChIJgTwKgJcpQg0RaSKMYcHeNsQ",
+              lat: 40.41672790000001,
+              lng: -3.7032905,
+            },
+            {
+              name: "Barcelona, España",
+              place_id: "ChIJ5TCOcRaYpBIRCmZHTz37sEQ",
+              lat: 41.3873974,
+              lng: 2.168568,
+            },
+          ],
         };
       }
       resolve(preferences);
