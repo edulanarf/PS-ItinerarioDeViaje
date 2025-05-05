@@ -275,3 +275,6 @@ section.main {
 .itinerary-created-by .value {
     font-weight: bold;
 }
+.total-cost {
+    font-size: 1.2rem;
+}

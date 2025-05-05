@@ -25,8 +25,14 @@ async function loadItineraries() {
       return snap.data();
     })
     itineraryData.id = itineraryDoc.id;
+    itineraryData.totalCost = itineraryData.days.reduce((c,v)=>{
+      return c+v.places.reduce((c,v)=>{
+        return c+v.price;
+      },0);
+    },0);
     itineraries.push(itineraryData);
   }
+  console.log(itineraries);
   return itineraries;
 }
 
@@ -471,7 +477,7 @@ function showModal(itinerary) {
       </div>
     </div>
   `;
-  let html = itinerary.days.map(day => {
+  let html = `<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>`.replace('{{totalCost}}',itinerary.totalCost)+itinerary.days.map(day => {
     let placesHtml = day.places.map(place => {
       return placeTemplate
         .replace('{{photo}}',place.photo)

@@ -37,6 +37,10 @@ function loadPreferences(user) {
             from: 1,
             to: 3
           },
+          cost: {
+            from: 0,
+            to: 1000
+          },
           cities: [
             {
               name: "Madrid, España",
@@ -64,6 +68,8 @@ function fillPreferencesForm() {
   });
   document.querySelector('#edit-preferences-form [name="from-duration"]').value = preferences.duration.from;
   document.querySelector('#edit-preferences-form [name="to-duration"]').value = preferences.duration.to;
+  document.querySelector('#edit-preferences-form [name="from-cost"]').value = preferences.cost.from;
+  document.querySelector('#edit-preferences-form [name="to-cost"]').value = preferences.cost.to;
   refreshSelectedLocations();
 }
 
@@ -89,6 +95,10 @@ window.addEventListener('load',()=>{
     preferences.duration = {
       from: document.querySelector('#edit-preferences-form [name="from-duration"]').value,
       to: document.querySelector('#edit-preferences-form [name="to-duration"]').value,
+    }
+    preferences.cost = {
+      from: document.querySelector('#edit-preferences-form [name="from-cost"]').value,
+      to: document.querySelector('#edit-preferences-form [name="to-cost"]').value,
     }
     let preferencesRef = doc(db, `users/${currentUser.uid}/recommend-itineraries/preferences`);
     setDoc(preferencesRef, preferences).then(() => alert('Preferences updated.'));
