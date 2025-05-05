@@ -1,3 +1,6 @@
+@import "colors.css";
+
+/* Estructura general */
 .carousel-wrapper {
     display: contents;
 }
@@ -10,6 +13,7 @@
     display: grid;
     grid-template-rows: auto 1fr;
     place-items: center;
+    padding: 40px 20px;
 }
 
 .carousel-column {
@@ -32,9 +36,10 @@
 .carousel-text {
     text-align: center;
     display: inline-block;
+    font-size: 1.1rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
 }
-
-
 
 .carousel-actions {
     gap: 16px;
@@ -43,6 +48,7 @@
     padding-top: 16px;
 }
 
+/* Galería del carrusel */
 .carousel-gallery {
     gap: 24px;
     width: 100%;
@@ -51,110 +57,74 @@
 }
 
 .carousel-placeholder-image {
-    border: white solid 2px;
-    width: 1500px;
-    aspect-ratio: 1/1.2;
+    border: 2px solid #ffffff;
+    border-radius: 12px;
     object-fit: cover;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1/1.2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-@media(max-width: 479px) {
-    .carousel-actions {
-        width: 100%;
-        flex-direction: column;
-    }
-    .carousel-button {
-        width: 100%;
-    }
-}
-
-@keyframes scroll-x {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(calc(-50% ));
-        /* 4 images 3 times so a third of the width*/
-    }
-}
-@media (max-width: 3000px) {
-    .carousel-placeholder-image {
-        width: 800px;
-    }
-}
-
-@media (max-width: 2400px) {
-    .carousel-placeholder-image {
-        width: 600px;
-    }
-}
-
-@media (max-width: 1700px) {
-    .carousel-placeholder-image {
-        width: 400px;
-    }
-}
-
-@media (max-width: 1000px) {
-    .carousel-placeholder-image {
-        width: 200px;
-    }
-}
-
-
-
-
+/* Escalado al hacer hover */
 .img-scale {
-    transition: 0.3s;
+    transition: transform 0.3s;
 }
 
 .img-scale:hover {
-    scale: 1.05;
+    transform: scale(1.05);
 }
 
+/* Sección con padding coherente */
 .section-padding {
     width: 100%;
     display: flex;
-    padding: 80px;
+    padding: 80px 20px;
     position: relative;
     align-items: center;
     flex-direction: column;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-
+/* Títulos y textos coherentes con index */
+.heading-1,
+.heading-2,
+.heading-3,
+.text-body-large,
+.text-body-small {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+    color: #008cff;
+}
 
 .heading-1 {
     font-size: 48px;
-    font-family: serif;
     font-weight: 700;
-    line-height: 1.5;
 }
 
 .heading-2 {
     font-size: 35px;
-    font-family: serif;
     font-weight: 600;
-    line-height: 1.5;
 }
 
 .heading-3 {
     font-size: 26px;
-    font-family: serif;
     font-weight: 600;
-    line-height: 1.5;
 }
 
 .text-body-large {
     font-size: 18px;
-    font-family: serif;
-    line-height: 1.5;
+    color: #333;
 }
 
 .text-body-small {
     font-size: 16px;
-    font-family: serif;
-    line-height: 1.5;
+    color: #333;
 }
 
+/* Carrusel horizontal */
 .carousel-container-horizontal {
     gap: 16px;
     display: flex;
@@ -162,7 +132,8 @@
     width: 100%;
 }
 
-.carousel-horizontal, .carousel-horizontal-reverse {
+.carousel-horizontal,
+.carousel-horizontal-reverse {
     display: flex;
     animation: scroll-x 20s linear infinite;
     min-width: 100%;
@@ -176,4 +147,37 @@
 
 .carousel-container-horizontal:hover div {
     animation-play-state: paused;
+}
+
+/* Animación scroll */
+@keyframes scroll-x {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-50%));
+    }
+}
+
+/* Responsividad */
+@media(max-width: 1000px) {
+    .carousel-placeholder-image {
+        max-width: 400px;
+    }
+}
+
+@media(max-width: 600px) {
+    .carousel-placeholder-image {
+        max-width: 250px;
+    }
+}
+
+@media(max-width: 479px) {
+    .carousel-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    .carousel-button {
+        width: 100%;
+    }
 }

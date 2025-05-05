@@ -2,50 +2,61 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: var(--gris-claro);
+    margin: 0;
 }
 
 button {
     cursor: pointer;
 }
 
-
-
-#navigation,#tools {
+/* NAVIGATION & TOOLS */
+#navigation, #tools {
     display: flex;
-    height: auto;
-    background-color: var(--beige-calido);
+    flex-wrap: wrap;
+    background-color: #f5f7fa;
     align-items: center;
     justify-content: center;
     padding: 2rem;
     font-size: 1rem;
     text-align: center;
-}
-
-
-#links {
-    display: flex;
-    gap: 1rem;
-    align-items: end;
+    position: relative;
+    z-index: 1;
 }
 
 #tools {
-    background-color: var(--naranja-quemado);
+    background-color: #f5f7fa;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 6rem;
     padding: 1rem 0;
+    margin-top: 3rem; /* AÑADIDO para separar de #navigation */
 }
+
+
+/* NAV LINKS */
+#links {
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+}
+
+/* VIEW SWITCH */
 #switch-view {
     background-color: var(--marron-claro);
-    border-color: var(--marron-oscuro);
+    border: 1px solid var(--marron-oscuro);
     box-shadow: 0 0 0.5rem var(--marron-oscuro);
+    padding: 0.8rem 2rem;
+    border-radius: 10px;
 }
+
 #switch-view:hover {
     background-color: var(--marron-medio);
 }
 
+/* ACTION BUTTONS */
 #actions {
     display: flex;
     gap: 1rem;
@@ -54,10 +65,14 @@ button {
 }
 
 #open-itinerary {
-    padding: 1rem;
-    border-radius: 2rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
     background-color: var(--marron-claro);
-    border-color: var(--marron-medio);
+    border: 1px solid var(--marron-medio);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
 }
 
 #open-itinerary:hover {
@@ -66,50 +81,46 @@ button {
     box-shadow: 0 0 0.5rem var(--marron-oscuro);
 }
 
-#next-itinerary,#previous-itinerary {
+#next-itinerary, #previous-itinerary {
     border: none;
     height: 4em;
     width: 4em;
     outline: none;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #previous-itinerary {
-    rotate: 180deg;
+    transform: rotate(180deg);
 }
 
-#next-itinerary svg,#previous-itinerary svg{
-    align-items: center;
-    justify-content: center;
+#next-itinerary svg, #previous-itinerary svg {
     height: 100%;
     width: 100%;
-
 }
 
-#previous-itinerary:hover, #next-itinerary:hover svg {
-    transform: scale(1.1); /* Animación de tamaño al pasar el cursor */
+#previous-itinerary:hover svg, #next-itinerary:hover svg {
+    transform: scale(1.1);
 }
 
-
-
+/* SEARCH */
 #search-actions {
     display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
-/* from search-places.css*/
 #search {
     padding: 12px 20px;
     font-size: 15px;
     height: 54px;
     width: 350px;
-    border: 2px;
-    transition: all 0.3s ease;
+    border: 1px solid lightgray;
     font-family: 'Montserrat', sans-serif;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 #search:focus {
@@ -121,38 +132,37 @@ button {
 #reload-button {
     padding: 0;
     height: 54px;
-    width: 54px; /* Ajusta el tamaño del botón para que se ajuste a la imagen */
+    width: 54px;
     border: none;
-    display: flex; /* Flexbox para centrar la imagen dentro del botón */
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra horizontalmente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--marron-medio);
     cursor: pointer;
-    border-top-right-radius: 10px; /* Curva en el borde superior derecho */
-    border-bottom-right-radius: 10px; /* Curva en el borde inferior derecho */
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #reload-button img {
-    width: 30px; /* Ajusta el tamaño de la imagen dentro del botón */
-    height: auto; /* Mantiene la proporción de la imagen */
+    width: 30px;
+    height: auto;
 }
-/* until here*/
 
+/* MAIN CONTENT */
 main {
-    padding: 3rem;
+    padding: 5rem 3rem 3rem;
     flex: 1;
-    background-color: var(--marron-medio);
+    background-color: #f5f7fa;
 }
 
-
-/* list view*/
+/* ITINERARY LIST VIEW */
 .my-itineraries {
     display: grid;
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
-    height: 100%;
     max-height: 100%;
     border-radius: 2rem;
+    gap: 2rem;
 }
 
 .preview {
@@ -160,15 +170,16 @@ main {
     flex-direction: column;
     padding: 1rem;
     background-color: var(--oro-suave);
-    max-height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 .image-preview {
     display: flex;
-    justify-content: center; /* Centra la imagen en el contenedor */
+    justify-content: center;
     align-items: center;
     padding: 0 2rem;
-    overflow: hidden; /* Asegura que no haya desbordamiento en el contenedor */
+    overflow: hidden;
     aspect-ratio: 4 / 2;
 }
 
@@ -181,11 +192,10 @@ main {
 
 .intro {
     width: 100%;
-    max-width: 380px; /* La imagen nunca será más ancha que su contenedor */
-    height: auto; /* Mantiene la proporción de la imagen */
+    max-width: 380px;
+    height: auto;
     border-radius: 2em;
 }
-
 
 .summary {
     display: flex;
@@ -195,13 +205,16 @@ main {
 }
 
 .title {
-    font-size: 4rem;
+    font-size: 2.5rem;
+    font-weight: bold;
 }
 
 .description {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    color: #333;
 }
 
+/* DAYS SECTION */
 .grid-column {
     display: grid;
     grid-template-rows: 1fr 18fr 1fr;
@@ -211,17 +224,16 @@ main {
 .day-container {
     padding: 1rem 0;
     background-color: var(--oro-suave);
-    display: block;
     overflow: hidden;
-
 }
 
-.days  {
+.days {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 15px;
     align-items: center;
+    justify-content: center;
 }
 
 .days button {
@@ -235,8 +247,6 @@ main {
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-align: center;
-    justify-content: left;
 }
 
 .days button:hover {
@@ -245,41 +255,14 @@ main {
     color: black;
 }
 
-.days button:active {
-    background-color: #aaa;
-}
-
-#closePopup {
-    padding: 10px 20px;
-    border-radius: 5px;
-    background: #ffffff;
-    color: #09f;
-    border: none;
-    cursor: pointer;
-}
-
-
 .content {
     display: flex;
     max-height: 100%;
 }
 
-.days {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-}
-
-.day-button {
-    border-radius: 0;
-}
-
-
 .side-bar {
     width: 0.5rem;
     border-radius: 1rem;
-    height: 100%;
     background-color: black;
 }
 
@@ -290,16 +273,15 @@ main {
     overflow-y: auto;
 }
 
-/* gallery view */
+/* GALLERY VIEW */
 #itinerary-gallery-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 16px; /* opcional, espacio entre tarjetas */
-    padding: 16px; /* opcional */
+    gap: 16px;
+    padding: 16px;
     overflow-y: auto;
     width: 100%;
-    height: 100%;
     max-height: 100%;
 }
 
@@ -309,6 +291,7 @@ main {
     padding: 0;
     object-fit: contain;
 }
+
 #itinerary-gallery-container .preview {
     background-color: inherit;
     padding: 0;
@@ -317,7 +300,7 @@ main {
 }
 
 #itinerary-gallery-container .intro {
-    max-width: 300px !important; /* La imagen nunca será más ancha que su contenedor */
+    max-width: 300px !important;
     width: 100%;
     height: 100%;
     object-fit: fill;

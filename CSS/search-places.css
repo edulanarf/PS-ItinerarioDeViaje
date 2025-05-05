@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    background: #FFE3B3;
+    background-color: #f5f7fa;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -29,13 +29,13 @@ input:invalid {
     border-color: red;
 }
 
-#errors{
+#errors {
     justify-content: center;
     align-content: center;
     padding-left: 30px;
 }
 
-/* Sección izquierda: búsqueda, mapa, resultados */
+/* Sección izquierda */
 #form-map-list {
     width: 65%;
     display: flex;
@@ -69,9 +69,9 @@ input:invalid {
     height: 54px;
     width: 300px;
     border: none;
-    transition: all 0.3s ease;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 #search-input:focus {
@@ -111,7 +111,7 @@ input:invalid {
     height: auto;
 }
 
-/* Botón global de añadir (ya no se usa pero lo dejamos por si acaso) */
+/* Botón añadir global */
 #add-info-button {
     font-size: 13px;
     padding: 1rem;
@@ -150,7 +150,7 @@ input:invalid {
 }
 
 #places-list {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     font-size: 18px;
     text-align: center;
@@ -163,7 +163,7 @@ input:invalid {
     background: #fff;
     padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -175,8 +175,7 @@ input:invalid {
     max-width: 100%;
 }
 
-/* ======== BOTÓN INDIVIDUAL AÑADIR ======== */
-
+/* Botón añadir individual */
 .add-button {
     margin-top: 10px;
     padding: 0.5rem 1rem;
@@ -194,9 +193,8 @@ input:invalid {
     background-color: var(--borgona-profundo);
 }
 
-/* ======== ITINERARIO (DERECHA) ======== */
-
-#places{
+/* ITINERARIO (derecha) */
+#places {
     border: none;
 }
 
@@ -210,11 +208,10 @@ input:invalid {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    box-sizing: border-box;
     height: fit-content;
 }
 
-/* Encabezado y texto */
+/* Encabezado */
 h3 {
     margin: 0;
     font-size: 1.2rem;
@@ -222,14 +219,12 @@ h3 {
     text-align: center;
 }
 
-
 #separation-itinerary {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* Campo de título */
 #itinerary-title {
     width: 100%;
     padding: 10px 15px;
@@ -247,20 +242,6 @@ h3 {
     box-shadow: 0 0 10px var(--rojo-oxido);
 }
 
-/* Botón guardar */
-#save-itinerary {
-    font-size: 14px;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--rojo-oscuro);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 20px;
-    width: 50%;
-    align-self: center;
-}
 #itinerary-description {
     width: 50%;
     padding: 10px 15px;
@@ -282,10 +263,25 @@ h3 {
     box-shadow: 0 0 8px var(--rojo-oxido);
 }
 
+#save-itinerary {
+    font-size: 14px;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--rojo-oscuro);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    width: 50%;
+    align-self: center;
+}
+
 #save-itinerary:hover {
     background-color: var(--borgona-profundo);
 }
 
+/* Botones por día */
 #day-buttons-container {
     display: flex;
     flex-wrap: wrap;
@@ -319,12 +315,12 @@ h3 {
     background-color: #aaa;
 }
 
-#day{
+#day {
     padding-left: 10px;
     padding-bottom: 10px;
 }
 
-#save-day-button{
+#save-day-button {
     font-size: 14px;
     padding: 0.75rem 1.5rem;
     background-color: var(--rojo-oscuro);
@@ -339,7 +335,7 @@ h3 {
     background-color: var(--borgona-profundo);
 }
 
-/* Lista guardada */
+/* Lista del itinerario */
 #itinerary-list {
     list-style: none;
     padding-left: 0;
@@ -348,7 +344,7 @@ h3 {
     gap: 10px;
 }
 
-/* Botones de eliminar */
+/* Botones eliminar */
 .delete-button {
     font-size: 13px;
     padding: 6px 10px;
@@ -370,10 +366,9 @@ h3 {
     gap: 10px;
 }
 
-/* kilometros */
-
-#km-input-value{
-    margin-left:20px;
+/* Kilómetros */
+#km-input-value {
+    margin-left: 20px;
     display: flex;
     align-items: center;
 }

@@ -1,3 +1,5 @@
+@import "colors.css";
+
 body {
     font-family: 'Montserrat', sans-serif;
     display: flex;
@@ -5,7 +7,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f5f5;
+    background-color: #f5f7fa;
 }
 
 #us {
@@ -21,8 +23,8 @@ body {
 .background-square {
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     text-align: center;
     width: 300px;
 }
@@ -30,31 +32,39 @@ body {
 h2 {
     font-weight: 600;
     margin-bottom: 20px;
+    color: var(--carbon);
 }
 
+/* Botón principal (rojo) */
 button {
-    background-color: #d9534f;
+    background-color: var(--e63946);
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s ease;
+    margin-bottom: 12px;
 }
 
 button:hover {
-    background-color: #c9302c;
+    background-color: var(--d62828);
 }
 
+/* Cancelar */
 #cancel-button {
     display: block;
     text-decoration: none;
-    color: #555;
+    color: #008cff;
     font-size: 14px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: color 0.2s ease;
 }
 
 #cancel-button:hover {
-    color: #000;
+    color: #005fa3;
 }

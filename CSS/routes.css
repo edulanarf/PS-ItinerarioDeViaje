@@ -1,42 +1,53 @@
+@import "colors.css";
+
+/* POPUP GENERAL */
 .popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.85);
     color: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 16px;
     z-index: 1000;
-    display: none; /* Asegúrate de que esté oculto por defecto */
-    width: 80%;
-    height: 95vh;
-    overflow: hidden;
-    overflow-y: auto; /* SCROLL vertical solo en el contenido */
-
+    display: none;
+    width: 90%;
+    max-width: 1000px;
+    height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    font-family: 'Montserrat', sans-serif;
 }
 
-
-
+/* CONTENIDO */
 .popup-content {
-    flex: 1;
-    padding: 20px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
+    padding: 20px;
 }
 
-
+/* MOSTRAR POPUP */
 .popup.show {
-    display: block; /* Se muestra cuando se le agrega la clase 'show' */
+    display: block;
 }
 
+/* BOTÓN DE CIERRE */
 .close {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: var(--cta-rojo);
     cursor: pointer;
-    font-size: 20px;
-    color: red;
+    font-weight: bold;
+    background: none;
+    border: none;
     z-index: 10;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--cta-rojo-hover);
 }

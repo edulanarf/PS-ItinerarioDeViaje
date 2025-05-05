@@ -1,17 +1,24 @@
+@import "colors.css";
 
-#register-form{
-    display:flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-body{
+/* Fondo y alineación */
+body {
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
+    background-color: #f5f7fa;
 }
 
+/* Formulario principal */
+#register-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Campos de entrada */
 #register-email,
 #register-username,
 #register-password {
@@ -27,19 +34,20 @@ body{
     box-sizing: border-box;
 }
 
+/* Mensajes de error */
 .error-message {
     color: red;
     font-size: 0.7rem;
-    display: none; /* Inicialmente oculto */
+    display: none;
 }
 
 input:invalid {
     border-color: red;
 }
 
-
-#profile-pic-container{
-    margin:12px;
+/* Foto de perfil */
+#profile-pic-container {
+    margin: 12px;
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -50,6 +58,8 @@ input:invalid {
     justify-content: center;
     align-items: center;
     text-align: center;
+    background-color: var(--crema-ligera);
+    border: 2px dashed var(--marron-claro);
 }
 
 #profile-pic-container input[type="file"] {
@@ -74,21 +84,26 @@ input:invalid {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     z-index: 1;
+    text-align: center;
+    color: #333;
 }
 
-#register-button{
+/* Botón de registro */
+#register-button {
     margin: 15px;
-    background-color: var(--marron-medio);
+    background-color: var(--e63946);
     cursor: pointer;
-    border-color: black;
-    padding: 5px 20px;
+    border: none;
+    padding: 12px 30px;
     text-align: center;
     border-radius: 30px;
     font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
     transition: background-color 0.3s ease;
     color: white;
+    font-weight: bold;
 }
 
 #register-button:hover {
-    background-color: var(--marron-oscuro);
+    background-color: var(--d62828);
 }

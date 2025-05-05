@@ -1,24 +1,27 @@
 @import "colors.css";
 
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
 #navigation {
     display: block;
     width: 100%;
     height: auto;
-    background-color: var(--beige-calido);
+    background-color: #f5f7fa;
     align-items: center;
     justify-content: space-between;
-    padding: 2rem 2rem 0.5rem 2rem ;
+    padding: 2rem 2rem 0.5rem 2rem;
     font-size: 1rem;
     text-align: center;
 }
 
-#links-section{
+#links-section {
     justify-items: center;
     align-content: center;
     align-items: center;
     width: 100%;
 }
-
 
 #session-navbar {
     display: flex;
@@ -31,6 +34,7 @@
 #us {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 #brand-name {
@@ -38,6 +42,10 @@
     font-size: 2rem;
     font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
     color: black;
+}
+
+#logo {
+    height: 60px;
 }
 
 #links {
@@ -50,32 +58,24 @@
     width: fit-content;
 }
 
-#links a{
+#links a {
     margin-right: 2rem;
 }
 
-
-
 .nav-button {
-    color:black;
+    color: #008cff;
+    border: 2px solid #008cff;
+    padding: 10px 20px;
+    border-radius: 10px;
     font-weight: bold;
     text-decoration: none;
-    width: fit-content;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .nav-button:hover {
+    background-color: #008cff;
+    color: white;
     cursor: pointer;
-    text-decoration: none;
-}
-
-#us {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#logo {
-    height: 60px;
 }
 
 #profile-info {
@@ -97,12 +97,12 @@
     font-weight: 200;
     color: #222;
     font-family: 'Montserrat', sans-serif;
-    font-size: 2px;
+    font-size: 14px;
 }
 
 #dropdown-menu {
     position: absolute;
-    top: 70px; /* Ajusta la posición del menú */
+    top: 70px;
     right: 0;
     width: 160px;
     background: white;
@@ -126,10 +126,8 @@
     background: #f0f0f0;
 }
 
-/* Clase para mostrar el menú */
 #dropdown-menu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-

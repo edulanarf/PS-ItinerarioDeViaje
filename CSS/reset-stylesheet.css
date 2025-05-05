@@ -1,36 +1,113 @@
+/* === Reset base === */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html {  line-height: 1.15;
+/* HTML y cuerpo */
+html {
     scroll-behavior: smooth;
+    line-height: 1.5;
     height: 100%;
     width: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
+
 body {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100vh;
     width: 100%;
-    margin: 0;
-}
-main {
-    overflow: hidden;
-    justify-items: center;
-    align-content: center;
-    height: 100%;
-    width: 100%;
+    background-color: var(--beige-calido);
+    color: var(--carbon);
 }
 
-p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}
-button {  background-color: transparent;}
-button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}
-button,select {  text-transform: none;}
-button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;  color: inherit;}
-button:focus-visible,[type="button"]:focus-visible,[type="reset"]:focus-visible,[type="submit"]:focus-visible {  border-style: none;  padding: 0;}
-button:focus,[type="button"]:focus,[type="reset"]:focus,[type="submit"]:focus {  outline: 1px dotted ButtonText;}
-a {  color: inherit;  text-decoration: inherit;}
-input {  padding: 2px 4px;}
-img {  display: block;}
-details {  display: block;  margin: 0;  padding: 0;}
-summary::-webkit-details-marker {  display: none;}
+/* Tipografía base */
+p, li, ul, pre, div, h1, h2, h3, h4, h5, h6, figure, blockquote, figcaption {
+    margin: 0;
+    padding: 0;
+}
+
+/* Imágenes y medios */
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Links */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Botones e inputs */
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    background-color: transparent;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    -webkit-appearance: button;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+button:focus,
+[type="button"]:focus,
+[type="reset"]:focus,
+[type="submit"]:focus {
+    outline: 1px dotted ButtonText;
+}
+
+button:focus-visible,
+[type="button"]:focus-visible,
+[type="reset"]:focus-visible,
+[type="submit"]:focus-visible {
+    border-style: none;
+    padding: 0;
+}
+
+input {
+    padding: 2px 4px;
+}
+
+/* HTML5 específicos */
+details {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Main wrapper */
+main {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
