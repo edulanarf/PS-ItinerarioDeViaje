@@ -324,9 +324,42 @@ window.addEventListener("load", () => {
     if (!link) return;
     e.preventDefault();
     e.stopPropagation();
+    if (moved) return;
     let itinerary = itineraries.find(itinerary => itinerary.id===link.dataset.id);
     showModal(itinerary);
   });
+  let pos = { top: 0, left: 0, x: 0, y: 0 };
+  let ele, moved;
+  const mouseDownHandler = function (e) {
+    ele = e.target.closest('.destination-content');
+    moved = false;
+    if (!ele) return;
+    e.preventDefault();
+    ele.style.userSelect = 'none';
+    pos = {
+        // The current scroll
+        left: ele.scrollLeft,
+        // Get the current mouse position
+        x: e.clientX,
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+  };
+  const mouseMoveHandler = function (e) {
+    moved = true;
+    // How far the mouse has been moved
+    const dx = e.clientX - pos.x;
+    console.log(pos.left - dx);;
+
+    // Scroll the element
+    ele.scrollLeft = pos.left - dx;
+  };
+  const mouseUpHandler = function () {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  };
+  document.querySelector('.destinations').addEventListener('mousedown',mouseDownHandler);
   document.querySelector('.modal').addEventListener('click',e => {
     if (!e.target.classList.contains('modal')&&!e.target.classList.contains('close')) return;
     e.target.closest('.modal').classList.add('hidden');

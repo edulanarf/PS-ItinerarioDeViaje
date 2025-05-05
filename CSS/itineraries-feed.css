@@ -70,7 +70,7 @@ section.main {
 }
 
 .destination-content {
-    overflow-x: scroll;
+    overflow-x: hidden;
     overflow-y: hidden;
     display: flex;
     gap: 1rem;
