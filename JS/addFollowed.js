@@ -22,5 +22,6 @@ export async function addFollowedUser(user) {
     });
 
   } else {
+    console.log('nok');
   }
 }

@@ -54,6 +54,11 @@
         <div class="result-category-content">
         </div>
       </div>
+      <div class="result-category result-category-creator hidden">
+        <div class="result-category-header">CREADOR</div>
+        <div class="result-category-content">
+        </div>
+      </div>
     </div>
     <div class="destinations">
     </div>
@@ -61,83 +66,14 @@
 </section>
 <div class="modal hidden">
   <div class="modal-container">
-    <div class="modal-header">Title</div>
+    <div class="modal-header"></div>
     <div class="modal-content">
       <div class="modal-itinerary-created-by">
-        Creado por <span class="value">Edu</span> <button type="button">Seguir</button>
+        Creado por <span class="value">Edu</span> <button type="button" class="follow">Seguir</button> <button class="stop-following hidden" type="button">Dejar de seguir</button>
       </div>
       <div class="modal-itinerary-description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae malesuada leo, et aliquam orci. Pellentesque eget libero et magna lobortis egestas non eget eros.
       </div>
       <div class="itinerary-days">
-        <div class="itinerary-day">
-          <div class="itinerary-day-header">Día 1</div>
-          <div class="itinerary-day-places">
-            <div class="itinerary-day-place">
-              <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
-              <div class="itinerary-day-place-data">
-                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
-                <div class="itinerary-day-place-address">
-                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
-                </div>
-                <div class="itinerary-day-place-category">
-                  Categoría: <span class="value">Restaurante</span>
-                </div>
-                <div class="itinerary-day-place-price">
-                  Precio: <span class="value">20</span> €
-                </div>
-                <div class="itinerary-day-place-rating">
-                  Rating: <span class="value">4.9</span> ★
-                </div>
-              </div>
-            </div>
-            <div class="itinerary-day-place">
-              <div class="itinerary-day-place-img-container">
-                <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
-              </div>
-              <div class="itinerary-day-place-data">
-                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
-                <div class="itinerary-day-place-address">
-                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
-                </div>
-                <div class="itinerary-day-place-category">
-                  Categoría: <span class="value">Restaurante</span>
-                </div>
-                <div class="itinerary-day-place-price">
-                  Precio: <span class="value">20</span> €
-                </div>
-                <div class="itinerary-day-place-rating">
-                  Rating: <span class="value">4.9</span> ★
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="itinerary-day">
-          <div class="itinerary-day-header">Día 2</div>
-          <div class="itinerary-day-places">
-            <div class="itinerary-day-place">
-              <div class="itinerary-day-place-img-container">
-                <img class="itinerary-day-place-img" src="https://maps.googleapis.com/maps/api/place/js/PhotoService.GetPhoto?1sAeeoHcIL3drdeiicpgKSVG-l92WPbX5HjKlE7Fy0UxfUS6M4JHnIVn9kpnk_Akk0TxCzbxlnHKUcp2en1X0_rqzD0ZMfB_w3C8zITT99XlLIN86kejdOEMqkBNaEylAnyEaAPJF0bspCO_292K2mjS6YcRRiwujKAohNFL0RkcsoEzfqiZfLEO-DwbzksZPkLqhaLaL4dy2wj8BLYD9axWwhFd5WW9hrheDdrDZb02FFGbZmmUeM5VMG2iiooXCOshhbAXR6xAt6q7GtYvjMfHb3oCJECctGfmC15rzLtvDGpd3BJC5qnDY&amp;3u1024&amp;4u1024&amp;5m1&amp;2e1&amp;callback=none&amp;r_url=http%3A%2F%2Flocalhost%3A63342%2FPS-ItinerarioDeViaje2%2FHTML%2Fsearch-places.html&amp;key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&amp;token=71631" alt="La Palmera Hotel Boutique">
-              </div>
-              <div class="itinerary-day-place-data">
-                <div class="itinerary-day-place-name">La Palmera Hotel Boutique</div>
-                <div class="itinerary-day-place-address">
-                  Dirección: <span class="value">C. Rafael Dávila, 12, Las Palmas de Gran Canaria</span>
-                </div>
-                <div class="itinerary-day-place-category">
-                  Categoría: <span class="value">Restaurante</span>
-                </div>
-                <div class="itinerary-day-place-price">
-                  Precio: <span class="value">20</span> €
-                </div>
-                <div class="itinerary-day-place-rating">
-                  Rating: <span class="value">4.9</span> ★
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="itinerary-map"></div>
     </div>

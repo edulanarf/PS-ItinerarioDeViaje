@@ -12,6 +12,8 @@ import { priceLevels } from "/JS/price-levels.js";
 import { auth, db } from "./firebase-config.js";
 import{addFavoriteItinerary} from './addFavorite.js'
 import{removeFavoriteItinerary} from './removeFavorite.js'
+import { addFollowedUser } from "./addFollowed.js";
+import { removeFollowedUser } from "./removeFollowed.js";
 
 async function loadItineraries() {
   const itinerariesRef = collection(db, "publicItineraries");
@@ -28,7 +30,7 @@ async function loadItineraries() {
   return itineraries;
 }
 
-let currentUser, users, preferences, itineraries, geocoder, searchCategories = [], searchLocalities = [], favorites = [];
+let currentUser, users, preferences, itineraries, geocoder, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [];
 const allCategories = ['Hotel','Restaurante','Cafetería','Museo','Parque','Centro comercial','Aeropuerto'];
 
 onAuthStateChanged(auth, async (user) => {
@@ -38,7 +40,8 @@ onAuthStateChanged(auth, async (user) => {
       loadPreferences(user),
       loadUsers(),
       loadItineraries(),
-      loadFavorites()
+      loadFavorites(),
+      loadFollowed()
     ])
     drawItineraries();
   } else {
@@ -95,6 +98,10 @@ async function loadFavorites() {
   const itinerariesRef = collection(db, 'users', currentUser.uid, 'favorites');
   return favorites = (await getDocs(itinerariesRef)).docs.map(itineraryDoc => itineraryDoc.data().itineraryRef);
 }
+async function loadFollowed() {
+  const usersRef = collection(db, 'users', currentUser.uid, 'followed');
+  return followed = (await getDocs(usersRef)).docs.map(userDoc => userDoc.data().userRef);
+}
 
 function drawItineraries() {
   let itinerariesGroups = [];
@@ -102,26 +109,102 @@ function drawItineraries() {
   let categories = searchCategories.length === 0 ? preferences.categories : searchCategories;
   let duration = preferences.duration;
   let f1Itineraries = itineraries.filter(itinerary => itinerary.days.length >= duration.from && itinerary.days.length <= duration.to);
-  cities.forEach(city => {
-    categories.forEach(category => {
-      let f2Itineraries = f1Itineraries.filter(itinerary => {
-        return itinerary.days.findIndex(day => {
-          return day.places.findIndex(place => {
-            return (
-              place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-              &&
-              place.category === category
-            );
+  if (searchCreators.length === 0) {
+    cities.forEach(city => {
+      categories.forEach(category => {
+        let f2Itineraries = f1Itineraries.filter(itinerary => {
+          return itinerary.days.findIndex(day => {
+            return day.places.findIndex(place => {
+              return (
+                place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
+                &&
+                place.category === category
+              );
+            }) !== -1;
           }) !== -1;
-        }) !== -1;
+        });
+        if (f2Itineraries.length === 0) return;
+        itinerariesGroups.push({
+          name: `Con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
+          itineraries: f2Itineraries
+        });
       });
+    });
+    followed.forEach(userId => {
+      let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
       if (f2Itineraries.length === 0) return;
       itinerariesGroups.push({
-        name: `Con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
+        name: `Creados por ${users[userId].username}`,
         itineraries: f2Itineraries
       });
     });
-  });
+  } else {
+    searchCreators.forEach(userId => {
+      if (searchCategories.length > 0 && searchLocalities.length > 0) {
+        cities.forEach(city => {
+          categories.forEach(category => {
+            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+              return itinerary.days.findIndex(day => {
+                return day.places.findIndex(place => {
+                  return (
+                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
+                    &&
+                    place.category === category
+                  );
+                }) !== -1;
+              }) !== -1;
+            });
+            if (f2Itineraries.length === 0) return;
+            itinerariesGroups.push({
+              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
+              itineraries: f2Itineraries
+            });
+          });
+        });
+      } else if (searchCategories.length) {
+        categories.forEach(category => {
+          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+            return itinerary.days.findIndex(day => {
+              return day.places.findIndex(place => {
+                return (
+                  place.category === category
+                );
+              }) !== -1;
+            }) !== -1;
+          });
+          if (f2Itineraries.length === 0) return;
+          itinerariesGroups.push({
+            name: `Creados por ${users[userId].username} con visita a ${category}`,
+            itineraries: f2Itineraries
+          });
+        });
+      } else if (searchLocalities.length) {
+        cities.forEach(city => {
+          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
+            return itinerary.days.findIndex(day => {
+              return day.places.findIndex(place => {
+                return (
+                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
+                );
+              }) !== -1;
+            }) !== -1;
+          });
+          if (f2Itineraries.length === 0) return;
+          itinerariesGroups.push({
+            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
+            itineraries: f2Itineraries
+          });
+        });
+      } else {
+        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
+        if (f2Itineraries.length === 0) return;
+        itinerariesGroups.push({
+          name: `Creados por ${users[userId].username}`,
+          itineraries: f2Itineraries
+        });
+      }
+    });
+  }
   const groupTemplate = `
     <div class="destination">
       <div class="destination-header"><h2>{{name}}</h2></div>
@@ -166,6 +249,9 @@ function drawFilters() {
   html += searchCategories.map(category => {
     return `<a href="#" class="search-filter" data-type="category" data-name="${category}">&times; ${category}</a>`;
   }).join();
+  html += searchCreators.map(userId => {
+    return `<a href="#" class="search-filter" data-type="creator" data-user_id="${userId}">&times; ${users[userId].username}</a>`;
+  }).join();
   document.querySelector('.current-filters').innerHTML = html;
 }
 
@@ -192,9 +278,11 @@ window.addEventListener("load", () => {
     let searchResults = document.querySelector('.search-results');
     let resultsCategory = document.querySelector('.result-category-category');
     let resultsLocality = document.querySelector('.result-category-locality');
+    let resultsCreator = document.querySelector('.result-category-creator');
     searchResults.classList.add('hidden');
     resultsCategory.classList.add('hidden')
     resultsLocality.classList.add('hidden');
+    resultsCreator.classList.add('hidden');
     if (e.target.value.length < 3) {
       return;
     }
@@ -204,6 +292,13 @@ window.addEventListener("load", () => {
         return `<a class="result-category-item" data-type="category" data-name="${result}" href="#">${result}</a>`
       }).join('');
       resultsCategory.classList.remove('hidden')
+    }
+    let filteredCreators = Object.keys(users).filter(userId => users[userId].username.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase()));
+    if (filteredCreators.length > 0) {
+      resultsCreator.querySelector('.result-category-content').innerHTML = filteredCreators.map(result => {
+        return `<a class="result-category-item" data-type="creator" data-user_id="${result}" href="#">${users[result].username}</a>`
+      }).join('');
+      resultsCreator.classList.remove('hidden')
     }
     timeout = setTimeout(() => {
       timeout = undefined;
@@ -237,6 +332,8 @@ window.addEventListener("load", () => {
       searchLocalities.push({name:link.dataset.name,place_id:link.dataset.place_id,lat:link.dataset.lat,lng:link.dataset.lng});
     } else if(link.dataset.type==='category') {
       searchCategories.push(link.dataset.name);
+    } else if(link.dataset.type==='creator') {
+      searchCreators.push(link.dataset.user_id);
     }
     drawFilters();
     drawItineraries()
@@ -248,6 +345,8 @@ window.addEventListener("load", () => {
       searchLocalities = searchLocalities.filter(city => city.place_id !== link.dataset.place_id);
     } else if(link.dataset.type==='category') {
       searchCategories = searchCategories.filter(category => category !== link.dataset.name);
+    } else if(link.dataset.type==='creator') {
+      searchCreators = searchCreators.filter(userId => userId !== link.dataset.user_id);
     }
     drawFilters();
     drawItineraries()
@@ -264,6 +363,20 @@ window.addEventListener("load", () => {
       e.target.classList.add('hidden');
       favorites = favorites.filter(itineraryId => itineraryId !== e.target.dataset.itineraryId);
       document.querySelector('.add-to-favortites').classList.remove('hidden');
+    });
+  });
+  document.querySelector('.follow').addEventListener('click',e=>{
+    addFollowedUser(e.target.dataset.userId).then(() => {
+      e.target.classList.add('hidden');
+      followed.push(e.target.dataset.userId);
+      document.querySelector('.stop-following').classList.remove('hidden');
+    });
+  });
+  document.querySelector('.stop-following').addEventListener('click',e=>{
+    removeFollowedUser(e.target.dataset.userId).then(() => {
+      e.target.classList.add('hidden');
+      followed = followed.filter(userId => userId !== e.target.dataset.userId);
+      document.querySelector('.follow').classList.remove('hidden');
     });
   });
 });
@@ -328,6 +441,17 @@ function showModal(itinerary) {
   } else {
     addToFavoritesBtn.classList.remove('hidden');
     removeFromFavoritesBtn.classList.add('hidden');
+  }
+  let addToFolloedBtn = modal.querySelector('.follow');
+  let removeFromFollowedBtn = modal.querySelector('.stop-following');
+  addToFolloedBtn.dataset.userId = itinerary.userRef;
+  removeFromFollowedBtn.dataset.userId = itinerary.userRef;
+  if (followed.includes(itinerary.userRef)) {
+    removeFromFollowedBtn.classList.remove('hidden');
+    addToFolloedBtn.classList.add('hidden');
+  } else {
+    addToFolloedBtn.classList.remove('hidden');
+    removeFromFollowedBtn.classList.add('hidden');
   }
   modal.classList.remove('hidden');
 }
