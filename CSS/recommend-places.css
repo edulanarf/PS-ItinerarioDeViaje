@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: var(--beige-calido);
+    background-color: #f5f7fa;
     margin: 0;
 }
 
@@ -24,10 +24,10 @@ body {
 .nav-tabs {
     display: flex;
     background-color: var(--naranja-quemado);
-    padding: 0.5rem;
+    padding: 1rem;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .nav-tabs > * {
@@ -106,30 +106,35 @@ body {
 .sidebar-footer {
     display: flex;
     justify-content: center;
-    padding-bottom: 1rem;
-    gap: 0.5rem;
+    padding: 1rem;
+    gap: 1rem;
+    border-top: 1px solid #ccc;
+    background-color: #fff;
 }
 
+/* Botones principales */
 .configure-preferences,
 .save-preferences,
 .cancel-preferences {
     text-align: center;
     text-decoration: none;
-    background-color: var(--e63946);
-    color: white;
+    background-color: white;
+    color: var(--google-blue);
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     padding: 0.8rem 1.5rem;
     border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
-    border: none;
+    border: 2px solid var(--google-blue);
     cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .configure-preferences:hover,
 .save-preferences:hover,
 .cancel-preferences:hover {
-    background-color: var(--d62828);
+    background-color: var(--azul-brillante);
+    color: white;
 }
 
 /* Mapa */
@@ -180,6 +185,7 @@ body {
     border-radius: 1rem;
     overflow-y: auto;
     background-color: #fff;
+    padding: 0.5rem;
 }
 
 /* Buscador */
@@ -187,7 +193,7 @@ body {
     padding: 0.5rem;
     font-size: 15px;
     width: calc(100% - 1rem);
-    border: none;
+    border: 1px solid lightgray;
     border-radius: 0.5rem;
     margin-top: 1rem;
     transition: all 0.3s ease;
@@ -197,25 +203,26 @@ body {
 .place-control {
     display: flex;
     justify-content: center;
+    margin-top: 0.5rem;
 }
 
 .add-location,
 .remove-location {
-    background-color: var(--azul-principal);
-    color: white;
+    background-color: white;
+    color: var(--azul-principal);
     font-weight: bold;
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: none;
-    margin-top: 0.5rem;
+    border: 2px solid var(--azul-principal);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .add-location:hover,
 .remove-location:hover {
-    background-color: #0070dd;
+    background-color: var(--azul-principal);
+    color: white;
 }
 
 .location-info {
@@ -279,18 +286,20 @@ body {
 }
 
 .infobox-controls button {
-    border: none;
-    background-color: var(--e63946);
-    color: white;
+    background-color: white;
+    color: var(--cta-rojo);
+    border: 2px solid var(--cta-rojo);
     font-size: 1rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 .infobox-controls button:hover {
-    background-color: var(--d62828);
+    background-color: var(--cta-rojo);
+    color: white;
 }
 
 /* Eliminar botón de cierre del infowindow */
@@ -299,5 +308,5 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }

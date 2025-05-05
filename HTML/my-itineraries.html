@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>my-itineraries</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inspiration&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inspiration&display=swap" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="../CSS/reset-stylesheet.css">
-    <link rel="stylesheet" href="../CSS/colors.css">
-    <link rel="stylesheet" href="../CSS/my-itineraries.css">
-    <link rel="stylesheet" href="../CSS/itinerary-gallery-card.css">
-    <link rel="stylesheet" href="../CSS/navigation.css">
-    <link rel="stylesheet" href="../CSS/carousel.css">
-    <link rel="stylesheet" href="../CSS/routes.css">
+    <link rel="stylesheet" href="../CSS/reset-stylesheet.css"/>
+    <link rel="stylesheet" href="../CSS/colors.css"/>
+    <link rel="stylesheet" href="../CSS/my-itineraries.css"/>
+    <link rel="stylesheet" href="../CSS/itinerary-gallery-card.css"/>
+    <link rel="stylesheet" href="../CSS/navigation.css"/>
+    <link rel="stylesheet" href="../CSS/carousel.css"/>
+    <link rel="stylesheet" href="../CSS/routes.css"/>
+
     <script type="module" src="../JS/my-itineraries.js"></script>
     <script type="module" src="../JS/my-itineraries-gallery.js"></script>
     <script type="module" src="/JS/firebase-config.js"></script>
@@ -25,10 +26,11 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
 </head>
 <body>
+
 <header id="navigation">
     <nav id="session-navbar">
         <div id="us">
-            <img id="logo" src="../mockups/logo.png" alt="logo" />
+            <img id="logo" src="../mockups/logo.png" alt="logo"/>
             <div id="brand-name">Itineraries</div>
         </div>
         <div id="links-section">
@@ -41,14 +43,10 @@
         </div>
         <div id="profile-info"></div>
     </nav>
-
 </header>
-
-
 
 <header id="tools">
     <div id="switch-view">switch view</div>
-
     <div id="actions">
         <button id="previous-itinerary">
             <svg fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,26 +60,22 @@
             </svg>
         </button>
         <script>
-            // Selecciona el SVG y el path dentro de él
             const actions = document.getElementById('actions');
             const svgs = actions.querySelectorAll('svg');
-
-            // Obtiene las dimensiones del path usando getBBox
             svgs.forEach(function(svg) {
                 const bbox = svg.querySelector('path').getBBox();
                 svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
             });
-            // Ajusta el viewBox del SVG para ajustarse al tamaño del path
         </script>
     </div>
+
     <div id="search-actions">
         <label for="search"></label>
         <input id="search" type="text" placeholder="search in your itineraries">
         <button id="reload-button">
-            <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="" class="">
+            <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt=""/>
         </button>
     </div>
-
 
     <div id="popup" class="popup">
         <div class="popup-content">
@@ -91,13 +85,14 @@
     </div>
 </header>
 
-
 <template id="day-button">
     <button tabindex="0" class="day-button down"></button>
 </template>
+
 <template>
     <ul class="places"></ul>
 </template>
+
 <template id="itinerary-container">
     <section class="my-itineraries" data-name="" data-type="list">
         <article class="preview">
@@ -108,32 +103,28 @@
                 <div class="title"></div>
                 <div class="description">description</div>
             </div>
-            <div class="button-group"></div>
+            <div class="button-group">
+                <!-- Botón añadido para redirigir al editor -->
+                <button class="edit-itinerary-button">Editar Itinerario</button>
+            </div>
         </article>
 
         <section class="day-container">
             <div class="days"></div>
             <div class="content">
                 <div class="side-bar"></div>
-                <div class="list-container">
-                    <!--
-                    in class places:
-                    each li = place.toString()
-                    -->
-                    <!-- <ul class="places"></ul> -->
-                </div>
+                <div class="list-container"></div>
             </div>
         </section>
     </section>
 </template>
 
-<template id="gallery-container">
+<template id="gallery-container"></template>
 
-</template>
 <template id="itinerary-card">
     <article class="preview" data-type="gallery">
         <div class="image-preview itinerary-gallery-card">
-            <img class="intro " src="" alt="">
+            <img class="intro" src="" alt=""/>
             <div class="tooltip">
                 <div class="summary">
                     <div class="title"></div>

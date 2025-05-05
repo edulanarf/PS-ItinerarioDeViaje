@@ -8,33 +8,46 @@ body {
 
 button {
     cursor: pointer;
+    border: 2px solid var(--google-blue); /* Marco azul */
+    background-color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: var(--azul-brillante);
+    color: white;
 }
 
 /* NAVIGATION & TOOLS */
-#navigation, #tools {
+#navigation {
     display: flex;
     flex-wrap: wrap;
     background-color: #f5f7fa;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 2rem;
     font-size: 1rem;
     text-align: center;
     position: relative;
-    z-index: 1;
+    z-index: 10;
 }
 
 #tools {
-    background-color: #f5f7fa;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 6rem;
-    padding: 1rem 0;
-    margin-top: 3rem; /* AÑADIDO para separar de #navigation */
+    padding: 2rem 0;
+    background-color: #f5f7fa;
+    margin-top: 2rem; /* Separación del header */
+    z-index: 5;
+    position: relative;
 }
-
 
 /* NAV LINKS */
 #links {
@@ -46,7 +59,7 @@ button {
 /* VIEW SWITCH */
 #switch-view {
     background-color: var(--marron-claro);
-    border: 1px solid var(--marron-oscuro);
+    border: 2px solid var(--marron-oscuro);
     box-shadow: 0 0 0.5rem var(--marron-oscuro);
     padding: 0.8rem 2rem;
     border-radius: 10px;
@@ -65,14 +78,13 @@ button {
 }
 
 #open-itinerary {
-    padding: 1rem 2rem;
-    border-radius: 12px;
     background-color: var(--marron-claro);
-    border: 1px solid var(--marron-medio);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    font-weight: bold;
+    border: 2px solid var(--marron-medio);
+    border-radius: 12px;
+    padding: 1rem 2rem;
     margin-top: 1rem;
-    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 #open-itinerary:hover {
@@ -85,10 +97,10 @@ button {
     border: none;
     height: 4em;
     width: 4em;
-    outline: none;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: none;
 }
 
 #previous-itinerary {
@@ -100,7 +112,8 @@ button {
     width: 100%;
 }
 
-#previous-itinerary:hover svg, #next-itinerary:hover svg {
+#previous-itinerary:hover svg,
+#next-itinerary:hover svg {
     transform: scale(1.1);
 }
 
@@ -125,7 +138,7 @@ button {
 
 #search:focus {
     outline: none;
-    border-color: var(--borgona-profundo);
+    border-color: var(--google-blue);
     box-shadow: 0 0 10px var(--rojo-oxido);
 }
 
@@ -159,10 +172,10 @@ main {
 .my-itineraries {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
     overflow: hidden;
     max-height: 100%;
     border-radius: 2rem;
-    gap: 2rem;
 }
 
 .preview {

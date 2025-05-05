@@ -1,0 +1,26 @@
+<!-- edit-itinerary.html -->
+<link rel="stylesheet" href="../CSS/edit-itinerary.css" />
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editar Itinerario</title>
+  <script type="module" src="../JS/edit-itinerary.js"></script>
+</head>
+<body>
+<h1>Editar Itinerario</h1>
+<form id="edit-form">
+  <label for="title">Título:</label>
+  <input type="text" id="title" name="title" />
+
+  <label for="photo">Foto:</label>
+  <input type="file" id="photo" name="photo" />
+  <img id="preview" src="" alt="preview" style="max-width: 200px; display: block;"/>
+
+  <button type="submit">Guardar cambios</button>
+  <button type="button" id="delete">Eliminar itinerario</button>
+</form>
+</body>
+</html>

@@ -1,16 +1,14 @@
 @import "colors.css";
 
 #navigation {
-    display: block;
-    width: 100%;
-    height: auto;
-    background-color: var(--beige-calido);
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem 2rem 0.5rem 2rem ;
-    font-size: 1rem;
-    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 #links-section{
     justify-items: center;
@@ -86,12 +84,13 @@
 }
 
 #profile-info img {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
 }
+
 
 #profile-info span {
     font-weight: 200;
@@ -133,3 +132,22 @@
     transform: translateY(0);
 }
 
+#links a.nav-button {
+    background-color: white;
+    color: var(--google-blue);
+    border: 2px solid var(--google-blue);
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#links a.nav-button:hover {
+    background-color: var(--azul-brillante);
+    color: white;
+    border-color: var(--azul-brillante);
+}
