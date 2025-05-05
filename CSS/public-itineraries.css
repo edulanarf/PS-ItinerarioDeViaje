@@ -194,3 +194,9 @@ body {
 .popup::-webkit-scrollbar-button {
     display: none;
 }
+
+#title-public-itineraries{
+    align-self: center;
+    margin: 40px;
+    font-family: 'Playfair Display', sans-serif;
+}
