@@ -22,7 +22,7 @@ body {
 #register-email,
 #register-username,
 #register-password {
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 4px;
     margin: 15px;
     padding-left: 20px;
@@ -32,6 +32,13 @@ body {
     max-width: 250px;
     height: 48px;
     box-sizing: border-box;
+}
+
+#register-email:focus,
+#register-username:focus,
+#register-password:focus {
+    outline: none;
+    border: 1px solid #09f; ;
 }
 
 /* Mensajes de error */
@@ -91,7 +98,7 @@ input:invalid {
 /* Botón de registro */
 #register-button {
     margin: 15px;
-    background-color: var(--e63946);
+    background-color: var(--google-blue);
     cursor: pointer;
     border: none;
     padding: 12px 30px;
@@ -105,5 +112,5 @@ input:invalid {
 }
 
 #register-button:hover {
-    background-color: var(--d62828);
+    background-color: #1a66cc;
 }

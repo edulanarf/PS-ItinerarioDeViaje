@@ -35,7 +35,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 12px;
-    background-color: #ffffff;
+    background-color: #f0f8ff;
     padding: 10px;
 }
 
@@ -141,7 +141,8 @@ body {
 .popup-close {
     padding: 10px 20px;
     border-radius: 5px;
-    color: var(--azul-principal);
+    color: #09f;
+    background: #eee;
     font-weight: bold;
     border: none;
     cursor: pointer;
@@ -149,7 +150,7 @@ body {
 }
 
 .popup-close:hover {
-    background: #eee;
+    background: #b3b3b3;
 }
 
 /* CONTENIDO INTERNO */
@@ -160,7 +161,6 @@ body {
 .content-right {
     flex: 1;
     padding: 20px;
-    background-color: var(--marron-claro);
     border-radius: 10px;
     color: white;
     display: flex;
