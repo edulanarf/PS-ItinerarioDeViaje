@@ -186,7 +186,8 @@ main {
     flex-direction: column;
     padding: 1rem;
     background-color: var(--oro-suave);
-    border-radius: 20px;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
@@ -210,7 +211,6 @@ main {
     width: 100%;
     max-width: 380px;
     height: auto;
-    border-radius: 2em;
 }
 
 .summary {
@@ -238,9 +238,12 @@ main {
 }
 
 .day-container {
-    padding: 1rem 0;
+    height: 600px;
     background-color: var(--oro-suave);
     overflow: hidden;
+    border-bottom-right-radius:40px;
+    border-top-right-radius: 40px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 .days {
@@ -253,7 +256,6 @@ main {
 }
 
 .days button {
-    flex: 0 0 70px;
     height: 40px;
     background-color: #ccc;
     color: #333;
@@ -263,6 +265,9 @@ main {
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;            /* Establece un modelo flex para el botón */
+    align-items: center;      /* Alinea los elementos en el eje vertical (centro) */
+    justify-content: center;  /* Alinea los elementos en el eje horizontal (centro) */
 }
 
 .days button:hover {
@@ -285,8 +290,23 @@ main {
 .list-container {
     margin: 1rem;
     padding: 1rem;
+    max-width: 450px;
     width: 100%;
-    overflow-y: auto;
+    max-height: 100%; /* O un valor específico si prefieres */
+    overflow-y: auto; /* Desplazamiento vertical */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.list-container ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.list-container li {
+    margin-bottom: 1rem; /* Espaciado entre los elementos */
 }
 
 /* GALLERY VIEW */
