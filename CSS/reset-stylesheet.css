@@ -29,13 +29,6 @@ p, li, ul, pre, div, h1, h2, h3, h4, h5, h6, figure, blockquote, figcaption {
     padding: 0;
 }
 
-/* Imágenes y medios */
-img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
 /* Links */
 a {
     color: inherit;
