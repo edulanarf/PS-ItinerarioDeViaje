@@ -231,7 +231,8 @@ main {
     align-items: center;
     padding: 0 2rem;
     overflow: hidden;
-    aspect-ratio: 4 / 2;
+    max-height: 300px;
+    object-fit: cover;
 }
 
 .button-group {
