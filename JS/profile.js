@@ -37,6 +37,7 @@ onAuthStateChanged(auth, async (user) => {
       <a onclick="location.href='edit-profile.html'">Editar Perfil</a>
       <a onclick="location.href='edit-preferences.html'">Editar Preferencias</a>
       <a onclick="location.href='my-itineraries.html'">Mis Itinerarios</a>
+      <a onclick="location.href='Favorites-Itineraries.html'">Itinerarios Favoritos</a>
       <a href="#" id="logout-button">Cerrar Sesión</a>
     `;
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/CSS/navigation.css">
+  <link rel="stylesheet" href="/CSS/reset-stylesheet.css" />
+  <link rel="stylesheet" href="/CSS/colors.css"/>
+  <link rel="stylesheet" href="/CSS/public-itineraries.css"/>
+  <link rel="stylesheet" href="/CSS/carousel.css"/>
+  <link rel="stylesheet" href="/CSS/itinerary-gallery-card.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+
+  <script type="module" src="/JS/firebase-config.js"></script>
+  <script type="module" src="/JS/types.js"></script>
+  <script type="module" src="/JS/profile.js"></script>
+  <script type="module" src="/JS/Favorites-Itineraries.js"></script>
+  <script type="module" src="/JS/deleteFavorite.js"></script>
+</head>
+<body>
+<header id="navigation">
+  <nav id="session-navbar">
+    <div id="us">
+      <img id="logo" src="../mockups/logo.png" alt="logo" />
+      <div id="brand-name">Itineraries</div>
+    </div>
+    <section id="links-section">
+      <div id="links">
+        <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+      </div>
+    </section>
+    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+  </nav>
+</header>
+
+<div class="popup hidden">
+  <div class="popup-content">
+    <div class="content-left">
+      <span class="popup-title"></span>
+      <div id="popup-days"></div>
+    </div>
+
+    <div class="content-right">
+      <h3>Resumen del viaje</h3>
+      <p id="total-price"></p>
+      <p id="total-days"></p>
+      <p id="total-places"></p>
+      <div id="popup-map" class="popup-map"></div>
+      <button class="popup-favorite">Eliminar de favoritos</button>
+    </div>
+  </div>
+  <div class="popup-footer">
+    <button class="popup-close">Cerrar</button>
+  </div>
+</div>
+<div id="itineraries-container"></div>
+
+</body>
+</html>
