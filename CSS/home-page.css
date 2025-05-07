@@ -1,5 +1,7 @@
 @import url("CSS/colors.css");
-
+body{
+font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
+}
 
 #us {
     display: flex;

@@ -308,7 +308,7 @@ main {
 .list-container::-webkit-scrollbar-track {
     background: #444;
     border-radius: 10px;
-}
+} 
 
 .list-container::-webkit-scrollbar-thumb {
     background-color: #008cff;
