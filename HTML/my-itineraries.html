@@ -47,35 +47,7 @@
 
 <header id="tools">
     <div id="switch-view">switch view</div>
-    <div id="actions">
-        <button id="previous-itinerary">
-            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <button id="open-itinerary">open this itinerary</button>
-        <button id="next-itinerary">
-            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <script>
-            const actions = document.getElementById('actions');
-            const svgs = actions.querySelectorAll('svg');
-            svgs.forEach(function(svg) {
-                const bbox = svg.querySelector('path').getBBox();
-                svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
-            });
-        </script>
-    </div>
 
-    <div id="search-actions">
-        <label for="search"></label>
-        <input id="search" type="text" placeholder="search in your itineraries">
-        <button id="reload-button">
-            <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt=""/>
-        </button>
-    </div>
 
     <div id="popup" class="popup">
         <div class="popup-content">
@@ -84,7 +56,6 @@
         </div>
     </div>
 </header>
-
 <template id="day-button">
     <button tabindex="0" class="day-button down"></button>
 </template>
@@ -100,7 +71,11 @@
                 <img class="intro" src="" alt=""/>
             </div>
             <div class="summary">
-                <div class="title"></div>
+                <div id="separation-title-button">
+                    <div class="title">
+                    </div>
+                    <button class="delete-itinerary">  <img src="../mockups/garbage.png" alt="Papelera"/></button>
+                </div>
                 <div class="description">description</div>
             </div>
             <div class="button-group">
@@ -135,9 +110,14 @@
 </template>
 
 <main>
-    <section id="itinerary-list-container"></section>
-    <section id="itinerary-gallery-container"></section>
+    <div id="separation-buttons-itinerary">
+        <button id="previous-itinerary">&lt;</button>
+        <section id="itinerary-list-container"></section>
+        <section id="itinerary-gallery-container"></section>
+        <button id="next-itinerary">&gt;</button>
+    </div>
 </main>
+
 
 </body>
 </html>

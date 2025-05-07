@@ -4,7 +4,7 @@ import { ItineraryPlan } from './types.js';
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
-import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { deleteDoc, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { shareItinerary } from './shareItinerary.js';
 
 export const list = document.getElementById("itinerary-list-container")
@@ -207,6 +207,32 @@ async function renderItinerary(plan) {
     }
   });
 
+
+  const deleteButton = container.querySelector('.delete-itinerary');
+  if (deleteButton) {
+    deleteButton.addEventListener('click', async () => {
+      const confirmDelete = confirm(`¿Estás seguro de eliminar el itinerario "${plan.title}"?`);
+      if (confirmDelete) {
+        try {
+          // Eliminar de Firestore
+          const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${plan.title}`);
+          await deleteDoc(itineraryDocRef);
+
+          // Eliminar del DOM
+          container.remove();
+
+          // Eliminar de la variable en memoria
+          delete itineraries[plan.title];
+
+          console.log(`Itinerario "${plan.title}" eliminado correctamente.`);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error al eliminar el itinerario:", error);
+        }
+      }
+    });
+  }
+
   intro.addEventListener("click", () => inputFile.click());
 
   container.querySelector(".title").innerText = plan.title;
@@ -231,15 +257,4 @@ async function appendItinerary(container) {
   }
 }
 
-async function renderModified(itinerary, previousName) {
-  let old = document.querySelector(`[data-name="${previousName || itinerary.title}"][data-type=list]`);
-  list.replaceChild(await renderItinerary(itinerary), old);
-}
-document.getElementById('open-itinerary').addEventListener('click', () => {
-  if (currentItinerary) {
-    const encodedId = encodeURIComponent(currentItinerary);
-    window.location.href = `edit-itinerary.html?id=${encodedId}`;
-  } else {
-    alert("No hay itinerario seleccionado.");
-  }
-});
+

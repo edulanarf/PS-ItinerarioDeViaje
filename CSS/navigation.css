@@ -91,6 +91,7 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
+    margin-right: 10px;
 }
 
 

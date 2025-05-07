@@ -103,21 +103,59 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: none;
+    background-color: #09f; /* Color de fondo azul */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Suaviza la transición */
 }
 
-#previous-itinerary {
-    transform: rotate(180deg);
+#separation-title-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#next-itinerary svg, #previous-itinerary svg {
-    height: 100%;
-    width: 100%;
+#separation-title-button button {
+    background-color: transparent; /* Fondo transparente */
+    border: 2px solid #e74c3c; /* Borde rojo para el botón */
+    padding: 8px 12px; /* Espaciado interno */
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave */
+    outline: none;
 }
 
-#previous-itinerary:hover svg,
-#next-itinerary:hover svg {
-    transform: scale(1.1);
+#separation-title-button button img {
+    width: 20px; /* Tamaño de la imagen */
+}
+
+#separation-title-button button:hover {
+    background-color: #e74c3c; /* Cambia el color de fondo a rojo */
+    color: white; /* Cambia el color del icono a blanco */
+    transform: scale(1.1); /* Efecto de agrandamiento */
+}
+
+
+#separation-title-button div{
+    margin: 30px
+}
+
+
+/* Hover para cambiar el color de fondo */
+#previous-itinerary:hover, #next-itinerary:hover {
+    background-color: #0056b3; /* Color azul más oscuro */
+    transform: scale(1.1); /* Efecto de aumento */
+}
+
+#separation-buttons-itinerary{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Espacio entre elementos */
+    padding: 20px;
 }
 
 /* SEARCH */
