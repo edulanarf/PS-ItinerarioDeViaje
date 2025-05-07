@@ -289,9 +289,11 @@ main {
     margin-top: 15px;
     align-items: center;
     justify-content: center;
+    max-width: 470px;
 }
 
 .days button {
+    width: 100px;
     height: 40px;
     background-color: #ccc;
     color: #333;
@@ -301,9 +303,9 @@ main {
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;            /* Establece un modelo flex para el botón */
-    align-items: center;      /* Alinea los elementos en el eje vertical (centro) */
-    justify-content: center;  /* Alinea los elementos en el eje horizontal (centro) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .days button:hover {
