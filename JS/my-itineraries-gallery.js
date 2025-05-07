@@ -36,7 +36,7 @@ export async function galleryView(){
       }
     })
   ).then(() => {
-    document.getElementById("switch-view").addEventListener("click", () => {
+    document.querySelector(".switch-view").addEventListener("click", () => {
       if (view === "list"){
         list.style.display = "none";
         gallery.style.display = "grid";

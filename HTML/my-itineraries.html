@@ -45,17 +45,15 @@
     </nav>
 </header>
 
-<header id="tools">
-    <div id="switch-view">switch view</div>
-
-
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <p></p>
-            <button id="closePopup">Cerrar</button>
-        </div>
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <button id="closePopup">Cerrar</button>
     </div>
-</header>
+</div>
+
+
+
+
 <template id="day-button">
     <button tabindex="0" class="day-button down"></button>
 </template>
@@ -110,6 +108,7 @@
 </template>
 
 <main>
+    <button class="switch-view">Cambiar vista</button>
     <div id="separation-buttons-itinerary">
         <button id="previous-itinerary">&lt;</button>
         <section id="itinerary-list-container"></section>
