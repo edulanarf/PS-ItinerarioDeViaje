@@ -402,8 +402,16 @@ main {
     height: 100%;
     object-fit: fill;
 }
+
+#popup-footer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
 #closePopup{
     align-self: center;
-    width: 100%;
+    justify-content: center;
 }
 
