@@ -11,42 +11,57 @@ let view = "list"
  * @returns {Promise<Element>}
  */
 async function renderItineraryCard(plan) {
-  const container = document.importNode(card.content, true)
-    .querySelector(".preview")
-  const intro = container.querySelector(".intro");
-  intro.src = plan.photo
-  intro.alt = plan.title
-  container.querySelector(".title").innerText = plan.title
-  container.id = plan.title
-  return container
+  const preview = document.importNode(card.content, true)
+    .querySelector(".preview");
+
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("itinerary-gallery-card"); // Aquí aplicamos el estilo de tarjeta
+  wrapper.appendChild(preview); // Insertamos el .preview dentro del wrapper
+
+  const intro = preview.querySelector(".intro");
+  intro.src = plan.photo;
+  intro.alt = plan.title;
+  preview.querySelector(".title").innerText = plan.title;
+  wrapper.id = plan.title;
+
+  return wrapper; // Devolvemos el contenedor completo
 }
 
 async function appendItineraryCard(container) {
   gallery.appendChild(container);
 }
 
-export async function galleryView(){
-  console.log("gallery of:",itineraries);
+export async function galleryView() {
+  console.log("gallery of:", itineraries);
   console.log("current:", currentItinerary);
+
   await Promise.all(
     Object.values(itineraries).map(async (itinerary) => {
-      if (itinerary instanceof ItineraryPlan){
+      if (itinerary instanceof ItineraryPlan) {
         const container = await renderItineraryCard(itinerary);
         await appendItineraryCard(container);
       }
     })
   ).then(() => {
     document.querySelector(".switch-view").addEventListener("click", () => {
-      if (view === "list"){
+      const nextItineraryButton = document.getElementById('next-itinerary');
+      const previousItineraryButton = document.getElementById('previous-itinerary');
+      if (view === "list") {
         list.style.display = "none";
         gallery.style.display = "grid";
-        view = "gallery"
+
+        nextItineraryButton.style.display = "none";
+        previousItineraryButton.style.display = "none";
+        view = "gallery";
       } else {
         list.style.display = "contents";
         gallery.style.display = "none";
-        view = "list"
+
+        nextItineraryButton.style.display = "flex";
+        previousItineraryButton.style.display = "flex";
+        view = "list";
       }
-    })
+    });
   });
 }
 
