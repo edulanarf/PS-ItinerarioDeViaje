@@ -5,6 +5,9 @@ import { setSaved } from './saved-verification.js';
 import { auth } from './firebase-config.js';
 import { Itinerary, ItineraryPlan, Place } from './types.js';
 
+//module
+import {CurrentItinerary} from './my-itineraries-const.js';
+
 
 let map, service, infowindow, circle;
 let markers = [];
@@ -29,12 +32,113 @@ onAuthStateChanged(auth, (user) => {
   }
 })
 
+// Crear un objeto URL a partir de la URL actual
+const url = new URL(window.location.href);
+// Obtener la query parameters usando URLSearchParams
+const params = new URLSearchParams(url.search);
+// Acceder a un parámetro específico
+const paramValue = params.get('edit');
+/* si se esta editando:
+la url seria algo como ..../HTML/search-places.html?edit=true
+si no se esta editando:
+la url seria algo como ..../HTML/search-places.html
+ */
+/**
+ * @type {ItineraryPlan}
+ */
+let editingItinerary = null
+if (paramValue) {
+  editingItinerary = CurrentItinerary()
+  renderExisting()
+} else {
+  editingItinerary = new ItineraryPlan("","","",[defaultItineraryDay()])
+}
+
+function defaultItineraryDay(){
+  return new Itinerary(`Día ${counterDay}`, [])
+}
+
+//NODES
+const ItineraryPlanDaysContainer = document.getElementById("places");
+
+//TEMPLATES
+const dayContainer = document.getElementById("day-container");
+const listPlaceItem = document.getElementById("list-place-item");
+
+/**
+ * @param {number} count
+ * @param {Place} place
+ */
+function createPlaceItem(count, place){
+  let clone = document.importNode(listPlaceItem.content, true).querySelector("li");
+  clone.querySelector(".name").textContent = `${ count }.` + place.name;
+  clone.querySelector(".price").textContent = `${place.price}`;
+  clone.querySelector(".delete-button").addEventListener("click", () => {
+    clone.remove();
+  })
+  return clone
+}
+
+function createDayContainer(){
+  return document.importNode(dayContainer.content, true).querySelector("div");
+}
+
+/**
+ *
+ * @param {number} from - number of the former day
+ * @param {number}  to - nunmber of the next day
+ */
+function switchDay(from, to){
+  document.getElementById(`day-${from}`).style.display = "none";
+  document.getElementById(`day-${to}`).style.display = "block";
+}
+
+function renderDay(index, itinerary) {
+  let day = createDayContainer();
+  day.id = `day-${index}`;
+  day.querySelector('h1').textContent = itinerary.name;
+  let list = day.querySelector('.ul');
+  itinerary.places.forEach((place, indexP) => {
+    list.appendChild(createPlaceItem(indexP + 1, place));
+  });
+  day.style.display = 'none';
+  dayCounter++
+  ItineraryPlanDaysContainer.appendChild(day);
+}
+
+function appendPlace(place, day){
+  editingItinerary.itineraries[day-1].places.push(place);
+  document.getElementById(`day-${day}`).querySelector('.ul').appendChild(createPlaceItem(editingItinerary.itineraries[day-1].places.length, place));
+}
+
+function deletePlace(index, day){
+  document.getElementById(`day-${day}`).querySelector('.ul').children[index-1].remove();
+  editingItinerary.itineraries[day-1].places.splice(index-1,1)
+}
+
+function deleteDay(index){
+  document.getElementById(`day-${index}`).remove();
+  editingItinerary.itineraries.splice(index-1,1)
+  dayCounter--
+}
+
+function renderExisting(){
+  document.getElementById("itinerary-title").value = editingItinerary.title;
+  document.getElementById("itinerary-description").value = editingItinerary.description;
+  editingItinerary.itineraries.forEach((itinerary, index) => {
+    renderDay(index + 1, itinerary);
+  })
+}
+
+
 
 // Info para el itinerario
-
+let dayCounter = 1 // default: first day, => current day, visible
+let dayCurrent = 1
 let counter = 0;
 
-const placesList = document.getElementById("itinerary-list");
+const placesList = document.querySelector(".itinerary-list");
+
 
 function initMap() {
   const defaultLocation = { lat: 28.1235, lng: -15.4363 };
@@ -251,6 +355,8 @@ function addToItinerary(place) {
     place.geometry.location.lng()
   )
 
+
+  //here's for rendering a day
   listPlaces.push(aPlace)
 
   const li = document.createElement("li");

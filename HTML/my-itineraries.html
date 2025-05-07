@@ -54,6 +54,35 @@
             </svg>
         </button>
         <button id="open-itinerary">open this itinerary</button>
+        <button id="share-itinerary">open this itinerary</button>
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Enter usernames</h2>
+                <form id="names-form">
+                    <div id="name-fields">
+                        <div class="name-group">
+                            <template id="name-input-container">
+                                <div class="name-input-container">
+                                    <label>
+                                        <textarea class="name-input" name="name" placeholder="Enter a name" required></textarea>
+                                    </label>
+                                    <button type="button" class="remove-button">X</button>
+                                </div>
+                            </template>
+                            <div class="name-input-container">
+                                <label>
+                                    <textarea class="name-input" name="name" placeholder="Enter a name" required></textarea>
+                                </label>
+                                <button type="button" class="remove-button">X</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="add-name">+ Add another name</button>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
         <button id="next-itinerary">
             <svg fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>

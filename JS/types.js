@@ -50,6 +50,9 @@ export class Itinerary {
    */
   constructor(name, places) {
     this.name = name;
+    /**
+     * @type {Place[]}
+     */
     this.places = places? places : [];
   }
 
@@ -146,3 +149,77 @@ export class ItineraryPlan {
     }
   };
 }
+
+
+export class SharedPlan{
+  /**
+   *
+   * @param {string} author
+   * @param {string} plan
+   */
+  constructor(author,plan) {
+    this.author = author;
+    this.plan = plan;
+  }
+  toFirestore() {
+    return {
+      author: this.author,
+      plan: this.plan,
+    }
+  }
+
+  static Converter = {
+    toFirestore: function(itinerarySharedPlan) {
+      return itinerarySharedPlan.toFirestore();
+    },
+    fromFirestore: function(snapshot, options) {
+      const data = snapshot.data(options);
+      return new SharedPlan(data.author,data.plan);
+    }
+  };
+}
+
+export class UserReference {
+  constructor(id,name) {
+    if (id) {
+      this.id = id;
+    } else {
+      this.id = NoID;
+    }
+    this.name = name;
+  }
+}
+
+export class User extends UserReference{
+  /**
+   * @param {string} name
+   * @param {string} email
+   * @param {string} photoUrl
+   * @param {string} id
+   */
+  constructor(name,email,photoUrl,id) {
+    super(id,name)
+    this.email = email;
+    this.photoUrl = photoUrl;
+  }
+
+  toFirestore() {
+    return {
+      username: this.name,
+      photoUrl: this.photoUrl,
+      email: this.email,
+      id: ""
+    }
+  }
+  static Converter = {
+    toFirestore: function(User) {
+      return User.toFirestore();
+    },
+    fromFirestore: function(snapshot, options) {
+      const data = snapshot.data(options);
+      return new User(data.name,data.email,data.photoUrl,snapshot.id);
+    }
+  };
+}
+
+export const NoID = "NoID"

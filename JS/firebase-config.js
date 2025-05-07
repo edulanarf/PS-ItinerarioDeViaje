@@ -1,8 +1,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Itinerary, ItineraryPlan } from './types.js';
+import { Itinerary, ItineraryPlan, SharedPlan, User } from './types.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -34,8 +34,62 @@ export function checkAuthState() {
 
 export { app, auth, storage, db };
 
+/**
+ * @param {string[]} names
+ * @returns {Promise<{foundUserIds: string[], notFound: string[]}>}
+ *
+ * Use Example:
+ * const names = ["alice", "bob", "charlie"];
+ *
+ * findUsersByUsernames(names).then(result => {
+ *   console.log("IDs found:", result.foundUserIds); //ids
+ *   console.log("No found:", result.notFound); //names
+ * });
+ *
+ * NOTES:
+ */
+export async function getUsers(names){
+  const usersRef = collection(db, "users").withConverter(User.Converter);
+
+  // Dividir la búsqueda en fragmentos (máximo 10 por consulta debido a Firestore IN limit)
+  const foundUsers = {};
+  const CHUNK_SIZE = 10;
+
+  const chunks = [];
+  for (let i = 0; i < names.length; i += CHUNK_SIZE) {
+    chunks.push(names.slice(i, i + CHUNK_SIZE));
+  }
+
+  await Promise.all(
+    chunks.map(chunk => {
+      const q = query(usersRef, where("username", "in", chunk));
+      return getDocs(q).then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          const username = data.username;
+
+          // Verificación estricta
+          if (chunk.includes(username)) {
+            foundUsers[username] = doc.id;
+          }
+        });
+      });
+    })
+  );
+
+  // Crear lista final de resultados
+  const foundUserIds = Object.values(foundUsers);
+  const notFound = names.filter(name => !foundUsers[name]);
+
+  return {
+    foundUserIds,
+    notFound
+  };
+}
+
+
 export async function getUserData(userId) {
-  const docRef = doc(db, "users", userId);
+  const docRef = doc(db, "users", userId).withConverter(User.Converter);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -53,7 +107,7 @@ export async function getUserData(userId) {
  * @param {string} userId
  * @returns {Promise<ItineraryPlan[]>}
  */
-export async function getPlans(userId){
+export async function getPlans(userId) {
   const itinerariesRef = collection(db, `users/${userId}/itineraries`)
     .withConverter(ItineraryPlan.itineraryPlanConverter);
   try {
@@ -80,7 +134,9 @@ export async function getPlans(userId){
        * @type {Itinerary[]}
        */
       const days = []
-      await daySnapshot.forEach((file) =>  { files.push(file) })
+      await daySnapshot.forEach((file) => {
+        files.push(file)
+      })
       await Promise.all(files.map(async file => {
         let a = await file.data()
         console.log("a: ", a);
@@ -105,3 +161,14 @@ export async function getPlans(userId){
     return [];
   }
 }
+
+
+
+
+
+
+  export async function shareThisItineraryTo(userId, itineraryPlan) {
+    const shareCollection = collection(db, "users", userId, "shared").withConverter(SharedPlan.Converter)
+    const docRef = await addDoc(shareCollection, itineraryPlan);
+    return docRef.id;
+  }

@@ -83,8 +83,25 @@
     </div>
     <h3>Organiza tu día: </h3>
     <section id="places">
-      <h1 id="day"></h1>
-      <ul id="itinerary-list"></ul>
+      <template id="list-place-item">
+        <li class="list-item">
+          <div class="item-content">
+            <span class="name"></span>
+            <span class="price"></span>
+          </div>
+          <button class="delete-button">Eliminar</button>
+        </li>
+      </template>
+      <template id="day-container">
+        <div class="day-container">
+          <h1 class="day"></h1>
+          <ul class="itinerary-list"></ul>
+        </div>
+      </template>
+      <div id="day-1" class="day-container">
+        <h1 class="day"></h1>
+        <ul class="itinerary-list"></ul>
+      </div>
     </section>
     <section id="errors">
       <span id="not-hotel-error" class="error-message"> <strong>Asigne un hotel</strong></span>

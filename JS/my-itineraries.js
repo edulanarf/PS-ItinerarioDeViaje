@@ -6,19 +6,20 @@ import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
 import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { shareItinerary } from './shareItinerary.js';
+import { currentItinerary, itineraries } from "./my-itineraries-const.js";
 
 export const list = document.getElementById("itinerary-list-container")
 const template = document.getElementById("itinerary-container");
 const dayButton = document.getElementById("day-button");
 let session = null;
 
-export const itineraries = {};
-export let currentItinerary = "";
+
 let currentDay = "";
 export let currentRoutes;
 let currentItineraryTitle;
 let currentItineraryPhoto;
 
+// with user => init, then list, then gallery
 onAuthStateChanged(auth, (user) => {
   if (user) {
     session = user;
@@ -119,6 +120,8 @@ async function showItinerary(before, after){
   buttonGroup.innerHTML = "";
   buttonGroup.appendChild(verRutaBtn);
 
+
+  //SHARE
   const shareButton = document.createElement("button");
   shareButton.innerText = "publicar";
   shareButton.classList.add("publicar");
