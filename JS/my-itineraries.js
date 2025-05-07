@@ -4,7 +4,13 @@ import { ItineraryPlan } from './types.js';
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
-import { deleteDoc, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc, getDocs,
+  updateDoc
+} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { shareItinerary } from './shareItinerary.js';
 
 export const list = document.getElementById("itinerary-list-container")
@@ -217,6 +223,12 @@ async function renderItinerary(plan) {
           // Eliminar de Firestore
           const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${plan.title}`);
           await deleteDoc(itineraryDocRef);
+
+          const itineraryDaysDocRef = collection(db, `users/${session.uid}/itineraries/${plan.title}/days`);
+          const daysSnapshot = await getDocs(itineraryDaysDocRef);
+          for (const dayDoc of daysSnapshot.docs) {
+            await deleteDoc(dayDoc.ref);
+          }
 
           // Eliminar del DOM
           container.remove();
