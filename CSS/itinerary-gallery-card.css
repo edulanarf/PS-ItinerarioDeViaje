@@ -42,10 +42,5 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
     padding: 1rem;
-}
-
-/* Ocultar los botones en la vista de galería */
-.gallery-view #separation-buttons-itinerary {
-
-    background:red;
+    width: 80vw;
 }
