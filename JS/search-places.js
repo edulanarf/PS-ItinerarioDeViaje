@@ -262,6 +262,8 @@ function addToItinerary(place) {
   const delBtn = document.createElement("button");
   delBtn.className = "delete-button";
   delBtn.textContent = "Eliminar";
+  delBtn.innerHTML = '<img src="../mockups/garbage.png" alt="Eliminar" style="width: 20px; height: 20px;">';
+
   delBtn.addEventListener("click", () => {
     const index = Array.from(placesList.children).indexOf(li);
     listPlaces.splice(index,1);
@@ -416,7 +418,7 @@ function loadDay(dayKey) {
       div.innerHTML = `${index + 1}. ${place.name} ${place.price} Euros`;
       const delBtn = document.createElement("button");
       delBtn.className = "delete-button";
-      delBtn.textContent = "Eliminar";
+      delBtn.innerHTML = '<img src="../mockups/garbage.png" alt="Eliminar" style="width: 20px; height: 20px;">';
       delBtn.addEventListener("click", () => {
         listPlaces.splice(index, 1);
         li.remove();
