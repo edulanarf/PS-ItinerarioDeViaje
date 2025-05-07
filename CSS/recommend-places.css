@@ -15,7 +15,7 @@ body {
 /* Sidebar */
 .sidebar {
     max-width: 40rem;
-    background-color: var(--oro-suave);
+    background-color: #eee;
     display: flex;
     flex-direction: column;
 }
@@ -23,38 +23,32 @@ body {
 /* Pestañas */
 .nav-tabs {
     display: flex;
-    background-color: var(--naranja-quemado);
-    padding: 1rem;
+    background-color: #fff;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
 }
 
 .nav-tabs > * {
     flex: 1;
     background-color: var(--azul-principal);
-    padding: 1rem;
+    padding: 2rem;
     text-align: center;
-    color: white;
+    color: var(--google-blue);
     text-decoration: none;
     font-weight: bold;
     font-size: 1.2rem;
-    border-radius: 0.5rem;
     transition: background-color 0.3s ease;
 }
 
-.nav-tabs > *:hover {
-    background-color: #0070dd;
-}
-
-.nav-tabs > .active {
-    background-color: var(--cta-rojo);
+.nav-tabs > .active, .nav-tabs > *:hover {
+    background-color: var(--google-blue);
+    color: white;
 }
 
 /* Contenido de pestañas */
 .tab-content {
     padding: 1rem;
-    background-color: var(--naranja-quemado);
+    background-color: white;
     margin: 1rem;
     border-radius: 1rem;
     flex: 1;
@@ -72,7 +66,7 @@ body {
     text-decoration: none;
     color: black;
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--oro-suave);
+    border-bottom: 1px solid #ccc;
 }
 
 .place-category {
@@ -174,26 +168,32 @@ body {
     font-weight: bold;
     font-size: 1.7rem;
     padding-top: 1rem;
+    color: #008cff;
 }
 
 /* Contenedores de ubicaciones */
 #preferences .selected-locations,
 #preferences .found-locations {
     height: 20rem;
-    border: 2px solid var(--oro-suave);
+    border: 1px solid #ccc;
     margin-top: 1rem;
     border-radius: 1rem;
     overflow-y: auto;
+    background-color: #eee;
+}
+
+
+#preferences .selected-locations .place, #preferences .found-locations .place {
+    padding: 1rem 0.5rem;
     background-color: #fff;
-    padding: 0.5rem;
 }
 
 /* Buscador */
 #locations-search {
     padding: 0.5rem;
     font-size: 15px;
-    width: calc(100% - 1rem);
-    border: 1px solid lightgray;
+    width: 100%;
+    border: 1px solid #ccc;
     border-radius: 0.5rem;
     margin-top: 1rem;
     transition: all 0.3s ease;
@@ -209,19 +209,19 @@ body {
 .add-location,
 .remove-location {
     background-color: white;
-    color: var(--azul-principal);
+    color: var(--azul-brillante);
     font-weight: bold;
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: 2px solid var(--azul-principal);
+    border: 2px solid var(--azul-brillante);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .add-location:hover,
 .remove-location:hover {
-    background-color: var(--azul-principal);
+    background-color: var(--azul-brillante);
     color: white;
 }
 
@@ -233,8 +233,6 @@ body {
 /* Infobox personalizada de Google Maps */
 .gm-style .gm-style-iw-c {
     width: 18rem !important;
-    border-radius: 2rem;
-    background-color: var(--naranja-quemado);
 }
 
 .gm-style .gm-style-iw-tc::after {
@@ -249,15 +247,13 @@ body {
     margin-top: 1rem;
     width: 16.5rem;
     height: 8rem;
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
+    border-radius: 8px;
     object-fit: cover;
 }
 
 /* Contenedor del contenido del infobox */
 .infobox-place-container {
     padding: 0.5rem 0.5rem 1rem;
-    background-color: var(--oro-suave);
     border-bottom-left-radius: 2rem;
     border-bottom-right-radius: 2rem;
     min-height: 8rem;
@@ -287,8 +283,8 @@ body {
 
 .infobox-controls button {
     background-color: white;
-    color: var(--cta-rojo);
-    border: 2px solid var(--cta-rojo);
+    color: var(--azul-brillante);
+    border: 2px solid var(--azul-brillante);
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -298,7 +294,7 @@ body {
 }
 
 .infobox-controls button:hover {
-    background-color: var(--cta-rojo);
+    background-color: var(--azul-brillante);
     color: white;
 }
 

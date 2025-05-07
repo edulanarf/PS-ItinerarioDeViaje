@@ -115,15 +115,15 @@ window.addEventListener("load", () => {
                 <h2><b>${place.name}</b></h2>
                 <div><b>Type:</b> ${place.types[0].substring(0,1).toUpperCase()+place.types[0].substring(1)}</div>
                 <div><b>Address:</b> ${place.adr_address}</div>
-                <div><b>Phone:</b> ${place.formatted_phone_number}</div>
+                <div><b>Phone:</b> ${place?.formatted_phone_number||'Desconocido'}</div>
                 <div><b>Opening Hours:</b>
                   <ul>
-                    <li>${place.opening_hours.weekday_text.map(text => text.substring(0,1).toUpperCase()+text.substring(1)).join('</li><li>')}</li>
+                    <li>${place.opening_hours?.weekday_text?.map(text => text.substring(0,1).toUpperCase()+text.substring(1))?.join('</li><li>')||'Desconocido'}</li>
                   </ul>
                 </div>
                 <div class="infobox-score">${scoreHtml}</div>
                 <div class="infobox-controls">
-                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},${place.adr_address},${photoUrl})" type="button">Añadir Favorito</button>
+                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},${strip(place.adr_address)},${photoUrl})" type="button">Añadir Favorito</button>
                   <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
                 </div>
               </div>`;
@@ -527,4 +527,9 @@ function initMap() {
   service = new google.maps.places.PlacesService(map);
   infowindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
+}
+
+function strip(html) {
+  let doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || "";
 }
