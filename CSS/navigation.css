@@ -114,6 +114,7 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #dropdown-menu a {
