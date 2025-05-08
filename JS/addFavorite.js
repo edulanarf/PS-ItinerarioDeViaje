@@ -20,8 +20,5 @@ export async function addFavoriteItinerary(itinerary) {
     await addDoc(newItineraryRef, {
       itineraryRef: itinerary
     });
-
-    window.location.reload();
-  } else {
   }
 }

@@ -13,7 +13,6 @@ export async function deleteFavoriteId(itinerary) {
   }
 
   await deleteDoc(deleteItineraryRef);
-  window.location.reload();
 
 }
 

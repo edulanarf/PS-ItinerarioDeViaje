@@ -68,6 +68,7 @@ async function loadItineraries() {
               const favoriteBtn = document.querySelector(".popup-favorite");
               favoriteBtn.onclick = async () => {
                 await deleteFavoriteId(itineraryDoc.id);
+                window.location.reload();
 
               };
 

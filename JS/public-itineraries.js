@@ -57,38 +57,16 @@ async function loadItineraries() {
           }
 
           const favoriteBtn = document.querySelector(".popup-favorite");
-          let isFavorite = false;
-          onAuthStateChanged(auth,async user => {
+
+          onAuthStateChanged(auth, async user => {
             if (user) {
-              const favoritesRef = collection(db, "users", user.uid, "favorites");
-              const favoritesSnapshot = await getDocs(favoritesRef);
-              let userDocFavoriteRef = null;
-              favoritesSnapshot.forEach(doc => {
-                if (doc.data().itineraryRef === itineraryDoc.id) {
-                  isFavorite = true;
-                  userDocFavoriteRef = doc.id
-                }
-              });
-
-              if (isFavorite) {
-                favoriteBtn.textContent = "Añadido a favoritos";
-                favoriteBtn.onclick = async () => {
-                  await deleteFavoriteId(userDocFavoriteRef);
-                  favoriteBtn.textContent = "Añadir a favoritos";
-                };
-              } else {
-                favoriteBtn.textContent = "Añadir a favoritos";
-                favoriteBtn.onclick = async () => {
-                  await addFavoriteItinerary(itineraryDoc.id);
-                  favoriteBtn.textContent = "Añadido a favoritos";
-                };
-              }
-
+              await updateFavoriteButtonState(user, itineraryDoc.id, favoriteBtn);
+            } else {
+              favoriteBtn.textContent = "Inicia sesión para guardar";
+              favoriteBtn.disabled = true;
+              favoriteBtn.onclick = null;
             }
           });
-
-
-
 
           // Imagen
           const img = document.createElement("img");
@@ -153,3 +131,32 @@ async function loadItineraries() {
 }
 
 document.addEventListener("DOMContentLoaded", loadItineraries);
+
+
+async function updateFavoriteButtonState(user, itineraryId, favoriteBtn) {
+  const favoritesRef = collection(db, "users", user.uid, "favorites");
+  const favoritesSnapshot = await getDocs(favoritesRef);
+  let isFavorite = false;
+  let userDocFavoriteRef = null;
+
+  favoritesSnapshot.forEach(doc => {
+    if (doc.data().itineraryRef === itineraryId) {
+      isFavorite = true;
+      userDocFavoriteRef = doc.id;
+    }
+  });
+
+  if (isFavorite) {
+    favoriteBtn.textContent = "Eliminar de favoritos";
+    favoriteBtn.onclick = async () => {
+      await deleteFavoriteId(userDocFavoriteRef);
+      await updateFavoriteButtonState(user, itineraryId, favoriteBtn); // 🔁 recarga el botón
+    };
+  } else {
+    favoriteBtn.textContent = "Añadir a favoritos";
+    favoriteBtn.onclick = async () => {
+      await addFavoriteItinerary(itineraryId);
+      await updateFavoriteButtonState(user, itineraryId, favoriteBtn); // 🔁 recarga el botón
+    };
+  }
+}
