@@ -107,12 +107,15 @@ async function init(user) {
 }
 
 async function showItinerary(before, after){
+  const scrollY = window.scrollY;
   let from = document.querySelector(`[data-name="${before}"][data-type=list]`);
+  from.classList.remove("visible");
   from.style.display = "none";
   from.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
   from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up", "down");
 
   let to = document.querySelector(`[data-name="${after}"][data-type=list]`);
+  to.classList.add("visible");
   currentDay = itineraries[before].itineraries.at(0).name;
   currentRoutes = itineraries[after].itineraries;
 
@@ -129,18 +132,54 @@ async function showItinerary(before, after){
   shareButton.innerText = "publicar";
   shareButton.classList.add("publicar");
   shareButton.style.cursor = "pointer";
-  shareButton.addEventListener("click", async () => {
-    const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
-    currentItineraryTitle = currentContainer.dataset.name;
-    const itinerary = itineraries[currentItineraryTitle];
-    const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
-    const itineraryPhotoRef = await getDoc(itineraryDocRef);
-    currentItineraryPhoto = itineraryPhotoRef.data().photo;
-    await shareItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
-  });
+
+
+
+  const currentContainer = document.querySelector(".my-itineraries.visible");
+  currentItineraryTitle = currentContainer.dataset.name;
+  const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${currentItineraryTitle}`);
+  const itinerarySnapshot = await getDoc(itineraryDocRef);
+  const itineraryData = itinerarySnapshot.data()
+
+  if(itineraryData.published){
+    shareButton.innerText = "Publicado";
+    shareButton.addEventListener("click", async () => {
+      const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
+      currentItineraryTitle = currentContainer.dataset.name;
+      const itinerary = itineraries[currentItineraryTitle];
+      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
+      const itineraryPhotoRef = await getDoc(itineraryDocRef);
+      const currentItineraryPublishedRef = itineraryPhotoRef.data().publishedRef;
+      deleteDoc(currentItineraryPublishedRef);
+
+      const daysCollectionRef = collection(db, `publicItineraries/${currentItineraryPublishedRef.id}/days`);
+      const daysSnapshot = await getDocs(daysCollectionRef);
+      const daysDeletePromises = daysSnapshot.docs.map(async doc => await deleteDoc(doc.ref));
+      await Promise.all(daysDeletePromises);
+
+      await updateDoc(itineraryDocRef, {
+        published:false
+      })
+      window.location.reload();
+    });
+  } else {
+    shareButton.innerText = "publicar";
+    shareButton.addEventListener("click", async () => {
+      const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
+      currentItineraryTitle = currentContainer.dataset.name;
+      const itinerary = itineraries[currentItineraryTitle];
+      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
+      const itineraryPhotoRef = await getDoc(itineraryDocRef);
+      currentItineraryPhoto = itineraryPhotoRef.data().photo;
+      await shareItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
+      window.location.reload();
+    });
+  }
+
   buttonGroup.appendChild(shareButton);
 
   to.style.display = "grid";
+  window.scrollTo(0, scrollY); //Para cada vez q se renderiza el contenido
 }
 
 async function nextItinerary(current) {

@@ -21,6 +21,11 @@ export async function shareItinerary(itinerary, itineraryTitle, itineraryPhoto) 
     title: itineraryTitle,
   });
   await saveItineraryInfo(itinerary, publicItineraryRef);
+
+  await updateDoc(doc(db, 'users', userRef, "itineraries", itineraryTitle), {
+    publishedRef: publicItineraryRef,
+    published: true
+  });
 }
 
 async function saveItineraryInfo(itinerary, publicItineraryRefId) {
@@ -44,6 +49,7 @@ async function saveItineraryInfo(itinerary, publicItineraryRefId) {
         lng: place.lng
       }))
     });
+
   }
 }
 
