@@ -18,9 +18,15 @@ async function loadItineraries() {
       for (const itineraryDoc of favoritesItinerariesSnapshot.docs) {
         const favoriteItineraryData = itineraryDoc.data();
         const itineraryRef = favoriteItineraryData.itineraryRef;
-        console.log("publicItineraries", itineraryRef);
         const itineraryDataDocRef = await doc(db,"publicItineraries", itineraryRef);
         const itineraryDataDoc = await getDoc(itineraryDataDocRef);
+
+        if (!itineraryDataDoc.exists()) {
+          console.warn(`Itinerario no encontrado: ${itineraryRef}, borrando favorito...`);
+          await deleteFavoriteId(itineraryDoc.id);  // Aquí borras el doc en users/<uid>/favorites/<doc.id>
+          continue; // Salta a la siguiente iteración
+        }
+
         const itineraryData = itineraryDataDoc.data();
 
         //Creo div para cada uno
