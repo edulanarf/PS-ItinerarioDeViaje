@@ -21,8 +21,7 @@ export async function addFavoriteItinerary(itinerary) {
       itineraryRef: itinerary
     });
 
-    console.log("Añadido a favoritos:", itinerary);
+    window.location.reload();
   } else {
-    console.log("Este itinerario ya está en favoritos.");
   }
 }

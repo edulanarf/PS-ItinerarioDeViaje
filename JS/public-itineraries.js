@@ -1,6 +1,8 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from './firebase-config.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import{addFavoriteItinerary} from './addFavorite.js'
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { deleteFavoriteId } from './deleteFavorite.js';
 
 async function loadItineraries() {
   const itinerariesContainer = document.getElementById("itineraries-container");
@@ -55,10 +57,38 @@ async function loadItineraries() {
           }
 
           const favoriteBtn = document.querySelector(".popup-favorite");
-          favoriteBtn.onclick = () => {
-            addFavoriteItinerary(itineraryDoc.id);
+          let isFavorite = false;
+          onAuthStateChanged(auth,async user => {
+            if (user) {
+              const favoritesRef = collection(db, "users", user.uid, "favorites");
+              const favoritesSnapshot = await getDocs(favoritesRef);
+              let userDocFavoriteRef = null;
+              favoritesSnapshot.forEach(doc => {
+                if (doc.data().itineraryRef === itineraryDoc.id) {
+                  isFavorite = true;
+                  userDocFavoriteRef = doc.id
+                }
+              });
 
-          };
+              if (isFavorite) {
+                favoriteBtn.textContent = "Añadido a favoritos";
+                favoriteBtn.onclick = async () => {
+                  await deleteFavoriteId(userDocFavoriteRef);
+                  favoriteBtn.textContent = "Añadir a favoritos";
+                };
+              } else {
+                favoriteBtn.textContent = "Añadir a favoritos";
+                favoriteBtn.onclick = async () => {
+                  await addFavoriteItinerary(itineraryDoc.id);
+                  favoriteBtn.textContent = "Añadido a favoritos";
+                };
+              }
+
+            }
+          });
+
+
+
 
           // Imagen
           const img = document.createElement("img");
