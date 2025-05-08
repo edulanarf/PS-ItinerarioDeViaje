@@ -5,12 +5,18 @@ import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
 import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-import { shareItinerary } from './shareItinerary.js';
-import { currentItinerary, itineraries } from "./my-itineraries-const.js";
+import { publishItinerary } from './publishItinerary.js';
+import {
+  currentItinerary,
+  itineraries,
+  list,
+  setCurrent,
+  template,
+  dayButton,
+  SHARED
+} from "./my-itineraries-const.js";
 
-export const list = document.getElementById("itinerary-list-container")
-const template = document.getElementById("itinerary-container");
-const dayButton = document.getElementById("day-button");
+
 let session = null;
 
 
@@ -19,19 +25,44 @@ export let currentRoutes;
 let currentItineraryTitle;
 let currentItineraryPhoto;
 
+
 // with user => init, then list, then gallery
 onAuthStateChanged(auth, (user) => {
   if (user) {
     session = user;
-    init(user).then(() => {
-      listView().then(() => console.log("list ready"));
-      galleryView().then(() => console.log("gallery ready"));
-    }).then(() => console.log("changed, and finished"));
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get("type");
+    console.log(value);
+    if (value === SHARED){
+      document.getElementById('share-itinerary').classList.remove('hidden');
+      initShared(user).then(() => {
+        listView().then(() => console.log("list ready"));
+        galleryView().then(() => console.log("gallery ready"));
+      }).then(() => console.log("changed, and finished"));
+    } else { //MINE
+      document.getElementById('share-itinerary').classList.add('hidden');
+      init(user).then(() => {
+        listView().then(() => console.log("list ready"));
+        galleryView().then(() => console.log("gallery ready"));
+      }).then(() => console.log("changed, and finished"));
+    }
   } else {
     console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html";
   }
 });
+
+async function initShared(user){
+  await getShared(user.uid).then(data => {
+    console.log("plans",data);
+    data.forEach((it) => {
+      itineraries[it.title] = it;
+    });
+  }).catch(err => console.error(err)).then(() => {
+
+    setCurrent(Object.keys(itineraries).at(0))
+  });
+}
 
 function switchDay(container, day) {
   container.querySelector(`ul[data-day="${currentDay}"]`).style.display = 'none';
@@ -67,7 +98,7 @@ function prevDay() {
   );
 }
 
-async function listView() {
+export async function listView() {
   currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
   currentRoutes = Object.values(itineraries).at(0);
   renderAllItineraries(itineraries)
@@ -95,10 +126,16 @@ async function listView() {
 
 async function init(user) {
   await getPlans(user.uid).then(data => {
+    console.log("plans",data);
     data.forEach((it) => {
       itineraries[it.title] = it;
     });
-  }).catch(err => console.error(err)).then(() => currentItinerary = Object.keys(itineraries).at(0));
+  }).catch(err => console.error(err)).then(() => {
+    console.log("itinerary:", Object.keys(itineraries).at(0));
+    console.log("itinerary:", itineraries[Object.keys(itineraries).at(0)]);
+    console.log("current", setCurrent("hi"));
+    setCurrent(Object.keys(itineraries).at(0))
+  });
 }
 
 async function showItinerary(before, after){
@@ -133,7 +170,7 @@ async function showItinerary(before, after){
     const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
     const itineraryPhotoRef = await getDoc(itineraryDocRef);
     currentItineraryPhoto = itineraryPhotoRef.data().photo;
-    await shareItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
+    await publishItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
   });
   buttonGroup.appendChild(shareButton);
 

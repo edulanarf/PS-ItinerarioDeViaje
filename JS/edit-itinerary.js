@@ -3,6 +3,7 @@ import { auth, db, storage } from './firebase-config.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { doc, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
+import { MINE } from "./my-itineraries-const.js";
 
 let userId;
 let itineraryId;
@@ -57,7 +58,7 @@ document.getElementById('edit-form').addEventListener('submit', async (e) => {
   });
 
   alert("Itinerario actualizado.");
-  window.location.href = "my-itineraries.html";
+  window.location.href = `my-itineraries.html?type=${MINE}`;
 });
 
 document.getElementById('delete').addEventListener('click', async () => {
@@ -66,5 +67,5 @@ document.getElementById('delete').addEventListener('click', async () => {
 
   await deleteDoc(doc(db, `users/${userId}/itineraries/${itineraryId}`));
   alert("Itinerario eliminado.");
-  window.location.href = "my-itineraries.html";
+  window.location.href = `my-itineraries.html?type=${MINE}`;
 });

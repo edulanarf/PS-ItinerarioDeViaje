@@ -8,7 +8,7 @@ import {
   setDoc, updateDoc
 } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
-export async function shareItinerary(itinerary, itineraryTitle, itineraryPhoto) {
+export async function publishItinerary(itinerary, itineraryTitle, itineraryPhoto) {
   const user = getAuth().currentUser;
   const userRef = user.uid;
   if (await isPublic(userRef, itineraryTitle)) {

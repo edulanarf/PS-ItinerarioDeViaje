@@ -1,6 +1,7 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { auth, db } from "/JS/firebase-config.js";
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { MINE } from "./my-itineraries-const.js";
 
 const profileContainer = document.getElementById("profile-info");
 
@@ -36,7 +37,7 @@ onAuthStateChanged(auth, async (user) => {
     dropdownMenu.innerHTML = `
       <a onclick="location.href='edit-profile.html'">Editar Perfil</a>
       <a onclick="location.href='edit-preferences.html'">Editar Preferencias</a>
-      <a onclick="location.href='my-itineraries.html'">Mis Itinerarios</a>
+      <a onclick="location.href='my-itineraries.html?type=${MINE}'">Mis Itinerarios</a>
       <a href="#" id="logout-button">Cerrar Sesión</a>
     `;
 

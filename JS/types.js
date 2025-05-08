@@ -9,8 +9,20 @@ export class Place {
    * @param {string} address
    * @param {string} date - should be Date
    * @param {string} category
+   * @param lat
+   * @param lng
    */
-  constructor(name,photo,price,rating,address,date,category,lat=undefined,lng=undefined) {
+  constructor(
+    name,
+    photo,
+    price,
+    rating,
+    address,
+    date,
+    category,
+    lat = undefined,
+    lng = undefined
+  ) {
     this.name = name;
     this.photo = photo;
     this.price = price;
@@ -23,11 +35,13 @@ export class Place {
   }
 
   toString() {
-    return this.name + [":",this.category,this.date,this.address].join("\n\t+ ")
+    return (
+      this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
+    );
   }
 
   toFirestore() {
-    return {
+    let obj = {
       name: this.name,
       photo: this.photo,
       price: this.price,
@@ -35,11 +49,9 @@ export class Place {
       address: this.address,
       date: this.date,
       category: this.category,
-      lat: this.lat,
-      lng: this.lng
     };
+    return this.lat && this.lng ? { ...obj, lat: this.lat, lng: this.lng } : obj;
   }
-
 }
 
 export class Itinerary {
@@ -48,12 +60,13 @@ export class Itinerary {
    * @param {string} name
    * @param {Place[]}places
    */
-  constructor(name, places) {
+  constructor(name, places = []) {
     this.name = name;
     /**
      * @type {Place[]}
      */
-    this.places = places? places : [];
+    this.places = places;
+
   }
 
   toString() {
@@ -68,24 +81,13 @@ export class Itinerary {
   }
 
   // noinspection JSUnusedGlobalSymbols
-  static itineraryConverter = {
+  static Converter = {
     toFirestore: function(itinerary) {
       return itinerary.toFirestore();
     },
     fromFirestore: async function(snapshot, options) {
       const data = snapshot.data(options);
-      const places = data.places ? await Promise.all(data.places.map(placeData => new Place(
-        placeData.name,
-        placeData.photo,
-        placeData.price,
-        placeData.rating,
-        placeData.address,
-        placeData.date,
-        placeData.category,
-        placeData.lat,
-        placeData.lng
-      ))) : [];
-      return new Itinerary(data.name, places)
+      return new Itinerary(data.name)
     }
   };
 }
@@ -97,12 +99,16 @@ export class ItineraryPlan {
    * @param {string} photo
    * @param {string} description
    * @param {Itinerary[]} itineraries
+   * @param {string} id
+   * @param {string[]} sharedWith
    */
-  constructor(title, description, photo,itineraries) {
+  constructor(title, description, photo, itineraries, id=NoID, sharedWith = []) {
     this.itineraries = itineraries;
     this._title = title;
     this._description = description;
     this._photo = photo;
+    this.id = id;
+    this.sharedWith = sharedWith
   }
 
 
@@ -135,57 +141,30 @@ export class ItineraryPlan {
       title: this._title,
       photo: this._photo,
       description: this._description,
+      sharedWith: this.sharedWith
     }
   }
 
   // noinspection JSUnusedGlobalSymbols
-  static itineraryPlanConverter = {
-    toFirestore: function(itineraryPlan) {
-      return itineraryPlan.toFirestore();
-    },
-    fromFirestore: function(snapshot, options) {
-      const data = snapshot.data(options);
-      return new ItineraryPlan(data.title,data.description,data.photo,[] );
-    }
-  };
-}
-
-
-export class SharedPlan{
-  /**
-   *
-   * @param {string} author
-   * @param {string} plan
-   */
-  constructor(author,plan) {
-    this.author = author;
-    this.plan = plan;
-  }
-  toFirestore() {
-    return {
-      author: this.author,
-      plan: this.plan,
-    }
-  }
-
   static Converter = {
-    toFirestore: function(itinerarySharedPlan) {
-      return itinerarySharedPlan.toFirestore();
+    toFirestore: function(itineraryPlan) {
+      return {
+        title: itineraryPlan._title,
+        photo: itineraryPlan._photo,
+        description: itineraryPlan._description,
+        sharedWith: itineraryPlan.sharedWith
+      };
     },
     fromFirestore: function(snapshot, options) {
       const data = snapshot.data(options);
-      return new SharedPlan(data.author,data.plan);
+      return new ItineraryPlan(data.title, data.description, data.photo, [], snapshot.id, data.sharedWith? data.sharedWith : []);
     }
   };
 }
 
 export class UserReference {
-  constructor(id,name) {
-    if (id) {
-      this.id = id;
-    } else {
-      this.id = NoID;
-    }
+  constructor(id=NoID,name) {
+    this.id = id;
     this.name = name;
   }
 }
@@ -194,21 +173,21 @@ export class User extends UserReference{
   /**
    * @param {string} name
    * @param {string} email
-   * @param {string} photoUrl
+   * @param {string} photoURL
    * @param {string} id
    */
-  constructor(name,email,photoUrl,id) {
+  constructor(name,email,photoURL,id) {
     super(id,name)
     this.email = email;
-    this.photoUrl = photoUrl;
+    this.photoURL = photoURL;
   }
 
   toFirestore() {
     return {
       username: this.name,
-      photoUrl: this.photoUrl,
+      photoURL: this.photoUrl,
       email: this.email,
-      id: ""
+      id: this.id
     }
   }
   static Converter = {
@@ -217,7 +196,8 @@ export class User extends UserReference{
     },
     fromFirestore: function(snapshot, options) {
       const data = snapshot.data(options);
-      return new User(data.name,data.email,data.photoUrl,snapshot.id);
+      console.log("data",data);
+      return new User(data.username,data.email,data.photoURL,snapshot.id);
     }
   };
 }

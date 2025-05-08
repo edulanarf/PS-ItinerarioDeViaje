@@ -1,5 +1,7 @@
-import { getUsers, shareThisItineraryTo } from "./firebase-config.js";
+import { auth, db, deleteAllDocumentsInCollection, getUsers } from "./firebase-config.js";
 import { currentItineraryPlan } from "./my-itineraries-const.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { Itinerary, ItineraryPlan } from "./types.js";
 
 const modal = document.getElementById('modal');
 const openBtn = document.getElementById('share-itinerary');
@@ -22,28 +24,35 @@ openBtn.addEventListener('click', () => {
 
 // Cerrar el modal
 closeBtn.addEventListener('click', () => {
-  modal.classList.add('hidden');
+  closeModal()
 });
+
+function closeModal(){
+  modal.classList.add('hidden');
+  let names = document.querySelectorAll('.name-input-container');
+  names[0].querySelector('.name-input').value = '';
+  for (let i = 1; i < names.length; i++) names[i].remove();
+}
 
 // Agregar un nuevo textarea
 addNameButton.addEventListener('click', (e) => {
   e.preventDefault();
   // Limpiar mensaje de error al iniciar la validación
   errorMessage.style.display = 'none';
-  const clone = document.importNode(nameInputTemplate.content, true).querySelector("div");
+  const nameElement = document.importNode(nameInputTemplate.content, true).querySelector("div");
 
   // Crear el botón para eliminar este textarea
-  const removeButton = clone.querySelector('button');
+  const removeButton = nameElement.querySelector('button');
 
   // Cuando el botón "Remove" sea presionado, eliminar el textarea y el botón
   removeButton.addEventListener('click', () => {
-    namesContainer.removeChild(clone);
+    namesContainer.removeChild(nameElement);
     // Limpiar mensaje de error al iniciar la validación
     errorMessage.style.display = 'none';
   });
 
   // Agregar los elementos al contenedor
-  namesContainer.appendChild(clone);
+  namesContainer.appendChild(nameElement);
 });
 
 
@@ -66,34 +75,55 @@ form.addEventListener('submit', async (e) => {
     if (name.length > 0) {
       names.push(name);
     } else {
-      isValid = false; // Si algún textarea está vacío, es inválido
+      isValid = false; // Si algún textarea está vacío o menor a 6, es inválido
     }
   });
 
-  // Validación: Si hay algún campo vacío
   if (!isValid) {
     errorMessage.style.display = 'block';
-    errorMessage.textContent = 'Please fill in all the fields or delete the empty ones.';
+    errorMessage.textContent = 'Please fill in all the fields or delete the empty ones.'
   } else {
     console.log('Nombres ingresados:', names);
-
-    await getUsers(names).then(users => {
+    let itineraryPlan = currentItineraryPlan();
+    await getUsers(names).then( async (users) => {
       console.log(users);
       if (users.notFound.length > 0) {
         errorMessage.style.display = "block";
         errorMessage.textContent = "the following users were not found: " + users.notFound.join(", ") + ".";
         return;
       }
-      users.foundUserIds.forEach(userId => {
-        shareThisItineraryTo(userId, currentItineraryPlan())
-      })
+      await Promise.all(
+        users.foundUserIds.map(userId => shareThisItineraryTo(userId, itineraryPlan))
+      );
+      await setDoc(doc(db, "users", auth.currentUser.uid, "itineraries", itineraryPlan.id).withConverter(ItineraryPlan.Converter),
+        {
+          ...itineraryPlan,
+          sharedWith: [...itineraryPlan.sharedWith, ...users.foundUserIds]
+        }
+      )
+      console.log("itinerary sharedWith:", itineraryPlan.id,":", itineraryPlan.title,"to",...users.foundUserIds);
+
     })
-
-
-    // Cerrar modal
-    modal.classList.add('hidden');
-
-    // Limpiar los textareas
-    nameInputs.forEach(input => input.value = '');
+    closeModal();
   }
 });
+
+
+async function shareThisItineraryTo(userId, itineraryPlan) {
+  const itineraryRef = doc(db, "users", userId, "shared", itineraryPlan.id).withConverter(ItineraryPlan.Converter)
+  await setDoc(itineraryRef, itineraryPlan)
+    .then(async ()=> {
+      await deleteAllDocumentsInCollection(`users/${userId}/shared/${itineraryPlan.id}/days`)
+      console.log("shared:", itineraryPlan.id,":", itineraryPlan.title,"to",userId);
+    })
+    .then(async () => {
+      await Promise.all(
+        itineraryPlan.itineraries.map(itinerary => {
+          console.log(itinerary, itinerary.toFirestore());
+          const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.Converter);
+          return setDoc(dayRef, itinerary);
+        })
+      ).then(()=> console.log("shared days of", itineraryPlan.id,":", itineraryPlan.title,"to",userId))
+    })
+
+}

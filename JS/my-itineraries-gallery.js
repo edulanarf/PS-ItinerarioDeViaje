@@ -1,5 +1,5 @@
 import { ItineraryPlan } from './types.js';
-import {itineraries, currentItinerary, list } from './my-itineraries.js';
+import {itineraries, currentItinerary, list } from './my-itineraries-const.js';
 
 let gallery = document.getElementById("itinerary-gallery-container");
 gallery.style.display = "none";

@@ -1,10 +1,54 @@
 
-import { db, auth } from './firebase-config.js';
-import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { db, auth, deleteAllDocumentsInCollection } from "./firebase-config.js";
+import {
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+  Timestamp
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
-import { Itinerary, ItineraryPlan } from './types.js';
-import { plan } from './search-places.js'
+import { Itinerary, ItineraryPlan, NoID } from "./types.js";
+import { plan } from "./search-places.js";
+
+export async function storeItineraryPlanWithID(userId, itineraryPlan) {
+  const itineraryRef = doc(db, `users/${userId}/itineraries/${itineraryPlan.id}`).withConverter(ItineraryPlan.Converter)
+  await setDoc(
+    itineraryRef,
+    itineraryPlan)
+    .then(()=> deleteAllDocumentsInCollection(`users/${userId}/itineraries/${itineraryPlan.id}/days`))
+    .then(async () => {
+      for (const itinerary of itineraryPlan.itineraries) {
+        const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(
+          Itinerary.Converter,
+        );
+        await setDoc(dayRef, itinerary);
+      }
+    })
+}
+
+export async function storeItineraryPlanNoID(userId, itineraryPlan) {
+  const itinerariesCollection = collection(db, `users/${userId}/itineraries`).withConverter(ItineraryPlan.Converter)
+  const itineraryRef = await addDoc(itinerariesCollection, itineraryPlan);
+  await setDoc(
+    itineraryRef,
+    itineraryPlan)
+    .then(()=> deleteAllDocumentsInCollection(`users/${userId}/itineraries/${itineraryRef.id}/days`))
+    .then(async () => {
+      for (const itinerary of itineraryPlan.itineraries) {
+        const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(
+          Itinerary.Converter,
+        );
+        await setDoc(dayRef, itinerary);
+      }
+    })
+}
+
+export async function storeItineraryPlan(userId, itineraryPlan) {
+  if (itineraryPlan.id !== NoID) await storeItineraryPlanWithID(userId, itineraryPlan);
+  else await storeItineraryPlanNoID(userId, itineraryPlan);
+}
 
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
@@ -25,13 +69,7 @@ import { plan } from './search-places.js'
         plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
         
         try {
-          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
-            .withConverter(ItineraryPlan.itineraryPlanConverter);
-          await setDoc(itineraryRef, plan)
-          for (const itinerary of plan.itineraries) {
-            const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
-            await setDoc(dayRef, itinerary);
-          }
+          await storeItineraryPlan(user.id, plan);
           setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);

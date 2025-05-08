@@ -1,8 +1,20 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Itinerary, ItineraryPlan, SharedPlan, User } from './types.js';
+import { Itinerary, ItineraryPlan, User } from "./types.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -11,7 +23,7 @@ const firebaseConfig = {
   storageBucket: "itinerarios-de-viaje-2db0b.firebasestorage.app",
   messagingSenderId: "86468425538",
   appId: "1:86468425538:web:8bc9c4194193614f7cfadb",
-  measurementId: "G-CKN1D6S9GR"
+  measurementId: "G-CKN1D6S9GR",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -31,7 +43,6 @@ export function checkAuthState() {
   });
 }
 
-
 export { app, auth, storage, db };
 
 /**
@@ -48,7 +59,7 @@ export { app, auth, storage, db };
  *
  * NOTES:
  */
-export async function getUsers(names){
+export async function getUsers(names) {
   const usersRef = collection(db, "users").withConverter(User.Converter);
 
   // Dividir la búsqueda en fragmentos (máximo 10 por consulta debido a Firestore IN limit)
@@ -61,32 +72,33 @@ export async function getUsers(names){
   }
 
   await Promise.all(
-    chunks.map(chunk => {
+    chunks.map((chunk) => {
       const q = query(usersRef, where("username", "in", chunk));
-      return getDocs(q).then(querySnapshot => {
-        querySnapshot.forEach(doc => {
+      return getDocs(q).then((querySnapshot) => {
+        console.log(querySnapshot);
+        querySnapshot.forEach((doc) => {
           const data = doc.data();
-          const username = data.username;
-
+          console.log("read data", data);
+          const username = data.name;
+          console.log("read", username);
           // Verificación estricta
           if (chunk.includes(username)) {
             foundUsers[username] = doc.id;
           }
         });
       });
-    })
+    }),
   );
 
   // Crear lista final de resultados
   const foundUserIds = Object.values(foundUsers);
-  const notFound = names.filter(name => !foundUsers[name]);
+  const notFound = names.filter((name) => !foundUsers[name]);
 
   return {
     foundUserIds,
-    notFound
+    notFound,
   };
 }
-
 
 export async function getUserData(userId) {
   const docRef = doc(db, "users", userId).withConverter(User.Converter);
@@ -104,71 +116,116 @@ export async function getUserData(userId) {
 }
 
 /**
+ *
+ * @param {string} collectionPath - in the form collection/doc/.../collection
+ * @returns {Promise<void>}
+ */
+export async function deleteAllDocumentsInCollection(collectionPath) {
+  const snapshot = await getDocs(collection(db, collectionPath));
+
+  if (snapshot.empty) {
+    console.log("La colección está vacía o no existe.");
+    return;
+  }
+
+  const deletions = snapshot.docs.map((docSnap) => {
+    return deleteDoc(doc(db, collectionPath, docSnap.id));
+  });
+
+  await Promise.all(deletions);
+  console.log("Todos los documentos han sido eliminados.");
+}
+
+/// get plans modular
+/**
+ * @param {string} userId
+ * @returns {CollectionReference}
+ */
+function getItinerariesRef(userId) {
+  return collection(db, `users/${userId}/itineraries`).withConverter(
+    ItineraryPlan.Converter,
+  );
+}
+
+/**
+ * @param {string} userId
+ * @returns {CollectionReference}
+ */
+function getSharedItinerariesRef(userId) {
+  return collection(db, `users/${userId}/shared`).withConverter(
+    ItineraryPlan.Converter,
+  );
+}
+
+/**
+ * @param {CollectionReference} itinerariesRef
+ * @returns {Promise<ItineraryPlan[]>}
+ */
+async function fetchItineraryPlans(itinerariesRef) {
+  const querySnapshot = await getDocs(itinerariesRef);
+  const plans = [];
+  querySnapshot.forEach((doc) => plans.push(doc.data()));
+  return plans;
+}
+
+/**
+ * @param {CollectionReference} itinerariesRef
+ * @param {ItineraryPlan} plan
+ * @returns {Promise<Itinerary[]>}
+ */
+async function fetchDaysForPlan(itinerariesRef, plan) {
+  const daysRef = collection(itinerariesRef, plan.title, "days").withConverter(
+    Itinerary.Converter,
+  );
+  const docs = [];
+  (await getDocs(daysRef)).forEach((doc) => docs.push(doc));
+  return await Promise.all(docs.map(async (doc) => await doc.data()));
+}
+
+/**
  * @param {string} userId
  * @returns {Promise<ItineraryPlan[]>}
  */
 export async function getPlans(userId) {
-  const itinerariesRef = collection(db, `users/${userId}/itineraries`)
-    .withConverter(ItineraryPlan.itineraryPlanConverter);
   try {
-    const querySnapshot = await getDocs(itinerariesRef);
-    console.log(querySnapshot);
-    /**
-     * @type {ItineraryPlan[]}
-     */
-    const itineraryPlans = [];
-    /**
-     * @type {ItineraryPlan[]}
-     */
-    const processed = []
-    await querySnapshot.forEach((file) => {
-      itineraryPlans.push(file.data())
-      console.log(itineraryPlans);
-    })
-    await Promise.all(itineraryPlans.map(async (plan) => {
-      const daysRef = collection(itinerariesRef, plan.title, 'days')
-        .withConverter(Itinerary.itineraryConverter);
-      const daySnapshot = await getDocs(daysRef);
-      const files = []
-      /**
-       * @type {Itinerary[]}
-       */
-      const days = []
-      await daySnapshot.forEach((file) => {
-        files.push(file)
-      })
-      await Promise.all(files.map(async file => {
-        let a = await file.data()
-        console.log("a: ", a);
-        days.push(a)
-      }))
-        .then(async _ => await Promise.all(days.map(day => plan.itineraries.push(day))))
-        .then(_ => {
-          processed.push(plan)
-          console.log(plan);
-        });
-
-    }));
-
-    processed.values().forEach(
-      (i) => {
-        i.itineraries.forEach((k) => console.log(k.toString()));
-      }
-    )
-    return processed;
+    return await getItinerariesPlans(getItinerariesRef(userId));
   } catch (error) {
     console.error("Error getting itineraries: ", error);
     return [];
   }
 }
 
-
-
-
-
-
-  export async function shareThisItineraryTo(userId, itineraryPlan) {
-    const shareCollection = collection(db, "users", userId, "shared").withConverter(SharedPlan.Converter)
-    const docRef = await addDoc(shareCollection, itineraryPlan);
-    return docRef.id;
+/**
+ * @param {string} userId
+ * @returns {Promise<ItineraryPlan[]>}
+ */
+export async function getShared(userId) {
+  try {
+    return await getItinerariesPlans(getSharedItinerariesRef(userId));
+  } catch (error) {
+    console.error("Error getting itineraries: ", error);
+    return [];
   }
+}
+
+/**
+ * @param {CollectionReference} itinerariesRef
+ * @returns {Promise<ItineraryPlan[]>}
+ */
+export async function getItinerariesPlans(itinerariesRef) {
+  try {
+    const itineraryPlans = await fetchItineraryPlans(itinerariesRef);
+
+    return await Promise.all(
+      itineraryPlans.map(async (plan) => {
+        await fetchDaysForPlan(itinerariesRef, plan).then((arr) => {
+          plan.itineraries.push(...arr);
+        });
+        return plan;
+      }),
+    );
+  } catch (error) {
+    console.error("Error getting itineraries: ", error);
+    return [];
+  }
+}
