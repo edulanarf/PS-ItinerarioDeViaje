@@ -82,6 +82,10 @@
       <input type="text" id="itinerary-description" placeholder="Descripción:">
     </div>
     <h3>Organiza tu día: </h3>
+    <label for="daySelector">Selecciona un dia de tu plan</label>
+    <select id="daySelector">
+      <option value="1">Día 1</option> <!-- base -->
+    </select>
     <section id="places">
       <template id="list-place-item">
         <li class="list-item">
@@ -89,16 +93,17 @@
             <span class="name"></span>
             <span class="price"></span>
           </div>
-          <button class="delete-button">Eliminar</button>
+          <button class="delete-button">X</button>
         </li>
       </template>
       <template id="day-container">
-        <div class="day-container">
+        <div data-day="" class="day-container">
+          <button class="delete-button">Eliminar</button>
           <h1 class="day"></h1>
           <ul class="itinerary-list"></ul>
         </div>
       </template>
-      <div id="day-1" class="day-container">
+      <div data-day="1" class="day-container">
         <h1 class="day"></h1>
         <ul class="itinerary-list"></ul>
       </div>

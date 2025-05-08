@@ -35,9 +35,12 @@ export class Place {
   }
 
   toString() {
-    return (
-      this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
-    );
+    return this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
+
+  }
+
+  static toLi(place){
+    return place.name + [":", place.category, place.date, place.address].join("\n\t+ ")
   }
 
   toFirestore() {
@@ -87,7 +90,7 @@ export class Itinerary {
     },
     fromFirestore: async function(snapshot, options) {
       const data = snapshot.data(options);
-      return new Itinerary(data.name)
+      return new Itinerary(data.name, data.places)
     }
   };
 }

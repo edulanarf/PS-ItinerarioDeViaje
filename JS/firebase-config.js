@@ -179,7 +179,9 @@ async function fetchDaysForPlan(itinerariesRef, plan) {
   );
   const docs = [];
   (await getDocs(daysRef)).forEach((doc) => docs.push(doc));
-  return await Promise.all(docs.map(async (doc) => await doc.data()));
+  const days = [];
+  await Promise.all(docs.map(async (doc) => days.push(await doc.data())));
+  return days;
 }
 
 /**
@@ -218,7 +220,7 @@ export async function getItinerariesPlans(itinerariesRef) {
 
     return await Promise.all(
       itineraryPlans.map(async (plan) => {
-        await fetchDaysForPlan(itinerariesRef, plan).then((arr) => {
+        await fetchDaysForPlan(itinerariesRef, plan).then((arr) =>{
           plan.itineraries.push(...arr);
         });
         return plan;

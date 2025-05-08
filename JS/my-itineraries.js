@@ -1,6 +1,6 @@
-import { auth, db, getPlans, storage } from './firebase-config.js';
+import { auth, db, getPlans, getShared, storage } from "./firebase-config.js";
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { ItineraryPlan } from './types.js';
+import { ItineraryPlan, Itinerary, Place } from "./types.js";
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
@@ -34,13 +34,13 @@ onAuthStateChanged(auth, (user) => {
     const value = params.get("type");
     console.log(value);
     if (value === SHARED){
-      document.getElementById('share-itinerary').classList.remove('hidden');
+      document.getElementById('share-itinerary').classList.add('hidden');
       initShared(user).then(() => {
         listView().then(() => console.log("list ready"));
         galleryView().then(() => console.log("gallery ready"));
       }).then(() => console.log("changed, and finished"));
     } else { //MINE
-      document.getElementById('share-itinerary').classList.add('hidden');
+      document.getElementById('share-itinerary').classList.remove('hidden');
       init(user).then(() => {
         listView().then(() => console.log("list ready"));
         galleryView().then(() => console.log("gallery ready"));
@@ -202,6 +202,13 @@ async function renderAllItineraries(itineraries) {
   );
 }
 
+/**
+ *
+ * @param {Itinerary} itinerary
+ * @param daysContainer
+ * @param listContainer
+ * @returns {Promise<void>}
+ */
 async function renderDay(itinerary, daysContainer, listContainer) {
   let button = await document.importNode(dayButton.content, true).querySelector('button');
   button.innerText = itinerary.name;
@@ -211,8 +218,10 @@ async function renderDay(itinerary, daysContainer, listContainer) {
   ul.className = 'places';
   ul.dataset.day = itinerary.name;
   await Promise.all(itinerary.places.map(async place => {
-    let li = document.createElement('li');
-    li.innerText = place.toString();
+    let li = document.createElement('li')
+    console.log("for li",place);
+    console.log("for li string", );
+    li.innerText = Place.toLi(place);
     await ul.appendChild(li);
   }));
   ul.style.display = 'none';

@@ -6,7 +6,7 @@ import { auth } from './firebase-config.js';
 import { Itinerary, ItineraryPlan, Place } from './types.js';
 
 //module
-import {CurrentItinerary} from './my-itineraries-const.js';
+import {currentItineraryPlan} from './my-itineraries-const.js';
 
 
 let map, service, infowindow, circle;
@@ -19,11 +19,17 @@ let radius = 2000;
 /**
  * @type {ItineraryPlan}
  */
-export let plan = new ItineraryPlan("","","",[]);
+export let plan = new ItineraryPlan("","","",[])
+
 /**
  * @type {Place[]}
  */
-let listPlaces = []
+let placeArray = []
+
+/**
+ * @type {Place[][]}
+ */
+const allPlaces = [[]]
 const day = document.getElementById("day")
 
 onAuthStateChanged(auth, (user) => {
@@ -48,96 +54,215 @@ la url seria algo como ..../HTML/search-places.html
  */
 let editingItinerary = null
 if (paramValue) {
-  editingItinerary = CurrentItinerary()
+  editingItinerary = currentItineraryPlan()
   renderExisting()
 } else {
   editingItinerary = new ItineraryPlan("","","",[defaultItineraryDay()])
 }
 
 function defaultItineraryDay(){
-  return new Itinerary(`Día ${counterDay}`, [])
+  return new Itinerary(`Día ${dayCurrent}`, [])
 }
 
 //NODES
 const ItineraryPlanDaysContainer = document.getElementById("places");
+const daySelector = document.getElementById("daySelector")
+
 
 //TEMPLATES
-const dayContainer = document.getElementById("day-container");
-const listPlaceItem = document.getElementById("list-place-item");
+const dayContainerTemplate = document.getElementById("day-container");
+const listPlaceItemTemplate = document.getElementById("list-place-item");
 
+// Info para el itinerario
+let dayCurrent = 1
+let counter = 0;
+
+const placesList = document.querySelector(".itinerary-list");
+
+//PLACE
+
+///map references
 /**
- * @param {number} count
+ * @param {number} day
  * @param {Place} place
  */
-function createPlaceItem(count, place){
-  let clone = document.importNode(listPlaceItem.content, true).querySelector("li");
-  clone.querySelector(".name").textContent = `${ count }.` + place.name;
-  clone.querySelector(".price").textContent = `${place.price}`;
+function addPlaceToMatrix(day,place) {
+  allPlaces[day-1].push(place)
+  console.log("place added",allPlaces);
+}
+
+function removePlaceFromMatrix(day,place) {
+  allPlaces[day-1].splice(allPlaces[day-1].indexOf(place),1);
+  console.log("place deleted",allPlaces);
+}
+
+function displayPriceOfPlace(place) {
+  if (place.category === "Hotel") return `${place.price} Euros la noche`;
+  else if (["Restaurante", "Cafetería", "Museo"].includes(place.category))
+    return `${place.price} Euros por persona`;
+  else return `Gratis`;
+}
+
+/// HTML
+/**
+ * @param {Place} place
+ * @param {number} day
+ */
+function createPlaceItem(place,day){
+  let clone = document.importNode(listPlaceItemTemplate.content, true).querySelector("li");
+  clone.querySelector(".name").textContent = place.name;
+  clone.querySelector(".price").textContent = `${displayPriceOfPlace(place)}`;
   clone.querySelector(".delete-button").addEventListener("click", () => {
     clone.remove();
+    removePlaceFromMatrix(day,place)
   })
+  addPlaceToMatrix(day,place)
   return clone
 }
 
+/**
+ * @param {Place} place
+ * @param {number} day
+ */
+function renderNewPlaceForDay(place,day){
+  document.querySelector(`[data-day="${day}"]`).querySelector('.ul').appendChild(createPlaceItem(place, day));
+}
+
+
+// CRUD Itinerary (day)
+/// map References
+function newDay(){
+  allPlaces.push([]);
+  console.log("new day",allPlaces);
+}
+function deleteDay(day){
+  allPlaces.splice(day,1);
+  console.log("day deleted",allPlaces);
+}
+
+
+
+/// selector
+function createOptionForDaySelector(i) {
+  const option = document.createElement("option");
+  option.value = `${i}`;
+  option.text = `Día ${i}`;
+  return option;
+}
+
+function deleteDayFromSelector(day){
+  let option = daySelector.querySelector(`[value="${day}"]`);
+  option.remove();
+  for (let i = day + 1; i <= allPlaces.length; i++) {
+    option = (daySelector.querySelector(`[value="${i}"]`))
+    if (option) {
+      option.value = `${i-1}`;
+      option.text =`Día ${i-1}`;
+    }
+  }
+}
+
+function updateSelector(){
+  selector.appendChild(createOptionForDaySelector(allPlaces.length));
+}
+
+
+/// HTML
 function createDayContainer(){
-  return document.importNode(dayContainer.content, true).querySelector("div");
+  return document
+    .importNode(dayContainerTemplate.content, true)
+    .querySelector("div");
 }
 
 /**
- *
  * @param {number} from - number of the former day
- * @param {number}  to - nunmber of the next day
+ * @param {number}  to - number of the next day
  */
-function switchDay(from, to){
-  document.getElementById(`day-${from}`).style.display = "none";
-  document.getElementById(`day-${to}`).style.display = "block";
+function switchDay(from, to) {
+  document.querySelector(`[data-day="${from}"]`).style.display = "none";
+  document.querySelector(`[data-day="${to}"]`).style.display = "block"
+  dayCurrent = to
 }
 
-function renderDay(index, itinerary) {
-  let day = createDayContainer();
-  day.id = `day-${index}`;
-  day.querySelector('h1').textContent = itinerary.name;
-  let list = day.querySelector('.ul');
-  itinerary.places.forEach((place, indexP) => {
-    list.appendChild(createPlaceItem(indexP + 1, place));
+/**
+ * @param {number} day
+ * @param {Itinerary} itinerary
+ */
+function renderPlacesForDay(day, itinerary) {
+  let list = document.querySelector(`[data-day="${day}"]`).querySelector(".ul");
+  itinerary.places.forEach((place) => {
+    list.appendChild(createPlaceItem(place, day));
   });
-  day.style.display = 'none';
-  dayCounter++
-  ItineraryPlanDaysContainer.appendChild(day);
 }
 
-function appendPlace(place, day){
-  editingItinerary.itineraries[day-1].places.push(place);
-  document.getElementById(`day-${day}`).querySelector('.ul').appendChild(createPlaceItem(editingItinerary.itineraries[day-1].places.length, place));
+
+
+function renumberDays(index){
+  const days = document.querySelectorAll('[data-day]')
+  days.forEach((day) => {
+    if (Number(day.dataset.day) > index) {
+      day.dataset.day = `${Number(day.dataset.day)-1}`
+    }
+  })
 }
 
-function deletePlace(index, day){
-  document.getElementById(`day-${day}`).querySelector('.ul').children[index-1].remove();
-  editingItinerary.itineraries[day-1].places.splice(index-1,1)
+/**
+ * @param {number} index
+ * @return {HTMLElement} day element
+ * @see renderNewDay - calls this function to create the element
+ */
+function createDayElement(index){
+  let day = createDayContainer();
+  day.dataset.day = `${index}`;
+  day.querySelector('h1').textContent = "Día " + index;
+  day.querySelector('.delete-button').addEventListener('click', () => {
+    day.remove();
+    deleteDay(index)
+    renumberDays(index)
+    deleteDayFromSelector(index)
+  })
+  newDay()
+  updateSelector()
+  day.style.display = "none";
+  return day
 }
 
-function deleteDay(index){
-  document.getElementById(`day-${index}`).remove();
-  editingItinerary.itineraries.splice(index-1,1)
-  dayCounter--
+/**
+ * given a number, creates and renders a new day
+ * @param {number} index
+ * @see createDayElement - renderNewDay uses this function to create the element
+ */
+function renderNewDay(index){
+  ItineraryPlanDaysContainer.appendChild(createDayElement(index));
+}
+
+function sortedDays(){
+  return Array.from(document.querySelectorAll('[data-day]'))
+    .sort((a, b) => {
+      return Number(a.dataset.day) - Number(b.dataset.day);
+    });
+}
+
+/**
+ * @param {number} index
+ * @param {Itinerary} itinerary
+ */
+function renderNewDayForExisting(index, itinerary) {
+  renderNewDay(index)
+  renderPlacesForDay(index, itinerary)
+  switchDay(index-1, index)
 }
 
 function renderExisting(){
   document.getElementById("itinerary-title").value = editingItinerary.title;
   document.getElementById("itinerary-description").value = editingItinerary.description;
+  renderPlacesForDay(1, editingItinerary.itineraries.at(0))
   editingItinerary.itineraries.forEach((itinerary, index) => {
-    renderDay(index + 1, itinerary);
+    if (index === 0) return;
+    renderNewDayForExisting(index + 1, itinerary);
   })
+  dayCurrent = editingItinerary.itineraries.length;
 }
-
-
-
-// Info para el itinerario
-let dayCounter = 1 // default: first day, => current day, visible
-let dayCurrent = 1
-let counter = 0;
-
-const placesList = document.querySelector(".itinerary-list");
 
 
 function initMap() {
@@ -307,7 +432,7 @@ function addToItinerary(place) {
 
   //Mensaje error repetido
   const repeatError = document.getElementById("repeat-error");
-  if (listPlaces.find(p => p.name === place.name)) {
+  if (allPlaces[dayCurrent-1].find(p => p.name === place.name)) {
     repeatError.textContent = "Este lugar ya se ha añadido al itinerario";
     repeatError.style.display = "block";
     repeatError.style.borderColor = "red";
@@ -318,7 +443,7 @@ function addToItinerary(place) {
 
   //Mensaje error Hotel
   const hotelError = document.getElementById("hotel-error");
-  if (listPlaces.find(p => p.category === "Hotel" ) && place.category === "Hotel") {
+  if (allPlaces[dayCurrent-1].find(p => p.category === "Hotel" ) && place.category === "Hotel") {
     hotelError.textContent = "Ya se ha añadido un hotel";
     hotelError.style.display = "block";
     hotelError.style.borderColor = "red";
@@ -329,7 +454,7 @@ function addToItinerary(place) {
 
   //Mensaje error Elegir un hotel
   const notHotelError = document.getElementById("not-hotel-error");
-  if (counterDay === 1 && listPlaces.length === 0 && selectedCategory !== "Hotel") {
+  if (counterDay === 1 && allPlaces[dayCurrent-1].length === 0 && selectedCategory !== "Hotel") {
     notHotelError.textContent = "No se ha añadido un hotel";
     notHotelError.style.display = "block";
     notHotelError.style.borderColor = "red";
@@ -357,40 +482,43 @@ function addToItinerary(place) {
 
 
   //here's for rendering a day
-  listPlaces.push(aPlace)
+  addPlaceToMatrix(dayCurrent, aPlace);
+  renderNewPlaceForDay(aPlace, dayCurrent);
 
-  const li = document.createElement("li");
-  li.classList.add("list-item");
-  const div = document.createElement("div");
-
-  div.innerHTML = `${counter}. ${place.name} ${priceString} `;
-
-  const delBtn = document.createElement("button");
-  delBtn.className = "delete-button";
-  delBtn.textContent = "Eliminar";
-  delBtn.addEventListener("click", () => {
-    const index = Array.from(placesList.children).indexOf(li);
-    listPlaces.splice(index,1);
-    li.remove();
-    counter--;
-    renumberItems();
-    setSaved(false);
-  });
-  setSaved(false);
-  li.append(div, delBtn);
-  placesList.appendChild(li);
-
-  if(selectedCategory === "Hotel"){
-    day.innerHTML = `Día ${counterDay}`;
-  }
+  /*
+   * const li = document.createElement("li");
+   *   li.classList.add("list-item");
+   *   const div = document.createElement("div");
+   *
+   *   div.innerHTML = `${counter}. ${place.name} ${priceString} `;
+   *
+   *   const delBtn = document.createElement("button");
+   *   delBtn.className = "delete-button";
+   *   delBtn.textContent = "Eliminar";
+   *   delBtn.addEventListener("click", () => {
+   *     const index = Array.from(placesList.children).indexOf(li);
+   *     placeArray.splice(index,1);
+   *     li.remove();
+   *     counter--;
+   *     renumberItems();
+   *     setSaved(false);
+   *   });
+   *   setSaved(false);
+   *   li.append(div, delBtn);
+   *   placesList.appendChild(li);
+   *
+   *   if(selectedCategory === "Hotel"){
+   *     day.innerHTML = `Día ${counterDay}`;
+   *   }
+   */
 }
 
 function renumberItems() {
   const items = placesList.children;
   for (let i = 0; i < items.length; i++) {
-    const name = listPlaces[i].name;
-    const price = listPlaces[i].price;
-    const cat = listPlaces[i].category;
+    const name = placeArray[i].name;
+    const price = placeArray[i].price;
+    const cat = placeArray[i].category;
     let displayPrice = '';
     if (cat === "Hotel") displayPrice = `${price} Euros la noche`;
     else if (["Restaurante", "Cafetería", "Museo"].includes(cat)) displayPrice = `${price} Euros por persona`;
@@ -420,7 +548,7 @@ document.getElementById("select-container").addEventListener("change", (e) => {
 });
 
 document.getElementById("save-day-button").addEventListener("click", (_) => {
-  if (listPlaces.length === 0) {
+  if (allPlaces[dayCurrent-1].length === 0) {
     // Si está vacía, mostramos el mensaje de advertencia
     const warning = document.getElementById("warning");
     warning.innerText = "No puedes guardar un día vacío.";
@@ -438,24 +566,32 @@ document.getElementById("save-day-button").addEventListener("click", (_) => {
     return;
   }
 
+  renderNewDay(dayCurrent++);
+
   const key = `Día ${counterDay}`;
+  /*
+   *
+   * const existingItineraryIndex = plan.itineraries.findIndex(itinerary => itinerary.name === key);
+   *   // Si el itinerario ya existe, lo actualizamos, de lo contrario lo agregamos || en caso de cambiar entre dias
+   *   if (existingItineraryIndex !== -1) {
+   *     plan.itineraries[existingItineraryIndex].places = [...placeArray];
+   *     console.log(plan)
+   *   } else {
+   *     let it = new Itinerary(key, [...placeArray]);
+   *     plan.itineraries.push(it);
+   *     console.log(plan)
+   *   }
+   */
 
-  const existingItineraryIndex = plan.itineraries.findIndex(itinerary => itinerary.name === key);
-  // Si el itinerario ya existe, lo actualizamos, de lo contrario lo agregamos || en caso de cambiar entre dias
-  if (existingItineraryIndex !== -1) {
-    plan.itineraries[existingItineraryIndex].places = [...listPlaces];
-    console.log(plan)
-  } else {
-    let it = new Itinerary(key, [...listPlaces]);
-    plan.itineraries.push(it);
-    console.log(plan)
-  }
-
+  /*
   //Guardamos el el lc st la lista del dia
-  localStorage.setItem(key, JSON.stringify(listPlaces));
-  listPlaces.length = 0
+  localStorage.setItem(key, JSON.stringify(placeArray));
+  placeArray.length = 0
   day.innerHTML = `Día ${counterDay}`;
   placesList.innerHTML = '';
+   */
+
+  /*
 
   //Generacion de botones por dia
   const dayButton = document.createElement("button");
@@ -480,6 +616,8 @@ document.getElementById("save-day-button").addEventListener("click", (_) => {
 
   // Llamar a la función loadDay para cargar los lugares del siguiente día
   loadDay(`Día ${counterDay}`);
+   */
+
 
 });
 
@@ -498,7 +636,7 @@ function loadDay(dayKey) {
     placesList.innerHTML = '';
 
     // Sincronizar listPlaces con los lugares guardados
-    listPlaces = savedPlaces.map((place, index) => {
+    placeArray = savedPlaces.map((place, index) => {
       // Creamos un nuevo objeto Place con la estructura adecuada para listPlaces
       return new Place(
         place.name,
@@ -514,7 +652,7 @@ function loadDay(dayKey) {
     });
 
     // Reagregar los lugares a la lista
-    listPlaces.forEach((place, index) => {
+    placeArray.forEach((place, index) => {
       const li = document.createElement("li");
       li.classList.add("list-item");
       const div = document.createElement("div");
@@ -524,7 +662,7 @@ function loadDay(dayKey) {
       delBtn.className = "delete-button";
       delBtn.textContent = "Eliminar";
       delBtn.addEventListener("click", () => {
-        listPlaces.splice(index, 1);
+        placeArray.splice(index, 1);
         li.remove();
         counter--;
         renumberItems();
@@ -534,13 +672,9 @@ function loadDay(dayKey) {
       li.append(div, delBtn);
       placesList.appendChild(li);
     });
-    console.log(listPlaces);
+    console.log(placeArray);
   }
 }
-
-
-
-
 
 document.getElementById("itinerary-title").addEventListener("input", function (e) {
     plan.title = e.target.value
