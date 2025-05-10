@@ -1,16 +1,23 @@
 @import "colors.css";
 
 #navigation {
-    display: flex;
-    width: 100%;
-    height: auto;
-    background-color: var(--beige-calido);
-    align-items: center;
-    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
     padding: 2rem;
-    font-size: 1rem;
-    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
+
+
+#links-section{
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 
 #session-navbar {
     display: flex;
@@ -28,29 +35,37 @@
 #brand-name {
     text-align: center;
     font-size: 2rem;
-    font-family: fantasy;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    color: black;
 }
 
 #links {
     display: flex;
     gap: 1rem;
     align-items: center;
+    font-size: 16px;
     justify-content: center;
-    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    width: fit-content;
 }
 
+#links a{
+    margin-right: 2rem;
+}
+
+
+
 .nav-button {
-    background-color: var(--marron-medio);
-    color: white;
-    height: 100%;
-    padding: 0 2rem;
-    border-radius: 1rem;
-    cursor: pointer;
+    color:black;
+    font-weight: bold;
+    text-decoration: none;
+    width: fit-content;
+    font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
 }
 
 .nav-button:hover {
-    background-color: var(--marron-oscuro);
-    box-shadow: 0 0 1rem black;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 #us {
@@ -66,23 +81,77 @@
 #profile-info {
     display: flex;
     align-items: center;
-    gap: 10px;
     margin-left: auto;
     padding-right: 2rem;
 }
 
 #profile-info img {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
+    margin-right: 10px;
 }
+
 
 #profile-info span {
-    font-weight: 600;
+    font-weight: 200;
     color: #222;
     font-family: 'Montserrat', sans-serif;
-    font-size: 2rem;
+    font-size: 2px;
 }
 
+#dropdown-menu {
+    position: absolute;
+    top: 70px; /* Ajusta la posición del menú */
+    right: 0;
+    width: 160px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+#dropdown-menu a:hover {
+    background: #f0f0f0;
+}
+
+/* Clase para mostrar el menú */
+#dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#links a.nav-button {
+    background-color: white;
+    color: var(--google-blue);
+    border: 2px solid var(--google-blue);
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#links a.nav-button:hover {
+    background-color: var(--azul-brillante);
+    color: white;
+    border-color: var(--azul-brillante);
+}

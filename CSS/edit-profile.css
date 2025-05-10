@@ -13,8 +13,7 @@ body {
     color: #333;
 }
 
-
-
+/* Navegación */
 #us {
     display: flex;
     align-items: center;
@@ -25,13 +24,17 @@ body {
     height: 60px;
 }
 
-
 #links {
     display: flex;
     gap: 1rem;
 }
 
-
+#profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
 
 /* Usuario info */
 #user-info {
@@ -51,6 +54,24 @@ body {
     font-weight: 600;
     font-size: 1rem;
     color: #000;
+}
+
+/* Botones de navegación (estilo index) */
+.nav-button {
+    background-color: transparent;
+    color: #008cff;
+    padding: 10px 20px;
+    border: 2px solid #008cff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #008cff;
+    color: #fff;
 }
 
 /* MAIN */
@@ -75,7 +96,7 @@ main {
 
 /* TÍTULO */
 .edit-profile-container h2 {
-    color:#d9534f;
+    color: #008cff;
     margin-bottom: 1.5rem;
 }
 
@@ -102,11 +123,12 @@ main {
     border: 2px solid #ddd;
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .form-group input:focus {
-    background-color: #d9534f;
+    border-color: #008cff;
+    background-color: #fff;
     outline: none;
 }
 
@@ -121,20 +143,22 @@ main {
     display: block;
 }
 
-/* BOTÓN GUARDAR */
+/* BOTÓN GUARDAR (estilo CTA del index) */
 #save-button {
     width: 100%;
     padding: 14px;
-    background-color: #d9534f;
+    background-color: #e63946;
     color: white;
     border: none;
     border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 #save-button:hover {
-    background-color: #c9302c;
+    background-color: #d62828;
+    transform: scale(1.05);
 }

@@ -16,20 +16,22 @@
     <script type="module" src="/JS/types.js"></script>
 </head>
 <body>
-    <header id="navigation">
-        <nav id="session-navbar">
-            <div id="us">
-                <img id="logo" src="../mockups/logo.png" alt="logo"/>
-                <div id="brand-name">Itineraries</div>
-            </div>
+<header id="navigation">
+    <nav id="session-navbar">
+        <div id="us">
+            <img id="logo" src="../mockups/logo.png" alt="logo" />
+            <div id="brand-name">Itineraries</div>
+        </div>
+        <section id="links-section">
             <div id="links">
-                <button class="nav-button" onclick="location.href='user-register.html'">Registrarse</button>
-                <button class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</button>
-                <button class="nav-button" onclick="location.href='index.html'">Home</button>
-
+                <a class="nav-button" onclick="location.href='user-register.html'">Registrarse</a>
+                <a class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</a>
+                <a class="nav-button" onclick="location.href='index.html'">Home</a>
             </div>
-        </nav>
-    </header>
+        </section>
+        <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+    </nav>
+</header>
     <main>
         <div class="background-square">
             <form id="login-form">

@@ -1,38 +1,11 @@
 @import url("CSS/colors.css");
-#navigation {
-    display: flex;
-    width: 100%;
-    height: auto;
-    background-color: var(--beige-calido);
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    font-size: 1rem;
-    text-align: center;
+body{
+font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
 }
-
-#session-navbar {
-    display: flex;
-    width: 80%;
-    height: 2rem;
-    gap: 3rem;
-}
-
 
 #us {
     display: flex;
     gap: 1rem;
-}
-#brand-name {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-#links {
-    display: flex;
-    gap: 1rem;
-    align-items: end;
 }
 
 #logout-button {

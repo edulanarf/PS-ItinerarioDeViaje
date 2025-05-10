@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--fondo-marron); /* Fondo marrón en toda la página */
@@ -12,7 +12,6 @@ html, body {
   margin: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f7fa;
   color: #333;
 }
@@ -35,6 +34,9 @@ main {
 h2 {
   color: #008cff;
   margin-bottom: 15px;
+  font-size: 30px;
+  font-weight: bold;
+  justify-self: center;
 }
 
 p {
@@ -93,19 +95,114 @@ footer {
   border-radius: 0 0 16px 16px;
 }
 
-a {
+/* BOTÓN ROJO CON ZOOM */
+.cta-button-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.cta-button {
+  background-color: #e63946; /* Rojo intenso */
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cta-button:hover {
+  transform: scale(1.1); /* Zoom al pasar el ratón */
+  background-color: #d62828; /* Un rojo aún más fuerte al hacer hover */
+}
+
+/* Botones de navegación */
+.nav-button {
+  background-color: transparent;
   color: #008cff;
+  padding: 10px 20px;
+  border: 2px solid #008cff;
+  border-radius: 10px;
   text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-a:hover {
-  text-decoration: underline;
+.nav-button:hover {
+  background-color: #008cff;
+  color: #fff;
+}
+   /* Efecto para la sección CTA final */
+ .cta-section {
+   position: relative;
+   height: 100vh;
+   background: url('https://via.placeholder.com/1200x800') center/cover no-repeat;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transform: scale(1);
+   transition: transform 1s ease;
+   overflow: hidden;
+   width: 100%;
+ }
+
+.cta-overlay {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 1s ease;
 }
 
+.cta-content {
+  position: relative;
+  color: #09f;
+  text-align: center;
+  z-index: 1;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 1s ease, transform 1s ease;
+  padding: 40px;
+}
+
+.cta-content p{
+  margin: 30px;
+  font-size: 28px;
+}
+
+.cta-button {
+
+  padding: 12px 24px;
+  font-size: 1.1em;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.cta-section.show {
+  transform: scale(1.05);
+}
+
+.cta-section.show .cta-overlay {
+  opacity: 1;
+}
+
+.cta-section.show .cta-content {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .gallery-box, .team-member {
     flex: 1 1 100%;
   }
 }
-
-

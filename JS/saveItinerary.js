@@ -1,48 +1,43 @@
-import { getItineraryData } from './search-places.js';
+
 import { db, auth } from './firebase-config.js';
 import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
-
-export let saved;
-
-let itineraryTitle;
-document.getElementById("itinerary-title").addEventListener("change", (e) => {
-  itineraryTitle = e.target.value;
-});
+import { Itinerary, ItineraryPlan } from './types.js';
+import { plan } from './search-places.js'
 
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("Usuario autenticado:", user.email);
       const save = document.getElementById("save-itinerary");
       save.addEventListener("click", async function () {
-        const itineraryData = getItineraryData();
 
+        const titleError = document.getElementById("title-error");
+        if (plan.title === "") {
+          titleError.textContent = "Asigne un título al itinerario";
+          titleError.style.display = "block";
+          titleError.style.borderColor = "red";
+          return;
+        } else {
+          titleError.style.display = "none";
+        }
+
+        plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
+        
         try {
-          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${itineraryTitle}`);
-
-          // Guardar los datos en Firestore
-          await setDoc(itineraryRef, {
-            names: itineraryData.listNames,
-            photos: itineraryData.listPhoto,
-            prices: itineraryData.listPrice,
-            ratings: itineraryData.listRating,
-            addresses: itineraryData.listAddress,
-            dates: itineraryData.listDates,
-            categories: itineraryData.listCategories,
-          });
-          console.log("✅ Itinerario guardado correctamente.");
-          saved = true;
-          alert("✅ Itinerario guardado correctamente.");
+          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
+            .withConverter(ItineraryPlan.itineraryPlanConverter);
+          await setDoc(itineraryRef, plan)
+          for (const itinerary of plan.itineraries) {
+            const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
+            await setDoc(dayRef, itinerary);
+          }
           setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }
       });
-
     } else {
-      console.log("not authenticated!!!!");
       window.location.href = "../HTML/user-login.html"
     }
   });

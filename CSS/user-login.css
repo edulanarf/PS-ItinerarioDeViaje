@@ -1,29 +1,49 @@
+@import "colors.css";
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: var(--carbon);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 main {
     justify-items: center;
     align-content: center;
     height: 100%;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#login-form{
-    display:flex;
+/* Formulario principal */
+#login-form {
+    display: flex;
     align-items: center;
     flex-direction: column;
 }
 
+/* Branding */
 #us {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 1rem;
 }
 
 #logo {
     height: 60px;
 }
 
+/* Inputs */
 #login-email,
 #login-password {
-    border: none;
+    border: 1px solid #ccc; /* Agrega esta línea */
     border-radius: 4px;
     margin: 15px;
     padding-left: 20px;
@@ -34,47 +54,40 @@ main {
     height: 48px;
     box-sizing: border-box;
 }
+#login-email:focus,
+#login-password:focus {
+    outline: none;
+    border: 1px solid #09f; /* o el color que desees al enfocar */
+}
+input::placeholder {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: gray;
+    font-style: italic;
+}
 
-#login-button{
+/* Botón login */
+#login-button {
     margin: 15px;
-    background-color: var(--marron-medio);
+    background-color: var(--google-blue);
     cursor: pointer;
-    border-color: black;
-    padding: 5px 20px;
+    border: none;
+    padding: 10px 30px;
     text-align: center;
     border-radius: 30px;
     font-family: 'Montserrat', sans-serif;
-    transition: background-color 0.3s ease;
+    font-size: 14px;
     color: white;
+    transition: background-color 0.3s ease;
 }
 
 #login-button:hover {
-    background-color: var(--marron-oscuro);
+    background-color: #1a66cc;
 }
 
-.background-square {
-    margin-top:120px;
-    background-color: var(--beige-calido);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 30px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 300px;
-    max-height: 500px;
-}
-
-
-input::placeholder {
-    font-family: 'Montserrat', sans-serif; /* Fuente importada en el HTML */
-    font-size: 12px;
-    color: gray;
-    font-style: italic; /* Cursiva */
-}
-
+/* Google login */
 .google-button {
-    background-color: var(--gris-claro); /* Color azul de Google */
+    background-color: var(--gris-claro);
     font-size: 12px;
     font-family: 'Montserrat', sans-serif;
     padding: 12px 30px;
@@ -99,6 +112,7 @@ input::placeholder {
     margin-right: 10px;
 }
 
+/* Recuperar contraseña */
 #reset-password {
     font-size: 12px;
     color: var(--google-blue);
@@ -112,4 +126,18 @@ input::placeholder {
 #reset-password:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* Contenedor con fondo blanco */
+.background-square {
+    margin-top: 120px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 300px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }

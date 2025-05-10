@@ -20,11 +20,14 @@
             <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
-        <div id="links">
-            <button class="nav-button" onclick="location.href='user-login.html'">Iniciar Sesión</button>
-            <button class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</button>
-            <button class="nav-button" onclick="location.href='index.html'">Home</button>
-        </div>
+        <section id="links-section">
+            <div id="links">
+                <a class="nav-button" onclick="location.href='user-login.html'">Login</a>
+                <a class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</a>
+                <a class="nav-button" onclick="location.href='index.html'">Home</a>
+            </div>
+        </section>
+        <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
     </nav>
 </header>
 
@@ -39,8 +42,13 @@
             </div>
 
             <input type="text" id="register-username" placeholder="Nombre de usuario:" required />
+            <span id="name-error" class="error-message"></span>
+
             <input type="email" id="register-email" placeholder="Correo" required />
+            <span id="email-error" class="error-message"></span>
+
             <input type="password" id="register-password" placeholder="Contraseña" required />
+            <span id="password-error" class="error-message"></span>
 
             <button id="google-login" class="google-button" type="button">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/150px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-logo" />

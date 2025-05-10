@@ -1,8 +1,11 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import {
   doc,
+  collection,
   getDoc,
+  getDocs,
   setDoc,
+  deleteDoc,
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { request } from "/JS/places.js";
 import { priceLevels } from "/JS/price-levels.js";
@@ -10,7 +13,8 @@ import { auth, db } from "./firebase-config.js";
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    await loadPreferences(user);
+    currentUser = user;
+    await Promise.all([loadPreferences(user),loadFavoritesPlaces(user)]);
     let places = await loadPreferencesData(preferences);
     await loadUserPlacesStats(user, places);
     updateSectionsInfo(user, preferences, places);
@@ -21,7 +25,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-let map, service, marker, infowindow, geocoder;
+let map, service, marker, infowindow, geocoder, currentUser;
 
 window.addEventListener("load", () => {
   document.querySelectorAll(".nav-tabs > a").forEach((el) => {
@@ -79,10 +83,6 @@ window.addEventListener("load", () => {
         );
         map.panTo(center);
 
-        // Log the result.
-        console.log(place.name);
-        console.log(place.formatted_address);
-
         if (marker !== undefined) marker.setMap(null);
 
         // Add a marker for the place.
@@ -95,10 +95,38 @@ window.addEventListener("load", () => {
           let photoUrl = place.photos
             ? place.photos[0].getUrl({ maxWidth: 200 })
             : "https://via.placeholder.com/200";
+          let scoreHtml = "";
+          let intScore = parseInt(place.rating);
+          for (let i = 0; i < intScore; i++) {
+            scoreHtml += '<span class="star on"></span>';
+          }
+          if (place.rating - intScore >= 0.5)
+            scoreHtml += '<span class="star half"></span>';
+          for (let i = Math.round(place.rating); i < 5; i++) {
+            scoreHtml += '<span class="star"></span>';
+          }
+          scoreHtml += ` (${place.rating})`;
+
+          let favorite = favoritesPlaces[place.place_id]!==undefined;
 
           let content = `
-              <img src="${photoUrl}" alt="${place.name}" class="place-image" style="width: 200px; height: auto; border-radius: 10px;">
-              <h2><b>${place.name}</b></h2>`;
+              <img src="${photoUrl}" alt="${place.name}" class="place-image">
+              <div class="infobox-place-container">
+                <h2><b>${place.name}</b></h2>
+                <div><b>Type:</b> ${place.types[0].substring(0,1).toUpperCase()+place.types[0].substring(1)}</div>
+                <div><b>Address:</b> ${place.adr_address}</div>
+                <div><b>Phone:</b> ${place?.formatted_phone_number||'Desconocido'}</div>
+                <div><b>Opening Hours:</b>
+                  <ul>
+                    <li>${place.opening_hours?.weekday_text?.map(text => text.substring(0,1).toUpperCase()+text.substring(1))?.join('</li><li>')||'Desconocido'}</li>
+                  </ul>
+                </div>
+                <div class="infobox-score">${scoreHtml}</div>
+                <div class="infobox-controls">
+                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},${strip(place.adr_address)},${photoUrl})" type="button">Añadir Favorito</button>
+                  <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
+                </div>
+              </div>`;
           infowindow.setContent(content);
         } else {
           infowindow.setContent(place.name);
@@ -118,6 +146,7 @@ window.addEventListener("load", () => {
         timeout = undefined;
         geocoder.geocode({ address: this.value }, (results, status) => {
           if (status === "OK") {
+            results = results.filter(result => result.types.includes('locality'));
             setFoundLocations(
               results.map((result) => ({
                 name: result.formatted_address,
@@ -184,11 +213,40 @@ function setFoundLocations(results) {
   document.querySelector("#preferences .found-locations").innerHTML = html;
 }
 
-let preferences, placesRecommendationStats;
+let preferences, placesRecommendationStats, favoritesPlaces;
+
+function loadFavoritesPlaces(user) {
+  return new Promise((resolve, _) => {
+    let favoritesPlacesRef = collection(db, `users/${user.uid}/favorite-places`);
+    favoritesPlacesRef
+    getDocs(favoritesPlacesRef).then((querySnap) => {
+      favoritesPlaces = {};
+      querySnap.docs.forEach(docSnap => favoritesPlaces[docSnap.id]=docSnap.data());
+      resolve(favoritesPlaces);
+    });
+  });
+}
+
+window.addToFavorites = (place_id, name, lat, lng, adr_address, photoUrl) => {
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
+  let place = {place_id,name,lat,lng,adr_address,photoUrl};
+  setDoc(favoritePlaceRef,place).then(()=>{
+    favoritesPlaces[place_id] = place;
+    document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+  });
+}
+
+window.removeFromFavorites = (place_id) => {
+  let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
+  deleteDoc(favoritePlaceRef).then(()=>{
+    delete favoritesPlaces[place_id];
+    document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+  });
+}
 
 function loadPreferences(user) {
   return new Promise((resolve, _) => {
-    let preferencesRef = doc(db, "preferences", user.uid);
+    let preferencesRef = doc(db, `users/${user.uid}/recommend-places/preferences`);
     getDoc(preferencesRef).then((docSnap) => {
       if (docSnap.exists()) {
         preferences = docSnap.data();
@@ -276,11 +334,7 @@ function loadPreferences(user) {
 
 function loadUserPlacesStats(user, places) {
   return new Promise((resolve, _) => {
-    let placesRecommendationStatsRef = doc(
-      db,
-      "placesRecommendationStats",
-      user.uid,
-    );
+    let placesRecommendationStatsRef = doc(db, `users/${user.uid}/recommend-places/stats`);
     getDoc(placesRecommendationStatsRef).then((docSnap) => {
       if (docSnap.exists()) {
         placesRecommendationStats = docSnap.data();
@@ -313,11 +367,7 @@ function loadUserPlacesStats(user, places) {
 
 function updateUserPlacesStats(user) {
   return new Promise((_, __) => {
-    let placesRecommendationStatsRef = doc(
-      db,
-      "placesRecommendationStats",
-      user.uid,
-    );
+    let placesRecommendationStatsRef = doc(db, `users/${user.uid}/recommend-places/stats`);
     setDoc(placesRecommendationStatsRef, placesRecommendationStats);
   });
 }
@@ -337,6 +387,7 @@ async function loadPreferencesData(preferences) {
         new Promise((resolve, reject) => {
           let fullResults = [];
           service.nearbySearch(requests, (results, status, pagination) => {
+            if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) return resolve([]);
             if (status !== google.maps.places.PlacesServiceStatus.OK)
               return reject(status);
             results = results
@@ -476,4 +527,9 @@ function initMap() {
   service = new google.maps.places.PlacesService(map);
   infowindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
+}
+
+function strip(html) {
+  let doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || "";
 }

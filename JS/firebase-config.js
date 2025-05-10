@@ -2,7 +2,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Place, Itinerary, FBItinerary } from "./types.js";
+import { Itinerary, ItineraryPlan } from './types.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -49,55 +49,59 @@ export async function getUserData(userId) {
   }
 }
 
-export async function getUserItineraries(userId) {
-  const itinerariesRef = collection(db, `users/${userId}/itineraries`);
+/**
+ * @param {string} userId
+ * @returns {Promise<ItineraryPlan[]>}
+ */
+export async function getPlans(userId){
+  const itinerariesRef = collection(db, `users/${userId}/itineraries`)
+    .withConverter(ItineraryPlan.itineraryPlanConverter);
   try {
     const querySnapshot = await getDocs(itinerariesRef);
+    console.log(querySnapshot);
     /**
-     * @type {Itinerary[]}
+     * @type {ItineraryPlan[]}
      */
-    const itineraries = [];
-    querySnapshot.forEach((file) => {
-      const fbi = new FBItinerary(file.data());
-      const i =  loadItinerary(file.id, fbi)
-      itineraries.push(i);
-    });
-    itineraries.forEach(
+    const itineraryPlans = [];
+    /**
+     * @type {ItineraryPlan[]}
+     */
+    const processed = []
+    await querySnapshot.forEach((file) => {
+      itineraryPlans.push(file.data())
+      console.log(itineraryPlans);
+    })
+    await Promise.all(itineraryPlans.map(async (plan) => {
+      const daysRef = collection(itinerariesRef, plan.title, 'days')
+        .withConverter(Itinerary.itineraryConverter);
+      const daySnapshot = await getDocs(daysRef);
+      const files = []
+      /**
+       * @type {Itinerary[]}
+       */
+      const days = []
+      await daySnapshot.forEach((file) =>  { files.push(file) })
+      await Promise.all(files.map(async file => {
+        let a = await file.data()
+        console.log("a: ", a);
+        days.push(a)
+      }))
+        .then(async _ => await Promise.all(days.map(day => plan.itineraries.push(day))))
+        .then(_ => {
+          processed.push(plan)
+          console.log(plan);
+        });
+
+    }));
+
+    processed.values().forEach(
       (i) => {
-        console.log(i.toString());
+        i.itineraries.forEach((k) => console.log(k.toString()));
       }
     )
-    return itineraries;
+    return processed;
   } catch (error) {
     console.error("Error getting itineraries: ", error);
     return [];
   }
 }
-
-/**
- * @param {string} id
- * @param {FBItinerary} data
- */
-export function loadItinerary(id,data) {
-
-  let itinerary = new Itinerary(id);
-  itinerary.toString = () => {
-    return itinerary.name + ":\n" + itinerary.places.map(p => "-\t" + p.toString()).join('\n');
-  }
-  for (let i = 0; i < data.names.length; i++) {
-    itinerary.places.push(
-      new Place(
-        data.names.at(i),
-        data.photos.at(i),
-        data.prices.at(i),
-        data.ratings.at(i),
-        data.addresses.at(i),
-        data.dates.at(i),
-        data.categories.at(i)
-      )
-    )
-  }
-  return itinerary;
-}
-
-

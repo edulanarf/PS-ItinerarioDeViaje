@@ -1,0 +1,229 @@
+@import "colors.css";
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* Navegación */
+#us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logo {
+    height: 60px;
+}
+
+#links {
+    display: flex;
+    gap: 1rem;
+}
+
+#profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+/* Usuario info */
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #000;
+}
+
+/* Botones de navegación */
+.nav-button {
+    background-color: transparent;
+    color: #008cff;
+    padding: 10px 20px;
+    border: 2px solid #008cff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-button:hover {
+    background-color: #008cff;
+    color: #fff;
+}
+
+/* MAIN */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: calc(100vh - 100px);
+}
+
+/* CONTENEDOR DEL FORMULARIO */
+.edit-preferences-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* TÍTULO */
+.edit-preferences-container h2 {
+    color: #008cff;
+    margin-bottom: 1.5rem;
+}
+
+/* FORMULARIO */
+.form-group {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #008cff;
+    background-color: #fff;
+    outline: none;
+}
+
+/* DURACIÓN */
+.duration-input {
+    max-width: 8rem;
+}
+
+/* AUTOCOMPLETADO DE LUGARES */
+.relative {
+    position: relative;
+}
+
+.locations-list {
+    background-color: #fff;
+    width: 100%;
+    padding: 0.6rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    transform: translateY(-2px);
+    z-index: 10;
+}
+
+.locations-list > a {
+    display: block;
+    width: 100%;
+    padding: 0.4rem;
+    text-decoration: none;
+    color: #333;
+}
+
+.locations-list > a:hover {
+    background-color: #e63946;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.selected-locations {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    gap: 0.2rem;
+}
+
+.selected-locations > div {
+    display: flex;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+}
+
+.selected-locations > div > span {
+    padding-right: 0.2rem;
+}
+
+.selected-locations > div > a {
+    padding-left: 0.2rem;
+    border-left: 1px solid #aaa;
+    color: #d62828;
+    cursor: pointer;
+}
+
+/* FOTO DE PERFIL ACTUAL */
+#current-photo {
+    margin: 10px auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--crema-ligera);
+    display: block;
+}
+
+/* BOTÓN GUARDAR */
+#save-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #e63946;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#save-button:hover {
+    background-color: #d62828;
+    transform: scale(1.05);
+}

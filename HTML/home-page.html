@@ -17,7 +17,6 @@
             margin: 0;
             overflow-x: hidden;
             overflow-y: auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fa;
             color: #333;
         }
@@ -98,14 +97,6 @@
             border-radius: 0 0 16px 16px;
         }
 
-        a {
-            color: #008cff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
 
         @media (max-width: 768px) {
             .gallery-box, .team-member {
@@ -122,29 +113,22 @@
             <img id="logo" src="../mockups/logo.png" alt="logo" />
             <div id="brand-name">Itineraries</div>
         </div>
-        <div id="links">
-            <button class="nav-button" onclick="location.href='my-itineraries.html'">Mis itinerarios</button>
-            <button class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</button>
-            <button class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</button>
-            <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
-            <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar Sesión</button>
-        </div>
+        <section id="links-section">
+            <div id="links">
+                <a class="nav-button" onclick="location.href='public-itineraries.html'">Itinerarios</a>
+                <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+                <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+                <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+            </div>
+        </section>
         <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
     </nav>
 </header>
 
 <main>
-    <section class="section">
-        <h2>¿Qué es Itineraries?</h2>
-        <p>
-            Itineraries es una aplicación web diseñada para ayudarte a planificar tu viaje ideal.
-            Descubre los mejores restaurantes, hoteles y atracciones turísticas con base en
-            precio, calidad y valoraciones de otros viajeros. ¡Explora con confianza!
-        </p>
-    </section>
 
     <section class="section">
-        <h2>Explora el mundo con imágenes</h2>
+        <h2>Comienza a crear tu itinerario de viaje gratis en minutos</h2>
         <div class="gallery-row">
             <div class="gallery-box">
                 <img src="../mockups/argentina.jpg" alt="Viaje 1" />
@@ -202,10 +186,10 @@
             </div>
             <div class="team-member">
                 <strong>Santiago Galindo Peralta</strong><br />
-                Diseñadora UX/UI
+                Diseñador UX/UI
             </div>
             <div class="team-member">
-                <strong>Javier Antobio Alfonso Quintana</strong><br />
+                <strong>Javier Antonio Alfonso Quintana</strong><br />
                 Backend Developer
             </div>
             <div class="team-member">

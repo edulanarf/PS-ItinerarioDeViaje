@@ -28,7 +28,6 @@
       const docSnap = await getDoc(docRef);
 
       nameInput.value = docSnap.data().username;
-      emailInput.value = user.email;
       photoPreview.src = docSnap.data().photoURL;
     } else {
       console.log("not authenticated!!!!");

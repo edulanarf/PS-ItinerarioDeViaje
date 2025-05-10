@@ -20,16 +20,17 @@
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo"/>
+      <img id="logo" src="../mockups/logo.png" alt="logo" />
       <div id="brand-name">Itineraries</div>
     </div>
-    <div id="links">
-      <button class="nav-button" onclick="location.href='home-page.html'">Home</button>
-      <button class="nav-button" onclick="location.href='my-itineraries.html'">Mis itnerarios</button>
-      <button class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</button>
-      <button class="nav-button" onclick="location.href='edit-profile.html'">Mi Perfil</button>
-      <button class="nav-button" onclick="location.href='user-logout.html'">Cerrar session</button>
-    </div>
+    <section id="links-section">
+      <div id="links">
+        <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+        <a class="nav-button" onclick="location.href='public-itineraries.html'">Itnerarios</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+      </div>
+    </section>
     <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
 </header>
@@ -52,12 +53,13 @@
       <option value="Aeropuerto">Aeropuerto</option>
     </select>
     <button id="reload-button">
-      <img src="https://icon-icons.com/icons2/3285/PNG/512/magnifying_glass_magnifier_search_icon_208236.png" alt="" class="">
+      <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="" class="">
     </button>
+    <section id="km-input-value">
+      <label for="km-range">Distancia (m): <span id="km-value">2000</span></label>
+      <input type="range" id="km-range" min="0" max="50000" value="2000"  style="padding:0;">
+    </section>
   </form>
-  <button id="add-info-button">
-    Añadir
-  </button>
 </div>
 <div id="map"></div>
 </div>
@@ -67,17 +69,34 @@
   </div>
 
 </div>
-  <section>
+  <section id="right-section">
     <div id="separation-itinerary">
-      <button id="save-itinerary">Guardar </button>
+      <button id="save-itinerary">Guardar Itinerario</button>
+      <div id="day-buttons-container">
+
+      </div>
       <label for="itinerary-title"></label>
       <input type="text" id="itinerary-title" placeholder="Título:">
+      <span id="title-error" class="error-message"> <strong>Asigne un título al itinerario</strong></span>
+      <label for="itinerary-description"></label>
+      <input type="text" id="itinerary-description" placeholder="Descripción:">
     </div>
-    <h3> Añade un Hotel y los lugares que deseas visitar</h3>
-    <ul id="itinerary-list"></ul>
+    <h3>Organiza tu día: </h3>
+    <section id="places">
+      <h1 id="day"></h1>
+      <ul id="itinerary-list"></ul>
+    </section>
+    <section id="errors">
+      <span id="not-hotel-error" class="error-message"> <strong>Asigne un hotel</strong></span>
+      <span id="hotel-error" class="error-message"> <strong>Ya se ha elegido un hotel</strong></span>
+      <span id="repeat-error" class="error-message"> <strong>Este lugar ya está en el itinerario</strong></span>
+    </section>
+    <div id="warning" style="display: none;"></div>
+    <button id="save-day-button">Guardar día</button>
   </section>
 </div>
-<script type="module" src="../JS/saveItinerary.js"></script>
+
 <script type="module" src="../JS/search-places.js"></script>
+<script type="module" src="../JS/saveItinerary.js"></script>
 </body>
 </html>

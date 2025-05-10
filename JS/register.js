@@ -52,7 +52,14 @@ function registerUser(email, password, displayName, picture) {
     })
     .catch((error) => {
       console.error("❌ Error en el registro:", error.message);
-      alert(`Error al registrar: ${error.message}`);
+      const emailError = document.getElementById("email-error");
+      if(error.code === "auth/email-already-in-use"){
+        emailError.textContent = "El correo está en uso";
+        emailError.style.display = "block";
+        email.style.borderColor = "red";
+      } else {
+        emailError.style.display = "none";
+      }
     });
 }
 
@@ -63,5 +70,26 @@ document.getElementById("register-form").addEventListener("submit", function (e)
   const username = document.getElementById("register-username").value;
   const picture = document.getElementById("register-picture");
   const profilePicture = picture.files[0];
+
+  const nameError = document.getElementById("name-error");
+  if (username.length < 4) {
+    nameError.textContent = "El nombre debe tener al menos 4 caracteres.";
+    nameError.style.display = "block";
+    username.style.borderColor = "red";
+    return;
+  }  else {
+    nameError.style.display = "none";
+  }
+
+  const passwordError = document.getElementById("password-error");
+  if (password.length < 6) {
+    passwordError.textContent = "La contraseña debe tener al menos 6 caracteres.";
+    passwordError.style.display = "block";
+    password.style.borderColor = "red";
+    return;
+  } else {
+    passwordError.style.display = "none";
+  }
+
   registerUser(email, password, username, profilePicture);
 });

@@ -1,4 +1,5 @@
 @import "colors.css";
+
 #navigation {
     justify-content: space-between;
 }
@@ -6,7 +7,7 @@
 main {
     width: 100%;
     height: 100%;
-    background-color: var(--beige-calido);
+    background-color: #f5f7fa;
     overflow: hidden;
 }
 
@@ -78,7 +79,7 @@ main {
     grid-template-rows: 1fr 8fr 1fr;
     place-items: center;
     width: 100%;
-    height: min(100%,644px);
+    height: min(100%, 644px);
     padding: 10px;
     overflow: hidden;
 }
@@ -127,17 +128,20 @@ main {
     width: 90%;
 }
 
-
 #edit-button {
     width: 50%;
     height: 100%;
     background-color: var(--rojo-oxido);
     border-color: black;
     border-radius: 1rem;
+    color: white;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 #edit-button:hover {
     box-shadow: 0 0 5px black;
     background-color: var(--borgona-profundo);
 }
-

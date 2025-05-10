@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/CSS/navigation.css">
+  <link rel="stylesheet" href="/CSS/reset-stylesheet.css" />
+  <link rel="stylesheet" href="/CSS/colors.css"/>
+  <link rel="stylesheet" href="/CSS/itineraries-feed.css"/>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script type="module" src="/JS/firebase-config.js"></script>
+  <script type="module" src="/JS/types.js"></script>
+  <script type="module" src="/JS/profile.js"></script>
+  <script type="module" src="/JS/itineraries-feed.js"></script>
+</head>
+<body>
+<header id="navigation">
+  <nav id="session-navbar">
+    <div id="us">
+      <img id="logo" src="../mockups/logo.png" alt="logo" />
+      <div id="brand-name">Itineraries</div>
+    </div>
+    <section id="links-section">
+      <div id="links">
+        <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+      </div>
+    </section>
+    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+  </nav>
+</header>
+<section class="main">
+  <div class="main-container">
+    <div class="current-filters">
+    </div>
+    <div class="search-container">
+      <input id="search-input" type="text" autocomplete="off" placeholder="Busca localidades, categorias, creadores...">
+      <a class="nav-button config-button" onclick="location.href='edit-preferences.html'"><img src="https://www.freeiconspng.com/uploads/gear-icon-png-12.png" alt=""></a>
+      <button id="reload-button">
+        <img src="https://static.vecteezy.com/system/resources/previews/024/597/918/original/magnifying-glass-icon-free-png.png" alt="">
+      </button>
+    </div>
+    <div class="search-results hidden">
+      <div class="result-category result-category-locality hidden">
+        <div class="result-category-header">LOCALIDAD</div>
+        <div class="result-category-content">
+        </div>
+      </div>
+      <div class="result-category result-category-category hidden">
+        <div class="result-category-header">CATEGORÍA</div>
+        <div class="result-category-content">
+        </div>
+      </div>
+      <div class="result-category result-category-creator hidden">
+        <div class="result-category-header">CREADOR</div>
+        <div class="result-category-content">
+        </div>
+      </div>
+    </div>
+    <div class="destinations">
+    </div>
+  </div>
+</section>
+<div class="modal hidden">
+  <div class="modal-container">
+    <div class="modal-header"></div>
+    <div class="modal-content">
+      <div class="modal-itinerary-created-by">
+        Creado por <span class="value">Edu</span> <button type="button" class="follow">Seguir</button> <button class="stop-following hidden" type="button">Dejar de seguir</button>
+      </div>
+      <div class="modal-itinerary-description">
+      </div>
+      <div class="itinerary-days">
+      </div>
+      <div class="itinerary-map" id="map"></div>
+    </div>
+    <div class="modal-controls">
+      <button class="add-to-favortites" type="button">Añadir a favortios</button>
+      <button class="remove-from-favortites hidden" type="button">Quitar de favortios</button>
+      <button class="close" type="button">Cerrar</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

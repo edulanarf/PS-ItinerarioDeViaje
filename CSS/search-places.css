@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    background: #FFE3B3;
+    background-color: #f5f7fa;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -18,12 +18,29 @@ body {
     flex-wrap: wrap;
 }
 
-/* Sección izquierda: búsqueda, mapa, resultados */
+/*mensajes de error */
+.error-message {
+    color: red;
+    font-size: 0.7rem;
+    display: none;
+}
+
+input:invalid {
+    border-color: red;
+}
+
+#errors {
+    justify-content: center;
+    align-content: center;
+    padding-left: 30px;
+}
+
+/* Sección izquierda */
 #form-map-list {
     width: 65%;
     display: flex;
     flex-direction: column;
-    background-color: var(--naranja-suave);
+    background-color: var(--oro-suave);
     border-radius: 16px;
     padding: 1rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -45,22 +62,22 @@ body {
     flex-wrap: wrap;
 }
 
-/* Inputs */
 #search-input {
     padding: 12px 20px;
     font-size: 15px;
     height: 54px;
     width: 300px;
     border: none;
-    transition: all 0.3s ease;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    transition: all 0.3s ease;
+    background-color: white;
 }
 
 #search-input:focus {
     outline: none;
-    border-color: var(--borgona-profundo);
-    box-shadow: 0 0 10px var(--rojo-oxido);
+    border-color: #0077cc; /* tono más oscuro de #09f */
+    box-shadow: 0 0 10px #33aaff; /* sombra azul clara */
 }
 
 #select-container {
@@ -71,7 +88,7 @@ body {
     border-radius: 0;
     border: none;
     background-color: #fff;
-    border-left: 1px solid var(--crema-ligera);
+    border-left: 1px solid #cceeff; /* azul claro pastel */
 }
 
 /* Botón recargar */
@@ -83,7 +100,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--rosa-intenso);
+    background-color: #09f; /* azul principal */
     cursor: pointer;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -94,7 +111,7 @@ body {
     height: auto;
 }
 
-/* Botón global de añadir (ya no se usa pero lo dejamos por si acaso) */
+/* Botón añadir global */
 #add-info-button {
     font-size: 13px;
     padding: 1rem;
@@ -133,7 +150,7 @@ body {
 }
 
 #places-list {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     font-size: 18px;
     text-align: center;
@@ -146,7 +163,7 @@ body {
     background: #fff;
     padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -158,8 +175,7 @@ body {
     max-width: 100%;
 }
 
-/* ======== BOTÓN INDIVIDUAL AÑADIR ======== */
-
+/* Botón añadir individual */
 .add-button {
     margin-top: 10px;
     padding: 0.5rem 1rem;
@@ -177,39 +193,53 @@ body {
     background-color: var(--borgona-profundo);
 }
 
-/* ======== ITINERARIO (DERECHA) ======== */
+/* ITINERARIO (derecha) */
+#places {
+    border: none;
+}
 
-section {
+#right-section {
     width: 30%;
     background-color: #fff;
-    border: 2px solid var(--crema-ligera);
+    border: 8px solid var(--crema-ligera);
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    box-sizing: border-box;
     height: fit-content;
 }
 
-/* Encabezado y texto */
+/* Encabezado */
 h3 {
     margin: 0;
     font-size: 1.2rem;
-    color: var(--rojo-oscuro);
     text-align: center;
 }
 
 #separation-itinerary {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* Campo de título */
+.delete-button{
+    background-color: transparent; /* Fondo transparente */
+    padding: 8px 12px; /* Espaciado interno */
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+    outline: none;
+}
+
+.delete-button img{
+    width: 20px;
+}
+
 #itinerary-title {
     width: 100%;
     padding: 10px 15px;
@@ -218,19 +248,97 @@ h3 {
     border: 2px solid transparent;
     transition: all 0.3s ease;
     font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
 }
 
 #itinerary-title:focus {
     outline: none;
-    border-color: var(--borgona-profundo);
-    box-shadow: 0 0 10px var(--rojo-oxido);
+    border-color: #339cff; /* azul intermedio */
+    box-shadow: 0 0 8px #339cff;
 }
 
-/* Botón guardar */
+#itinerary-description {
+    width: 50%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+    color: black;
+    background-color: transparent;
+    cursor: text;
+    align-self: center;
+}
+
+#itinerary-description:focus {
+    outline: none;
+    border-color: #339cff; /* azul intermedio */
+    box-shadow: 0 0 8px #339cff;
+}
+
 #save-itinerary {
     font-size: 14px;
     padding: 0.75rem 1.5rem;
-    background-color: var(--rojo-oscuro);
+    background-color: #09f;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    width: 50%;
+    align-self: center;
+}
+
+#save-itinerary:hover {
+    background-color: #0077cc;
+}
+
+/* Botones por día */
+#day-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+#day-buttons-container button {
+    flex: 0 0 70px;
+    height: 40px;
+    background-color: #ccc;
+    color: #333;
+    border: 2px solid #bbb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: left;
+}
+
+#day-buttons-container button:hover {
+    background-color: #bbb;
+    border-color: #999;
+    color: black;
+}
+
+#day-buttons-container button:active {
+    background-color: #aaa;
+}
+
+#day {
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+#save-day-button {
+    font-size: 14px;
+    padding: 0.75rem 1.5rem;
+    background-color: #09f; /* azul principal */
     color: white;
     border: none;
     border-radius: 12px;
@@ -238,11 +346,11 @@ h3 {
     transition: all 0.3s ease;
 }
 
-#save-itinerary:hover {
-    background-color: var(--borgona-profundo);
+#save-day-button:hover {
+    background-color: #0077cc; /* azul más oscuro para el hover */
 }
 
-/* Lista guardada */
+/* Lista del itinerario */
 #itinerary-list {
     list-style: none;
     padding-left: 0;
@@ -251,24 +359,33 @@ h3 {
     gap: 10px;
 }
 
-/* Botones de eliminar */
-.delete-button {
-    font-size: 13px;
-    padding: 6px 10px;
-    background-color: var(--rojo-oscuro);
-    color: white;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.delete-button:hover {
-    background-color: var(--borgona-profundo);
-}
 
 .list-item {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 10px;
+}
+
+/* Kilómetros */
+#km-input-value {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#km-value {
+    display: inline-block;
+    width: 5ch;
+    text-align: center;
+}
+
+#km-range {
+    height: 8px;
+    width: 100%;
+}
+
+#warning {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
 }
