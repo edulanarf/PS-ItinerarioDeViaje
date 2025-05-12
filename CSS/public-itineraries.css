@@ -18,7 +18,7 @@ body {
 
 /* CONTENEDOR DE ITINERARIOS */
 #itineraries-container {
-    margin: 20px;
+    margin: 20px 20px 40px;
     display: flex;
     gap: 50px;
     flex-wrap: wrap;
