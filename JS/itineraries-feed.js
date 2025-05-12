@@ -14,6 +14,7 @@ import{addFavoriteItinerary} from './addFavorite.js'
 import{removeFavoriteItinerary} from './removeFavorite.js'
 import { addFollowedUser } from "./addFollowed.js";
 import { removeFollowedUser } from "./removeFollowed.js";
+import { getItineraryRating } from './itinerariesReviewsUtils.js';
 
 async function loadItineraries() {
   const itinerariesRef = collection(db, "publicItineraries");
@@ -24,6 +25,9 @@ async function loadItineraries() {
     itineraryData.days = (await getDocs(collection(db,`${itineraryDoc.ref.path}/days`))).docs.map(snap => {
       return snap.data();
     })
+    let rating = await getItineraryRating(itineraryDoc.ref.id);
+    itineraryData.rating = rating.averageRating||0;
+    itineraryData.ratingCount = rating.ratingCount||0;
     itineraryData.id = itineraryDoc.id;
     itineraryData.totalCost = itineraryData.days.reduce((c,v)=>{
       return c+v.places.reduce((c,v)=>{
@@ -282,16 +286,19 @@ function drawItineraries() {
       <div class="itinerary-content">
         <div class="itinerary-title">{{title}}</div>
         <div class="itinerary-created-by">Creado por <span class="value">{{creator}}</span></div>
+        <div class="itinerary-rating">{{rating}}</div>
         <div class="itinerary-description">{{description}}</div>
       </div>
     </a>
   `;
   let html = itinerariesGroups.map(group => {
     let itinerariesHtml = group.itineraries.map(itinerary => {
+      let ratingHtml = Array(parseInt(itinerary.rating)).map(()=>'<i>&Star;</i>').join('');
       return itineraryTemplate
         .replace('{{id}}',itinerary.id)
         .replace('{{title}}',itinerary.title)
         .replace('{{photo}}',itinerary.photo)
+        .replace('{{rating}}',ratingHtml)
         .replace('{{description}}',itinerary.description||'')
         .replace('{{creator}}',users[itinerary.userRef]?.username||'')
         ;
@@ -521,7 +528,10 @@ function showModal(itinerary) {
       </div>
     </a>
   `;
-  let html = `<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>`.replace('{{totalCost}}',itinerary.totalCost)+itinerary.days.map(day => {
+  let html = `
+<div class="rating"><b>Valoración:<b> {{rating}} ({{ratingCount}} valoraciones)</div>
+<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>
+`.replace('{{totalCost}}',itinerary.totalCost).replace('{{rating}}',itinerary.rating).replace('{{ratingCount}}',itinerary.ratingCount)+itinerary.days.map(day => {
     let waypoints = [];
     let placesHtml = day.places.map(place => {
       waypoints.push({lat:place.lat,lng:place.lng});
