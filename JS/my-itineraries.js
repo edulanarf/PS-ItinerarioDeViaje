@@ -296,6 +296,11 @@ async function renderItinerary(plan) {
 
   container.dataset.name = plan.title;
   container.style.display = "none";
+
+  if(plan.description != null){
+    container.querySelector(".description").innerHTML  = plan.description;
+  }
+
   return container;
 }
 
