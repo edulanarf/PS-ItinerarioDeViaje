@@ -215,10 +215,19 @@ async function renderDay(itinerary, daysContainer, listContainer) {
   let ul = document.createElement('ul');
   ul.className = 'places';
   ul.dataset.day = itinerary.name;
-  await Promise.all(itinerary.places.map(async place => {
+  await Promise.all(itinerary.places.map(async (place, index) => {
     let li = document.createElement('li');
     li.innerText = place.toString();
+    const letter = String.fromCharCode(65 + index); // 65 es el código ASCII de 'A'
+
+    const formattedPlace = `<strong>${letter}.</strong> ${place.name}:<br>
+    <strong>Tipo:</strong> ${place.category}<br>
+    <strong>Dirección:</strong> ${place.address}`;
+
+    li.innerHTML = formattedPlace;
+    console.log("Datos del Dia:", formattedPlace);
     await ul.appendChild(li);
+
   }));
   ul.style.display = 'none';
   await listContainer.appendChild(ul);
