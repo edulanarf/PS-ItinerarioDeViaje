@@ -22,6 +22,7 @@ async function renderItineraryCard(plan) {
   intro.src = plan.photo;
   intro.alt = plan.title;
   preview.querySelector(".title").innerText = plan.title;
+  preview.querySelector(".description").innerText = plan.description;
   wrapper.id = plan.title;
 
   return wrapper; // Devolvemos el contenedor completo
