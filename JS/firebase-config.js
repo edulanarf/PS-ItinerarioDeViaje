@@ -12,6 +12,7 @@ import {
   getFirestore,
   query,
   where,
+  CollectionReference
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 import { Itinerary, ItineraryPlan, User } from "./types.js";
@@ -47,7 +48,7 @@ export { app, auth, storage, db };
 
 /**
  * @param {string[]} names
- * @returns {Promise<{foundUserIds: string[], notFound: string[]}>}
+ * @returns {Promise<{foundUserIds: Record<string,string>, notFound: string[]}>}
  *
  * Use Example:
  * const names = ["alice", "bob", "charlie"];
@@ -91,7 +92,7 @@ export async function getUsers(names) {
   );
 
   // Crear lista final de resultados
-  const foundUserIds = Object.values(foundUsers);
+  const foundUserIds = foundUsers;
   const notFound = names.filter((name) => !foundUsers[name]);
 
   return {
@@ -217,7 +218,7 @@ export async function getShared(userId) {
 export async function getItinerariesPlans(itinerariesRef) {
   try {
     const itineraryPlans = await fetchItineraryPlans(itinerariesRef);
-
+    console.log(itineraryPlans);
     return await Promise.all(
       itineraryPlans.map(async (plan) => {
         await fetchDaysForPlan(itinerariesRef, plan).then((arr) =>{
@@ -227,7 +228,7 @@ export async function getItinerariesPlans(itinerariesRef) {
       }),
     );
   } catch (error) {
-    console.error("Error getting itineraries: ", error);
+    console.error("Error getting itineraries plans: ", error);
     return [];
   }
 }

@@ -43,17 +43,17 @@ export class Place {
     return place.name + [":", place.category, place.date, place.address].join("\n\t+ ")
   }
 
-  toFirestore() {
+  static toFirestore(place){
     let obj = {
-      name: this.name,
-      photo: this.photo,
-      price: this.price,
-      rating: this.rating,
-      address: this.address,
-      date: this.date,
-      category: this.category,
+      name: place.name,
+      photo: place.photo,
+      price: place.price,
+      rating: place.rating,
+      address: place.address,
+      date: place.date,
+      category: place.category,
     };
-    return this.lat && this.lng ? { ...obj, lat: this.lat, lng: this.lng } : obj;
+    return place.lat && place.lng ? { ...obj, lat: place.lat, lng: place.lng } : obj;
   }
 }
 
@@ -76,17 +76,17 @@ export class Itinerary {
     return this.name + ":\n" + this.places.map(p => "\t-" + p.toString()).join('\n')
   }
 
-  toFirestore() {
+  static toFirestore(itinerary) {
     return {
-      name: this.name,
-      places: this.places.map(p => p.toFirestore())
+      name: itinerary.name,
+      places: itinerary.places.map(p => Place.toFirestore(p))
     };
   }
 
   // noinspection JSUnusedGlobalSymbols
   static Converter = {
     toFirestore: function(itinerary) {
-      return itinerary.toFirestore();
+      return Itinerary.toFirestore(itinerary);
     },
     fromFirestore: async function(snapshot, options) {
       const data = snapshot.data(options);
@@ -139,24 +139,19 @@ export class ItineraryPlan {
     this._photo = value;
   }
 
-  toFirestore() {
+  static toFirestore(plan) {
     return {
-      title: this._title,
-      photo: this._photo,
-      description: this._description,
-      sharedWith: this.sharedWith
+      title: plan._title,
+      photo: plan._photo,
+      description: plan._description,
+      sharedWith: plan.sharedWith
     }
   }
 
   // noinspection JSUnusedGlobalSymbols
   static Converter = {
     toFirestore: function(itineraryPlan) {
-      return {
-        title: itineraryPlan._title,
-        photo: itineraryPlan._photo,
-        description: itineraryPlan._description,
-        sharedWith: itineraryPlan.sharedWith
-      };
+      return ItineraryPlan.toFirestore(itineraryPlan);
     },
     fromFirestore: function(snapshot, options) {
       const data = snapshot.data(options);

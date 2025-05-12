@@ -107,18 +107,18 @@ export async function listView() {
     })
     .then(() => {
       document.getElementById('next-itinerary').addEventListener('click', () => {
-        nextItinerary(currentItinerary).then(data => currentItinerary = data);
+        nextItinerary(currentItinerary).then(data => setCurrent(data));
       });
       document.getElementById('previous-itinerary').addEventListener('click', () => {
-        previousItinerary(currentItinerary).then(data => currentItinerary = data);
+        previousItinerary(currentItinerary).then(data => setCurrent(data));
       });
       addDaysListeners();
       document.addEventListener('keydown', (event) => {
         switch (event.key) {
           case 'ArrowDown': nextDay(); break;
           case 'ArrowUp': prevDay(); break;
-          case 'ArrowLeft': previousItinerary(currentItinerary).then(data => currentItinerary = data); break;
-          case 'ArrowRight': nextItinerary(currentItinerary).then(data => currentItinerary = data); break;
+          case 'ArrowLeft': previousItinerary(currentItinerary).then(data => setCurrent(data)); break;
+          case 'ArrowRight': nextItinerary(currentItinerary).then(data => setCurrent(data)); break;
         }
       });
     });
@@ -284,6 +284,7 @@ async function renderModified(itinerary, previousName) {
   let old = document.querySelector(`[data-name="${previousName || itinerary.title}"][data-type=list]`);
   list.replaceChild(await renderItinerary(itinerary), old);
 }
+
 document.getElementById('open-itinerary').addEventListener('click', () => {
   if (currentItinerary) {
     const encodedId = encodeURIComponent(currentItinerary);
