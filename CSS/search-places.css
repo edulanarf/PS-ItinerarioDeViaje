@@ -336,7 +336,7 @@ h3 {
 }
 
 /* Lista del itinerario */
-#itinerary-list {
+.itinerary-list {
     list-style: none;
     padding-left: 0;
     display: flex;
@@ -364,6 +364,10 @@ h3 {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 10px;
+}
+
+.name {
+    font-weight: bold;
 }
 
 /* Kilómetros */

@@ -32,7 +32,6 @@ onAuthStateChanged(auth, (user) => {
     session = user;
     const params = new URLSearchParams(window.location.search);
     const value = params.get("type");
-    console.log(value);
     if (value === SHARED){
       document.getElementById('share-itinerary').classList.add('hidden');
       initShared(user).then(() => {
@@ -47,14 +46,12 @@ onAuthStateChanged(auth, (user) => {
       }).then(() => console.log("changed, and finished"));
     }
   } else {
-    console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html";
   }
 });
 
 async function initShared(user){
   await getShared(user.uid).then(data => {
-    console.log("plans",data);
     data.forEach((it) => {
       itineraries[it.title] = it;
     });
@@ -126,14 +123,10 @@ export async function listView() {
 
 async function init(user) {
   await getPlans(user.uid).then(data => {
-    console.log("plans",data);
     data.forEach((it) => {
       itineraries[it.title] = it;
     });
   }).catch(err => console.error(err)).then(() => {
-    console.log("itinerary:", Object.keys(itineraries).at(0));
-    console.log("itinerary:", itineraries[Object.keys(itineraries).at(0)]);
-    console.log("current", setCurrent("hi"));
     setCurrent(Object.keys(itineraries).at(0))
   });
 }
@@ -145,7 +138,7 @@ async function showItinerary(before, after){
   from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up", "down");
 
   let to = document.querySelector(`[data-name="${after}"][data-type=list]`);
-  currentDay = itineraries[before].itineraries.at(0).name;
+  currentDay = itineraries[after].itineraries.at(0).name;
   currentRoutes = itineraries[after].itineraries;
 
   to.querySelector(`ul[data-day="${currentDay}"]`).style.display = "block";
@@ -219,8 +212,6 @@ async function renderDay(itinerary, daysContainer, listContainer) {
   ul.dataset.day = itinerary.name;
   await Promise.all(itinerary.places.map(async place => {
     let li = document.createElement('li')
-    console.log("for li",place);
-    console.log("for li string", );
     li.innerText = Place.toLi(place);
     await ul.appendChild(li);
   }));
@@ -278,11 +269,6 @@ async function appendItinerary(container) {
   } else {
     list.appendChild(container);
   }
-}
-
-async function renderModified(itinerary, previousName) {
-  let old = document.querySelector(`[data-name="${previousName || itinerary.title}"][data-type=list]`);
-  list.replaceChild(await renderItinerary(itinerary), old);
 }
 
 document.getElementById('open-itinerary').addEventListener('click', () => {

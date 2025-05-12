@@ -175,7 +175,7 @@ async function fetchItineraryPlans(itinerariesRef) {
  * @returns {Promise<Itinerary[]>}
  */
 async function fetchDaysForPlan(itinerariesRef, plan) {
-  const daysRef = collection(itinerariesRef, plan.title, "days").withConverter(
+  const daysRef = collection(itinerariesRef, plan.id, "days").withConverter(
     Itinerary.Converter,
   );
   const docs = [];

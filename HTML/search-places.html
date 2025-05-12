@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="/CSS/search-places.css">
   <link rel="stylesheet" href="/CSS/colors.css">
   <link rel="stylesheet" href="../CSS/navigation.css">
+
+  <script type="module" src="/JS/my-itineraries-const.js"></script>
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
   <script type="module" src="/JS/profile.js"></script>
@@ -90,7 +92,7 @@
       <template id="list-place-item">
         <li class="list-item">
           <div class="item-content">
-            <span class="name"></span>
+            <p class="name"></p>
             <span class="price"></span>
           </div>
           <button class="delete-button">X</button>
@@ -114,7 +116,7 @@
       <span id="repeat-error" class="error-message"> <strong>Este lugar ya está en el itinerario</strong></span>
     </section>
     <div id="warning" style="display: none;"></div>
-    <button id="save-day-button">Guardar día</button>
+    <button id="save-day-button">Añadir un nuevo día</button>
   </section>
 </div>
 
