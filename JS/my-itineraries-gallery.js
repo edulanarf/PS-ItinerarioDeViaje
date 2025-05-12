@@ -1,5 +1,5 @@
 import { ItineraryPlan } from './types.js';
-import {itineraries, currentItinerary, list } from './my-itineraries.js';
+import { itineraries, currentItinerary, list, setCurrentItinerary } from './my-itineraries.js';
 
 let gallery = document.getElementById("itinerary-gallery-container");
 gallery.style.display = "none";
@@ -24,9 +24,20 @@ async function renderItineraryCard(plan) {
   preview.querySelector(".title").innerText = plan.title;
   preview.querySelector(".description").innerText = plan.description;
   wrapper.id = plan.title;
+  wrapper.style.cursor = "pointer";
+  wrapper.addEventListener("click", () =>{
+  for(const itinerary in itineraries){
+    if(itinerary === wrapper.id){
+      setCurrentItinerary(itineraries[itinerary].title); //usar metodo set() si current no es let
+    }
+  }
+    changeViewMode();
+
+ });
 
   return wrapper; // Devolvemos el contenedor completo
 }
+
 
 async function appendItineraryCard(container) {
   gallery.appendChild(container);
@@ -45,24 +56,28 @@ export async function galleryView() {
     })
   ).then(() => {
     document.querySelector(".switch-view").addEventListener("click", () => {
-      const nextItineraryButton = document.getElementById('next-itinerary');
-      const previousItineraryButton = document.getElementById('previous-itinerary');
-      if (view === "list") {
-        list.style.display = "none";
-        gallery.style.display = "grid";
-
-        nextItineraryButton.style.display = "none";
-        previousItineraryButton.style.display = "none";
-        view = "gallery";
-      } else {
-        list.style.display = "contents";
-        gallery.style.display = "none";
-
-        nextItineraryButton.style.display = "flex";
-        previousItineraryButton.style.display = "flex";
-        view = "list";
-      }
+      changeViewMode();
     });
   });
+}
+
+function changeViewMode(){
+  const nextItineraryButton = document.getElementById('next-itinerary');
+  const previousItineraryButton = document.getElementById('previous-itinerary');
+  if (view === "list") {
+    list.style.display = "none";
+    gallery.style.display = "grid";
+
+    nextItineraryButton.style.display = "none";
+    previousItineraryButton.style.display = "none";
+    view = "gallery";
+  } else {
+    list.style.display = "contents";
+    gallery.style.display = "none";
+
+    nextItineraryButton.style.display = "flex";
+    previousItineraryButton.style.display = "flex";
+    view = "list";
+  }
 }
 

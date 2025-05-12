@@ -73,6 +73,8 @@ function prevDay() {
 }
 
 async function listView() {
+  list.innerHTML = "";
+
   currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
   currentRoutes = Object.values(itineraries).at(0);
   renderAllItineraries(itineraries)
@@ -128,6 +130,8 @@ async function showItinerary(before, after){
   buttonGroup.innerHTML = "";
   buttonGroup.appendChild(verRutaBtn);
 
+
+
   const shareButton = document.createElement("button");
   shareButton.innerText = "publicar";
   shareButton.classList.add("publicar");
@@ -176,7 +180,9 @@ async function showItinerary(before, after){
     });
   }
 
-  buttonGroup.appendChild(shareButton);
+  if (!buttonGroup.querySelector(".publicar")) {
+    buttonGroup.appendChild(shareButton);
+  }
 
   to.style.display = "grid";
   window.scrollTo(0, scrollY); //Para cada vez q se renderiza el contenido
@@ -320,6 +326,14 @@ async function appendItinerary(container) {
   } else {
     list.appendChild(container);
   }
+}
+
+
+//Exportar currentItinerary
+export function setCurrentItinerary(value) {
+  currentItinerary = value;
+  listView();
+
 }
 
 
