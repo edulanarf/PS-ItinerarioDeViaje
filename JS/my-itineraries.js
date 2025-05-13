@@ -271,7 +271,7 @@ async function appendItinerary(container) {
   }
 }
 
-document.getElementById('open-itinerary').addEventListener('click', () => {
+document.getElementById('edit-itinerary-button').addEventListener('click', () => {
   if (currentItinerary) {
     const encodedId = encodeURIComponent(currentItinerary);
     window.location.href = `edit-itinerary.html?id=${encodedId}`;

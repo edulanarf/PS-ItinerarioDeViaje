@@ -10,7 +10,7 @@ import {
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
 import { Itinerary, ItineraryPlan, NoID } from "./types.js";
-import { TITLE, DESCRIPTION, allPlaces } from "./search-places.js";
+import { TITLE, DESCRIPTION, allPlaces, PHOTO, PLAN_ID } from "./search-places.js";
 
 /**
  * @type {ItineraryPlan}
@@ -78,7 +78,7 @@ export async function storeItineraryPlan(userId, itineraryPlan) {
         storingItinerary = new ItineraryPlan(
           TITLE,
           DESCRIPTION,
-          allPlaces.at(0).at(0).photo || "",
+          PHOTO || allPlaces.at(0).at(0).photo || "",
           allPlaces.map(
             (arr, index) => new Itinerary(`Día `+String(index +1).padStart(3, '0'),arr)
           )
@@ -117,3 +117,10 @@ window.addEventListener("beforeunload", (event) => {
     event.returnValue = "Tienes cambios sin guardar. ¿Seguro que quieres salir?";
   }
 });
+
+
+async function storeNewPhoto(userId, photo) {
+
+}
+
+async function replaceOldPhoto(userId, planId, photo) {}

@@ -99,7 +99,7 @@ export class ItineraryPlan {
   /**
    *
    * @param {string} title
-   * @param {string} photo
+   * @param {CloudinaryImage} photo
    * @param {string} description
    * @param {Itinerary[]} itineraries
    * @param {string} id
@@ -171,33 +171,67 @@ export class User extends UserReference{
   /**
    * @param {string} name
    * @param {string} email
-   * @param {string} photoURL
+   * @param {CloudinaryImage} image
    * @param {string} id
    */
-  constructor(name,email,photoURL,id) {
+  constructor(name,email,image,id) {
     super(id,name)
     this.email = email;
-    this.photoURL = photoURL;
+    this.photo = image;
   }
 
-  toFirestore() {
+  static toFirestore(user) {
     return {
-      username: this.name,
-      photoURL: this.photoUrl,
-      email: this.email,
-      id: this.id
+      username: user.name,
+      photo: user.photo,
+      email: user.email,
+      id: user.id
     }
   }
+
   static Converter = {
-    toFirestore: function(User) {
-      return User.toFirestore();
+    toFirestore: function(user) {
+      return User.toFirestore(user);
     },
     fromFirestore: function(snapshot, options) {
       const data = snapshot.data(options);
       console.log("data",data);
-      return new User(data.username,data.email,data.photoURL,snapshot.id);
+      return new User(data.username,data.email,data.photo,snapshot.id);
     }
   };
 }
 
 export const NoID = "NoID"
+
+
+export class CloudinaryImage {
+  constructor(secure_url,public_id,folder) {
+    this.imageSrc =  secure_url
+    this.publicId = public_id
+    this.folder =  folder
+  }
+
+  /**
+   *
+   * @param {CloudinaryImage} image
+   * @returns {{imageSrc: *, publicId: *}}
+   */
+  static toFirestore(image) {
+    return {
+      imageSrc: image.imageSrc,
+      publicId: image.publicId,
+      folder: image.folder
+    }
+  }
+
+  static Converter = {
+    toFirestore: function(image) {
+      return CloudinaryImage.toFirestore(image);
+    },
+    fromFirestore: function(snapshot, options) {
+      const data = snapshot.data(options);
+      console.log("data",data);
+      return new CloudinaryImage(data.imageSrc,data.publicId,data.folder);
+    }
+  }
+}

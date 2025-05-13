@@ -73,10 +73,13 @@
 </div>
   <section id="right-section">
     <div id="separation-itinerary">
-      <button id="save-itinerary">Guardar Itinerario</button>
-      <div id="day-buttons-container">
-
+      <div class="image-dropzone" id="dropzone">
+        <label for="fileInput" class="image-overlay">Haz clic o arrastra una imagen aquí</label>
+        <img id="preview" src="" alt="itinerary photo" style="display: none;" />
+        <input type="file" id="fileInput" accept="image/*">
       </div>
+      <button id="save-itinerary">Guardar Itinerario</button>
+      <!-- <div id="day-buttons-container"></div> -->
       <label for="itinerary-title"></label>
       <input type="text" id="itinerary-title" placeholder="Título:">
       <span id="title-error" class="error-message"> <strong>Asigne un título al itinerario</strong></span>

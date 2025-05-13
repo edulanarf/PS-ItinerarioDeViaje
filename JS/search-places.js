@@ -20,6 +20,9 @@ export let PLAN_ID = ""
 export let TITLE = ""
 export let DESCRIPTION = ""
 
+
+export let PHOTO = null;
+
 /**
  * @type {Place[][]}
  */
@@ -64,7 +67,6 @@ let editingItinerary = null
 if (paramValue) {
   console.log("editing");
   editingItinerary = currentItineraryPlan()
-  PLAN_ID = editingItinerary.id
   await renderExisting()
 } else {
   console.log("creating");
@@ -185,8 +187,8 @@ async function switchDay(from, to) {
  * @param {number} day
  * @param {Itinerary} itinerary
  */
-async function renderPlacesForDay(day, itinerary) {
-  let list = document.querySelector(`[data-day="${day}"]`).querySelector("ul");
+async function renderExistingPlacesForDay(day, itinerary) {
+  let list = document.querySelector(`[data-day="${day}"]`).querySelector('ul');
   await Promise.all(
     itinerary.places.map(async (place) => {
     list.appendChild(await createPlaceItem(place, day));
@@ -250,19 +252,21 @@ async function renderNewDay(index){
  */
 async function renderNewDayForExisting(index, itinerary) {
   await renderNewDay(index)
-  await renderPlacesForDay(index, itinerary)
+  await renderExistingPlacesForDay(index, itinerary)
   await switchDay(index-1, index)
 }
 
 async function renderExisting(){
   document.getElementById("itinerary-title").value = editingItinerary.title;
   document.getElementById("itinerary-description").value = editingItinerary.description;
-  await renderPlacesForDay(1, editingItinerary.itineraries.at(0))
+  PLAN_ID = editingItinerary.id
+  TITLE = editingItinerary.title
+  DESCRIPTION = editingItinerary.description
+  await renderExistingPlacesForDay(1, editingItinerary.itineraries.at(0))
   editingItinerary.itineraries.map(async (itinerary, index) => {
     if (index === 0) return;
     await renderNewDayForExisting(index + 1, itinerary);
   })
-  dayCurrent = editingItinerary.itineraries.length;
 }
 
 
@@ -545,3 +549,57 @@ daySelector.addEventListener('change', async function(event) {
   console.log("switching from selector", dayCurrent, daySelector.value);
   await switchDay(dayCurrent,Number(daySelector.value))
 })
+
+
+//ITINERARY PHOTO
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+
+function handleFile(event) {
+  const file = event.target.files[0];
+  if (file) {
+    showPreview(file);
+  }
+}
+
+function showPreview(file) {
+  if (!file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    preview.src = e.target.result;
+    PHOTO = e.target.result;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Click para abrir selector
+dropzone.addEventListener('click', () => fileInput.click());
+
+// Al seleccionar archivo con el input
+fileInput.addEventListener('change', handleFile);
+
+// Soporte para arrastrar y soltar
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = '#555';
+});
+
+dropzone.addEventListener('dragleave', () => {
+  dropzone.style.borderColor = '#ccc';
+});
+
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = '#ccc';
+  /**
+   *
+   * @type {File}
+   */
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    showPreview(file);
+  }
+});
+
