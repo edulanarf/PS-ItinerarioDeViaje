@@ -266,7 +266,7 @@ section.main {
     justify-content: end;
     gap: 2rem;
 }
-.modal-controls button {
+.modal-controls button, .new-review {
     border: none;
     color: #888;
     border: 2px solid #888;
@@ -280,14 +280,45 @@ section.main {
     background-color: #888;
     color: #fff;
 }
-.modal-controls .modal-controls-left button {
+.modal-controls .modal-controls-left button, .new-review {
     border: 2px solid var(--azul-brillante);
     color: var(--azul-brillante);
     transition: all 0.3s ease;
 }
-.modal-controls .modal-controls-left button:hover {
+.modal-controls .modal-controls-left button:hover, .new-review:hover {
     background-color: var(--azul-brillante);
     color: #fff;    
+}
+
+.modal-reviews-controls, .no-reviews-found {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.form-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+.form-rating svg {
+    height: 1.5rem;
+    width: 1.5rem;
+    color: lightgray;
+    cursor: pointer;
+}
+.form-group textarea {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+.form-group textarea:focus {
+    outline: none;
+}
+
+.form-rating svg:hover, .form-rating svg:hover ~ svg, .form-rating svg.selected, .form-rating svg.selected ~ svg {
+    color: gold;
 }
 
 .hidden {

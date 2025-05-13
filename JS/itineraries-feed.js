@@ -14,7 +14,7 @@ import{addFavoriteItinerary} from './addFavorite.js'
 import{removeFavoriteItinerary} from './removeFavorite.js'
 import { addFollowedUser } from "./addFollowed.js";
 import { removeFollowedUser } from "./removeFollowed.js";
-import { getItineraryRating } from './itinerariesReviewsUtils.js';
+import { getItineraryRating, getItineraryReviews } from './itinerariesReviewsUtils.js';
 
 async function loadItineraries() {
   const itinerariesRef = collection(db, "publicItineraries");
@@ -325,6 +325,27 @@ function drawFilters() {
   document.querySelector('.current-filters').innerHTML = html;
 }
 
+function drawReviews(reviews) {
+  const reviewsContent = document.querySelector('.modal-reviews-list');
+  if (reviews.length===0) {
+    reviewsContent.innerHTML = '<div class="no-reviews-found">¡Se el primero en valorar el itinerario!</div>';
+    return;
+  }
+  const reviewTemplate = `
+    <div class="itinerary-review">
+      <div class="itinerary-review-username">{{username}}</div>
+      <div class="itinerary-review-rating">{{rating}}</div>
+      <div class="itinerary-review-text">{{reviewText}}</div>
+    </div>
+  `;
+  reviewsContent.innerHTML = reviews.map(review => {
+    return reviewTemplate
+      .replace('{{username}}',review.userName)
+      .replace('{{rating}}',review.rating)
+      .replace('{{reviewText}}',review.reviewText);
+  }).join('');
+}
+
 window.addEventListener("load", () => {
   document.querySelector('.destinations').addEventListener('click',e => {
     let link = e.target.closest('a')
@@ -357,7 +378,6 @@ window.addEventListener("load", () => {
     moved = true;
     // How far the mouse has been moved
     const dx = e.clientX - pos.x;
-    console.log(pos.left - dx);;
 
     // Scroll the element
     ele.scrollLeft = pos.left - dx;
@@ -467,6 +487,14 @@ window.addEventListener("load", () => {
       document.querySelector('.add-to-favortites').classList.remove('hidden');
     });
   });
+  document.querySelector('.show-reviews').addEventListener('click',e=>{
+    getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+      drawReviews(reviews);
+      document.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.add('hidden'));
+      let reviewsContent = document.querySelector('.modal-reviews-content');
+      reviewsContent.classList.remove('hidden');
+    });
+  });
   document.querySelector('.follow').addEventListener('click',e=>{
     addFollowedUser(e.target.dataset.userId).then(() => {
       e.target.classList.add('hidden');
@@ -555,8 +583,10 @@ function showModal(itinerary) {
   modal.querySelector('.itinerary-days').innerHTML = html;
   let addToFavoritesBtn = modal.querySelector('.add-to-favortites');
   let removeFromFavoritesBtn = modal.querySelector('.remove-from-favortites');
+  let showReviewsBtn = modal.querySelector('.show-reviews');
   addToFavoritesBtn.dataset.itineraryId = itinerary.id;
   removeFromFavoritesBtn.dataset.itineraryId = itinerary.id;
+  showReviewsBtn.dataset.itineraryId = itinerary.id;
   if (favorites.includes(itinerary.id)) {
     removeFromFavoritesBtn.classList.remove('hidden');
     addToFavoritesBtn.classList.add('hidden');
@@ -564,6 +594,8 @@ function showModal(itinerary) {
     addToFavoritesBtn.classList.remove('hidden');
     removeFromFavoritesBtn.classList.add('hidden');
   }
+  modal.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.remove('hidden'));
+  modal.querySelector('.modal-reviews-content').classList.add('hidden');
   let addToFolloedBtn = modal.querySelector('.follow');
   let removeFromFollowedBtn = modal.querySelector('.stop-following');
   addToFolloedBtn.dataset.userId = itinerary.userRef;

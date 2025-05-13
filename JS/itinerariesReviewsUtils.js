@@ -14,7 +14,19 @@ export async function getItineraryReviews(itineraryId) {
   const reviewsCol = collection(db, 'publicItineraries', itineraryId, 'reviews');
   const querySnapshot = await getDocs(reviewsCol);
   if (querySnapshot.empty) return [];
-  return querySnapshot.docs.map(doc => doc.data());
+  const usersRefs = [...new Set(querySnapshot.docs.map(doc => doc.data().userRef))];
+  let usersNames;
+  if (usersRefs.length) {
+    usersNames = (await getDocs(query(collection(db,'users'), where('__name__', 'in', usersRefs)))).docs.reduce((c,v)=>{
+      c[v.id] = v.data().username;
+      return c;
+    },{});
+  } else {
+    usersNames = {};
+  }
+  return querySnapshot.docs.map(doc => {
+    return {...doc.data(),userName:usersNames[doc.data().userRef]};
+  });
 }
 
 export async function getItineraryRating(itineraryId) {
