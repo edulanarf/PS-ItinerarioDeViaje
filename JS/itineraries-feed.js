@@ -14,7 +14,7 @@ import{addFavoriteItinerary} from './addFavorite.js'
 import{removeFavoriteItinerary} from './removeFavorite.js'
 import { addFollowedUser } from "./addFollowed.js";
 import { removeFollowedUser } from "./removeFollowed.js";
-import { getItineraryRating, getItineraryReviews } from './itinerariesReviewsUtils.js';
+import { addItineraryReview, getItineraryRating, getItineraryReviews } from './itinerariesReviewsUtils.js';
 
 async function loadItineraries() {
   const itinerariesRef = collection(db, "publicItineraries");
@@ -26,7 +26,7 @@ async function loadItineraries() {
       return snap.data();
     })
     let rating = await getItineraryRating(itineraryDoc.ref.id);
-    itineraryData.rating = rating.averageRating||0;
+    itineraryData.rating = parseFloat(rating.averageRating||0).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
     itineraryData.ratingCount = rating.ratingCount||0;
     itineraryData.id = itineraryDoc.id;
     itineraryData.totalCost = itineraryData.days.reduce((c,v)=>{
@@ -272,6 +272,11 @@ function drawItineraries() {
       }
     });
   }
+  const star = `
+    <svg class="star-single-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+    </svg>
+  `;
   const groupTemplate = `
     <div class="destination">
       <div class="destination-header"><h2>{{name}}</h2></div>
@@ -286,19 +291,19 @@ function drawItineraries() {
       <div class="itinerary-content">
         <div class="itinerary-title">{{title}}</div>
         <div class="itinerary-created-by">Creado por <span class="value">{{creator}}</span></div>
-        <div class="itinerary-rating">{{rating}}</div>
+        <div class="itinerary-rating">{{rating}}${star} ({{ratingCount}} usuarios)</div>
         <div class="itinerary-description">{{description}}</div>
       </div>
     </a>
   `;
   let html = itinerariesGroups.map(group => {
     let itinerariesHtml = group.itineraries.map(itinerary => {
-      let ratingHtml = Array(parseInt(itinerary.rating)).map(()=>'<i>&Star;</i>').join('');
       return itineraryTemplate
         .replace('{{id}}',itinerary.id)
         .replace('{{title}}',itinerary.title)
         .replace('{{photo}}',itinerary.photo)
-        .replace('{{rating}}',ratingHtml)
+        .replace('{{rating}}',itinerary.rating)
+        .replace('{{ratingCount}}',itinerary.ratingCount)
         .replace('{{description}}',itinerary.description||'')
         .replace('{{creator}}',users[itinerary.userRef]?.username||'')
         ;
@@ -327,22 +332,47 @@ function drawFilters() {
 
 function drawReviews(reviews) {
   const reviewsContent = document.querySelector('.modal-reviews-list');
+  const reviewForm = document.querySelector('.modal-reviews-form');
+  reviewForm.classList.remove('hidden');
   if (reviews.length===0) {
-    reviewsContent.innerHTML = '<div class="no-reviews-found">¡Se el primero en valorar el itinerario!</div>';
+    reviewsContent.innerHTML = '<div class="no-reviews-found"><b>¡Se el primero en valorar el itinerario!</b></div>';
     return;
+  }
+  reviewsContent.innerHTML = '';
+  let ownReviewIndex = reviews.findIndex(v => v.userRef === currentUser.uid);
+  console.log(ownReviewIndex);
+  if (ownReviewIndex !== -1) {
+    reviewForm.classList.add('hidden');
+    reviewsContent.innerHTML = '<div class="no-reviews-found"><b>¡Ya has valorado tu experiencia!</b></div>';
   }
   const reviewTemplate = `
     <div class="itinerary-review">
       <div class="itinerary-review-username">{{username}}</div>
-      <div class="itinerary-review-rating">{{rating}}</div>
+      <div class="itinerary-review-rating">
+        <svg class="star-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        </svg>
+        <svg class="star-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        </svg>
+        <svg class="star-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        </svg>
+        <svg class="star-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        </svg>
+        <svg class="star-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+        </svg>
+      </div>
       <div class="itinerary-review-text">{{reviewText}}</div>
     </div>
   `;
-  reviewsContent.innerHTML = reviews.map(review => {
+  reviewsContent.innerHTML += reviews.map(review => {
     return reviewTemplate
       .replace('{{username}}',review.userName)
-      .replace('{{rating}}',review.rating)
-      .replace('{{reviewText}}',review.reviewText);
+      .replace('star-'+review.rating,'star-'+review.rating+' selected')
+      .replace('{{reviewText}}','<p>'+review.reviewText.split("\n").join('</p><p>')+'</p>');
   }).join('');
 }
 
@@ -493,8 +523,32 @@ window.addEventListener("load", () => {
       document.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.add('hidden'));
       let reviewsContent = document.querySelector('.modal-reviews-content');
       reviewsContent.classList.remove('hidden');
+      e.target.classList.add('hidden');
+      document.querySelector('.show-itinerary').classList.remove('hidden');
     });
   });
+  document.querySelector('.show-itinerary').addEventListener('click',e=>{
+      document.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.remove('hidden'));
+      let reviewsContent = document.querySelector('.modal-reviews-content');
+      reviewsContent.classList.add('hidden');
+      e.target.classList.add('hidden');
+      document.querySelector('.show-reviews').classList.remove('hidden');
+  });
+  document.querySelector('.form-rating').addEventListener('click',e=>{
+    const svg = e.target.closest('svg');
+    if (!svg) return;
+    Array.from(svg.parentElement.children).forEach(el => el.classList.remove('selected'));
+    svg.classList.add('selected');
+  });
+  document.querySelector('.new-review').addEventListener('click',e=>{
+    let rating = Array.from(document.querySelector('.form-rating').children).reverse().findIndex(v => v.classList.contains('selected'))+1;
+    addItineraryReview(e.target.dataset.itineraryId,rating,document.querySelector('.modal-reviews-form textarea').value).then(saved => {
+      if (!saved) return;
+      getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+        drawReviews(reviews);
+      });
+    });
+  })
   document.querySelector('.follow').addEventListener('click',e=>{
     addFollowedUser(e.target.dataset.userId).then(() => {
       e.target.classList.add('hidden');
@@ -528,6 +582,11 @@ function showModal(itinerary) {
   modal.querySelector('.modal-header').textContent = itinerary.title;
   modal.querySelector('.modal-itinerary-created-by .value').textContent = users[itinerary.userRef].username||'';
   modal.querySelector('.modal-itinerary-description').textContent = itinerary.description||'';
+  const star = `
+    <svg class="star-single" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+    </svg>
+  `;
   const dayTemplate = `
     <div class="itinerary-day">
       <div class="itinerary-day-header">{{name}}</div>
@@ -551,13 +610,13 @@ function showModal(itinerary) {
           Precio: <span class="value">{{price}}</span> €
         </div>
         <div class="itinerary-day-place-rating">
-          Rating: <span class="value">{{rating}}</span> ★
+          Valoración: <span class="value">{{rating}}</span>${star}
         </div>
       </div>
     </a>
   `;
   let html = `
-<div class="rating"><b>Valoración:<b> {{rating}} ({{ratingCount}} valoraciones)</div>
+<div class="rating"><b>Valoración:</b> {{rating}}${star} ({{ratingCount}} usuarios)</div>
 <div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>
 `.replace('{{totalCost}}',itinerary.totalCost).replace('{{rating}}',itinerary.rating).replace('{{ratingCount}}',itinerary.ratingCount)+itinerary.days.map(day => {
     let waypoints = [];
@@ -584,9 +643,12 @@ function showModal(itinerary) {
   let addToFavoritesBtn = modal.querySelector('.add-to-favortites');
   let removeFromFavoritesBtn = modal.querySelector('.remove-from-favortites');
   let showReviewsBtn = modal.querySelector('.show-reviews');
+  let showItineraryBtn = modal.querySelector('.show-itinerary');
+  let newReviewBtn = modal.querySelector('.new-review');
   addToFavoritesBtn.dataset.itineraryId = itinerary.id;
   removeFromFavoritesBtn.dataset.itineraryId = itinerary.id;
   showReviewsBtn.dataset.itineraryId = itinerary.id;
+  newReviewBtn.dataset.itineraryId = itinerary.id;
   if (favorites.includes(itinerary.id)) {
     removeFromFavoritesBtn.classList.remove('hidden');
     addToFavoritesBtn.classList.add('hidden');
@@ -594,6 +656,8 @@ function showModal(itinerary) {
     addToFavoritesBtn.classList.remove('hidden');
     removeFromFavoritesBtn.classList.add('hidden');
   }
+  showReviewsBtn.classList.remove('hidden');
+  showItineraryBtn.classList.add('hidden');
   modal.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.remove('hidden'));
   modal.querySelector('.modal-reviews-content').classList.add('hidden');
   let addToFolloedBtn = modal.querySelector('.follow');

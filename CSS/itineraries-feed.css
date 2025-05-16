@@ -356,3 +356,47 @@ section.main {
     top: -0.9rem;
     font-size: 2rem;
 }
+
+.itinerary-review-username {
+  font-weight: bold;
+}
+.itinerary-review {
+  border-bottom: 1px solid gray;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.itinerary-review-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+}
+.itinerary-review-rating svg {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: lightgray;
+}
+.itinerary-review-rating svg.selected, .itinerary-review-rating svg.selected ~ svg {
+    color: gold;
+}
+.star-single {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: gold;
+    transform: translateY(0.2rem);
+}
+.star-single-white {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: #fff;
+    transform: translateY(0.2rem);
+}
+.modal-reviews-list {
+  max-height: 55vh;
+  overflow-y: scroll;
+}
+.itinerary-review-text {
+  padding-top: 0.25rem;
+}
+.rating {
+    font-size: 1.1rem;
+}
