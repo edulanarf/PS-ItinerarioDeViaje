@@ -15,7 +15,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
     await Promise.all([loadPreferences(user),loadFavoritesPlaces(user)]);
-    let places = await loadPreferencesData(preferences);
+    places = await loadPreferencesData(preferences);
     await loadUserPlacesStats(user, places);
     updateSectionsInfo(user, preferences, places);
     await updateUserPlacesStats(user);
@@ -25,7 +25,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-let map, service, marker, infowindow, geocoder, currentUser;
+let map, service, marker, infowindow, geocoder, currentUser, places;
 
 window.addEventListener("load", () => {
   document.querySelectorAll(".nav-tabs > a").forEach((el) => {
@@ -123,7 +123,7 @@ window.addEventListener("load", () => {
                 </div>
                 <div class="infobox-score">${scoreHtml}</div>
                 <div class="infobox-controls">
-                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},${strip(place.adr_address)},${photoUrl})" type="button">Añadir Favorito</button>
+                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},'${strip(place.adr_address)}','${photoUrl}')" type="button">Añadir Favorito</button>
                   <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
                 </div>
               </div>`;
@@ -233,6 +233,7 @@ window.addToFavorites = (place_id, name, lat, lng, adr_address, photoUrl) => {
   setDoc(favoritePlaceRef,place).then(()=>{
     favoritesPlaces[place_id] = place;
     document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+    updateFavoritesSectionInfo(places)
   });
 }
 
@@ -241,6 +242,7 @@ window.removeFromFavorites = (place_id) => {
   deleteDoc(favoritePlaceRef).then(()=>{
     delete favoritesPlaces[place_id];
     document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
+    updateFavoritesSectionInfo(places)
   });
 }
 
@@ -414,6 +416,33 @@ function updateSectionsInfo(user, preferences, places) {
   updatePopularSectionInfo(user, preferences, places);
   updateUpSectionInfo(user, preferences, places);
   updateNewSectionInfo(user, preferences, places);
+  updateFavoritesSectionInfo(places);
+}
+
+async function updateFavoritesSectionInfo(places) {
+  let favoritesPlacesIds = Object.keys(favoritesPlaces);
+  places = places.filter(place => favoritesPlacesIds.includes(place.place_id))
+  let foundIds = places.map(place => place.place_id);
+  let missingIds = favoritesPlacesIds.filter(place_id => !foundIds.includes(place_id));
+  for(let i=0;i<missingIds.length;i++) {
+    let place = await (new Promise((resolve,reject) => {
+      service.getDetails({placeId:missingIds[i]}, (place, status) => {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place &&
+          place.geometry &&
+          place.geometry.location
+        ) {
+          resolve(place);
+        } else {
+          resolve(null);
+        }
+      })
+    }));
+    if (place===null) continue;
+    places.push(place);
+  }
+  updateSectionInfo("favorites", places);
 }
 
 function updateUpSectionInfo(user, preferences, places) {
