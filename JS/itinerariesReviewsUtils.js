@@ -4,15 +4,16 @@ import {
   collection,
   doc,
   getDocs, query,
-  where,
+  where, orderBy,
   getAggregateFromServer,
   average,
-  count
+  count,
+  serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
 export async function getItineraryReviews(itineraryId) {
   const reviewsCol = collection(db, 'publicItineraries', itineraryId, 'reviews');
-  const querySnapshot = await getDocs(reviewsCol);
+  const querySnapshot = await getDocs(query(reviewsCol, orderBy('created','desc')));
   if (querySnapshot.empty) return [];
   const usersRefs = [...new Set(querySnapshot.docs.map(doc => doc.data().userRef))];
   let usersNames;
@@ -48,7 +49,8 @@ export async function addItineraryReview(itineraryId,rating,reviewText) {
   addDoc(reviewsCol,{
     userRef: currentUser.uid,
     rating,
-    reviewText
+    reviewText,
+    created: serverTimestamp()
   });
   return true;
 }
