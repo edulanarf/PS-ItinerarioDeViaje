@@ -73,6 +73,8 @@ function prevDay() {
 }
 
 async function listView() {
+  list.innerHTML = "";
+
   currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
   currentRoutes = Object.values(itineraries).at(0);
   renderAllItineraries(itineraries)
@@ -128,6 +130,8 @@ async function showItinerary(before, after){
   buttonGroup.innerHTML = "";
   buttonGroup.appendChild(verRutaBtn);
 
+
+
   const shareButton = document.createElement("button");
   shareButton.innerText = "publicar";
   shareButton.classList.add("publicar");
@@ -176,7 +180,9 @@ async function showItinerary(before, after){
     });
   }
 
-  buttonGroup.appendChild(shareButton);
+  if (!buttonGroup.querySelector(".publicar")) {
+    buttonGroup.appendChild(shareButton);
+  }
 
   to.style.display = "grid";
   window.scrollTo(0, scrollY); //Para cada vez q se renderiza el contenido
@@ -215,10 +221,19 @@ async function renderDay(itinerary, daysContainer, listContainer) {
   let ul = document.createElement('ul');
   ul.className = 'places';
   ul.dataset.day = itinerary.name;
-  await Promise.all(itinerary.places.map(async place => {
+  await Promise.all(itinerary.places.map(async (place, index) => {
     let li = document.createElement('li');
     li.innerText = place.toString();
+    const letter = String.fromCharCode(65 + index); // 65 es el código ASCII de 'A'
+
+    const formattedPlace = `<strong>${letter}.</strong> ${place.name}:<br>
+    <strong>Tipo:</strong> ${place.category}<br>
+    <strong>Dirección:</strong> ${place.address}`;
+
+    li.innerHTML = formattedPlace;
+    console.log("Datos del Dia:", formattedPlace);
     await ul.appendChild(li);
+
   }));
   ul.style.display = 'none';
   await listContainer.appendChild(ul);
@@ -311,6 +326,14 @@ async function appendItinerary(container) {
   } else {
     list.appendChild(container);
   }
+}
+
+
+//Exportar currentItinerary
+export function setCurrentItinerary(value) {
+  currentItinerary = value;
+  listView();
+
 }
 
 
