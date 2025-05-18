@@ -62,7 +62,7 @@ body {
 }
 
 /* BOTÓN FAVORITO */
-.popup-favorite {
+.popup-favorite, .popup-show-reviews, .new-review {
     padding: 10px 20px;
     border-radius: 12px;
     background: #e63946;
@@ -74,7 +74,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.popup-favorite:hover {
+.popup-favorite:hover, .popup-show-reviews:hover, .new-review:hover {
     background-color: #d62828;
 }
 
@@ -125,6 +125,7 @@ body {
     display: flex;
     gap: 20px;
     flex-direction: row;
+    flex: 1;
 }
 
 .popup-body {
@@ -169,7 +170,8 @@ body {
 
 /* MOSTRAR POPUP */
 .popup.show {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 /* TÍTULOS INTERNOS */

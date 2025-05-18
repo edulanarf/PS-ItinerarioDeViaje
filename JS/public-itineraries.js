@@ -3,6 +3,7 @@ import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/f
 import{addFavoriteItinerary} from './addFavorite.js'
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { deleteFavoriteId } from './deleteFavorite.js';
+import { addItineraryReview, getItineraryRating, getItineraryReviews, drawReviews } from './itinerariesReviewsUtils.js';
 
 let allItineraries = []; //Para la barra de búsqueda
 
@@ -91,13 +92,49 @@ document.getElementById("search-itinerary").addEventListener("input", (e) => {
   renderItineraries(filtered);
 });
 
+document.querySelector('.popup-show-reviews').addEventListener('click',e=>{
+  if (e.target.dataset.active==1) {
+    e.target.textContent = 'Mostrar reseñas';
+    document.querySelector('#popup-reviews').classList.add('popup-hidden');
+    document.querySelector('#popup-days').classList.remove('popup-hidden');
+    e.target.dataset.active = 0;
+    return;
+  }
+  getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+    drawReviews(reviews);
+    e.target.textContent = 'Mostrar itinerario';
+    document.querySelector('#popup-reviews').classList.remove('popup-hidden');
+    document.querySelector('#popup-days').classList.add('popup-hidden');
+    e.target.dataset.active = 1;
+  });
+});
+document.querySelector('.form-rating').addEventListener('click',e=>{
+  const svg = e.target.closest('svg');
+  if (!svg) return;
+  Array.from(svg.parentElement.children).forEach(el => el.classList.remove('selected'));
+  svg.classList.add('selected');
+});
+document.querySelector('.new-review').addEventListener('click',e=>{
+  let rating = Array.from(document.querySelector('.form-rating').children).reverse().findIndex(v => v.classList.contains('selected'))+1;
+  addItineraryReview(e.target.dataset.itineraryId,rating,document.querySelector('.modal-reviews-form textarea').value).then(saved => {
+    if (!saved) return;
+    getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+      drawReviews(reviews);
+    });
+  });
+})
+
 async function showPopup(itineraryData) {
   const popupDaysContainer = document.getElementById("popup-days");
   popupDaysContainer.innerHTML = "";
+  popupDaysContainer.classList.remove('popup-hidden');
+  document.querySelector('#popup-reviews').classList.add('popup-hidden');
+  document.querySelector('.new-review').dataset.itineraryId =  document.querySelector('.popup-show-reviews').dataset.itineraryId = itineraryData.id;
   document.querySelector(".popup-title").textContent = itineraryData.title;
 
   const daysRef = collection(db, "publicItineraries", itineraryData.id, "days");
   const daysData = await getDocs(daysRef);
+  const rating = await getItineraryRating(itineraryData.id);
   let totalPrice = 0;
   let firstPlaceForMap = null;
 
@@ -165,5 +202,7 @@ async function showPopup(itineraryData) {
   `;
 
   document.getElementById("total-price").textContent = `Costo total: ${totalPrice}€`;
+  document.querySelector('.popup-rating-value').textContent = parseFloat(rating.averageRating||0).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
+  document.querySelector('.popup-rating-count').textContent = rating.ratingCount||0;
   document.querySelector(".popup").classList.add("show");
 }

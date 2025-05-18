@@ -1,0 +1,87 @@
+.modal-reviews-controls, .no-reviews-found {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.form-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+.form-rating svg {
+    height: 1.5rem;
+    width: 1.5rem;
+    color: lightgray;
+    cursor: pointer;
+}
+.form-group textarea {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+}
+.form-group textarea:focus {
+    outline: none;
+}
+
+.form-rating svg:hover, .form-rating svg:hover ~ svg, .form-rating svg.selected, .form-rating svg.selected ~ svg {
+    color: gold;
+}
+
+.itinerary-rating {
+    position: relative;
+}
+.itinerary-rating i {
+    position: absolute;
+    top: -0.9rem;
+    font-size: 2rem;
+}
+
+.itinerary-review-username {
+  font-weight: bold;
+}
+.itinerary-review {
+  border-bottom: 1px solid gray;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.itinerary-review-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+}
+.itinerary-review-rating svg {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: lightgray;
+}
+.itinerary-review-rating svg.selected, .itinerary-review-rating svg.selected ~ svg {
+    color: gold;
+}
+.star-single {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: gold;
+    transform: translateY(0.2rem);
+}
+.star-single-white {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: #fff;
+    transform: translateY(0.2rem);
+}
+.modal-reviews-list {
+  max-height: 55vh;
+  overflow-y: scroll;
+}
+.itinerary-review-text {
+  padding-top: 0.25rem;
+}
+.rating {
+    font-size: 1.1rem;
+}
+.popup-hidden {
+    display: none;
+}
