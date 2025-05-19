@@ -87,6 +87,7 @@ button:hover {
     justify-content: center;
 }
 
+/**
 #open-itinerary {
     background-color: var(--marron-claro);
     border: 2px solid var(--marron-medio);
@@ -102,6 +103,7 @@ button:hover {
     border-color: var(--marron-oscuro);
     box-shadow: 0 0 0.5rem var(--marron-oscuro);
 }
+ */
 
 #next-itinerary, #previous-itinerary {
     border: none;

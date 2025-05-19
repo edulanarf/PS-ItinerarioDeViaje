@@ -46,12 +46,14 @@ onAuthStateChanged(auth, async (user) => {
     profileWrapper.addEventListener("click", function (event) {
       event.stopPropagation();
       dropdownMenu.classList.toggle("show");
+      dropdownMenu.classList.toggle("hidden");
     });
 
     // Cerrar si se hace clic fuera
     document.addEventListener("click", function (event) {
       if (!profileWrapper.contains(event.target)) {
-        dropdownMenu.classList.remove("show");
+        dropdownMenu.classList.toggle("show");
+        dropdownMenu.classList.toggle("hidden");
       }
     });
 
