@@ -75,29 +75,42 @@ function prevDay() {
 async function listView() {
   list.innerHTML = "";
 
-  currentDay = Object.values(itineraries).at(0).itineraries.at(0).name;
-  currentRoutes = Object.values(itineraries).at(0);
-  renderAllItineraries(itineraries)
-    .then(_ => {
-      showItinerary(currentItinerary, currentItinerary).then(_ => console.log('showed'));
-    })
-    .then(() => {
-      document.getElementById('next-itinerary').addEventListener('click', () => {
-        nextItinerary(currentItinerary).then(data => currentItinerary = data);
-      });
-      document.getElementById('previous-itinerary').addEventListener('click', () => {
-        previousItinerary(currentItinerary).then(data => currentItinerary = data);
-      });
-      addDaysListeners();
-      document.addEventListener('keydown', (event) => {
-        switch (event.key) {
-          case 'ArrowDown': nextDay(); break;
-          case 'ArrowUp': prevDay(); break;
-          case 'ArrowLeft': previousItinerary(currentItinerary).then(data => currentItinerary = data); break;
-          case 'ArrowRight': nextItinerary(currentItinerary).then(data => currentItinerary = data); break;
-        }
-      });
-    });
+  const itinerariesArray = Object.values(itineraries);
+
+  if (itinerariesArray.length === 0) {
+    console.warn("No hay itinerarios disponibles para mostrar.");
+    return; // O mostrar mensaje al usuario
+  }
+
+  const firstItinerary = itinerariesArray[0];
+  if (!firstItinerary.itineraries || firstItinerary.itineraries.length === 0) {
+    console.warn("El primer itinerario no tiene días definidos.");
+    return;
+  }
+
+  currentDay = firstItinerary.itineraries[0].name;
+  currentRoutes = firstItinerary;
+
+  await renderAllItineraries(itineraries);
+  await showItinerary(currentItinerary, currentItinerary);
+
+  document.getElementById('next-itinerary').addEventListener('click', () => {
+    nextItinerary(currentItinerary).then(data => currentItinerary = data);
+  });
+  document.getElementById('previous-itinerary').addEventListener('click', () => {
+    previousItinerary(currentItinerary).then(data => currentItinerary = data);
+  });
+
+  addDaysListeners();
+
+  document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+      case 'ArrowDown': nextDay(); break;
+      case 'ArrowUp': prevDay(); break;
+      case 'ArrowLeft': previousItinerary(currentItinerary).then(data => currentItinerary = data); break;
+      case 'ArrowRight': nextItinerary(currentItinerary).then(data => currentItinerary = data); break;
+    }
+  });
 }
 
 async function init(user) {
