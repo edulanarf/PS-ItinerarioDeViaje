@@ -22,7 +22,6 @@
         <a class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</a>
       </div>
     </section>
-    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
 </header>
 
@@ -116,7 +115,9 @@
     </div>
   </section>
 </main>
-
+<footer>
+  © 2025 Itineraries. Todos los derechos reservados.
+</footer>
 <script>
   const cta = document.getElementById('cta-final');
   const overlay = cta.querySelector('.cta-overlay');
@@ -136,8 +137,8 @@
       cta.style.transform = `scale(${scale})`;
 
       // Fade in del overlay y del contenido
-      overlay.style.opacity = progress * 0.8; // Máximo 0.8 de opacidad
-      content.style.opacity = progress;
+      overlay.style.opacity = `${progress * 0.8}`; // Máximo 0.8 de opacidad
+      content.style.opacity = `${progress}`;
       content.style.transform = `scale(${0.95 + progress * 0.05})`;
     }
   });

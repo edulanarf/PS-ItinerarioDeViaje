@@ -30,7 +30,7 @@ body {
 
 .nav-tabs > * {
     flex: 1;
-    background-color: var(--azul-principal);
+    background-color: var(--azul-brillante);
     padding: 2rem;
     text-align: center;
     color: var(--google-blue);

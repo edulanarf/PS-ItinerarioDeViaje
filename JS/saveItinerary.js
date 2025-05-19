@@ -1,38 +1,176 @@
-
-import { db, auth } from './firebase-config.js';
-import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import {
+  auth,
+  db,
+  deleteAllDocumentsInCollection, deleteStorageFolderContents, deleteImage,
+  itinerariesOfPlansFirestorePath,
+  placeStoragePath, planDaysStoragePath,
+  planFirestorePath,
+  planPreviewStoragePath,
+  storeImage,
+  storeImageFromUrl,
+  userPlansFirestorePath
+} from './firebase-config.js';
+import {
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+  Timestamp
+} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { getSaved, setSaved } from './saved-verification.js';
-import { Itinerary, ItineraryPlan } from './types.js';
-import { plan } from './search-places.js'
+import { Itinerary, ItineraryPlan, NoID } from './types.js';
+import { allPlaces, DESCRIPTION, PHOTO, PLAN_ID, SHARED_WITH, TITLE } from './search-places.js';
+import { closeBtn, hideLoader, hideModal, modal, showLoader, showModal } from "./modalFloatingWindow.js";
+
+/**
+ * @type {ItineraryPlan}
+ */
+let storingItinerary;
+
+
+
+export async function storeItineraryPlanWithID(userId, itineraryPlan) {
+  const itineraryRef = doc(db, planFirestorePath(userId,itineraryPlan.id)).withConverter(ItineraryPlan.Converter)
+  await deleteImage(planPreviewStoragePath(userId,itineraryPlan.id));
+  await addPhotoToPlan(userId,itineraryRef, itineraryPlan, PHOTO)
+    .then(async ()=> await deleteAllDocumentsInCollection(itinerariesOfPlansFirestorePath(userId,itineraryPlan.id)))
+    .then(async () => await deleteStorageFolderContents(planDaysStoragePath(userId,itineraryPlan.id)))
+    .then(async () => {
+      for (const itinerary of itineraryPlan.itineraries) {
+        const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(
+          Itinerary.Converter,
+        );
+        await setDoc(dayRef, itinerary);
+      }
+    })
+}
+
+/**
+ * @param {string} userId
+ * @param itineraryPlanRef
+ * @param {ItineraryPlan} plan
+ * @param {File} photo
+ * @returns {Promise<void>}
+ */
+async function addPhotoToPlan(userId, itineraryPlanRef, plan, photo) {
+  console.log("foto for",userId,itineraryPlanRef.id, plan.title);
+  plan.photo = await storeImage(planPreviewStoragePath(userId,itineraryPlanRef.id), photo);
+  console.log("photo url:", plan.photo);
+  await setDoc(itineraryPlanRef, plan)
+  console.log("photo & plan saved");
+}
+
+/**
+ *
+ * @param {string} userId
+ * @param itineraryPlanRef
+ * @param {ItineraryPlan} itineraryPlan
+ * @returns {Promise<void>}
+ */
+async function addPhotoToPlanFromPlaces(userId, itineraryPlanRef, itineraryPlan) {
+  itineraryPlan.photo = await storeImageFromUrl(
+    planPreviewStoragePath(userId, itineraryPlanRef.id),
+    itineraryPlan.itineraries.at(0).places.at(0).photo
+  );
+  await setDoc(itineraryPlanRef, itineraryPlan)
+}
+
+async function addPhotosToPlaces(itinerary, userId, itineraryPlanId) {
+  await Promise.all(
+    itinerary.places.map(async (p, index) => {
+      p.photo = await storeImageFromUrl(
+        placeStoragePath(userId, itineraryPlanId, itinerary.name, index),
+        p.photo,
+      );
+      console.log(p.photo);
+    }),
+  );
+}
+
+/**
+ *
+ * @param userId
+ * @param {ItineraryPlan} itineraryPlan
+ * @returns {Promise<void>}
+ */
+export async function storeItineraryPlanNoID(userId, itineraryPlan) {
+  const plansCollection = collection(db, userPlansFirestorePath(userId)).withConverter(ItineraryPlan.Converter)
+  const itineraryPlanRef = await addDoc(plansCollection, itineraryPlan);
+  await Promise.all(
+    itineraryPlan.itineraries.map(async (itinerary) => {
+      await addPhotosToPlaces(itinerary, userId, itineraryPlanRef.id);
+      const dayRef = doc(
+        db,
+        itinerariesOfPlansFirestorePath(userId, itineraryPlanRef.id),
+        itinerary.name
+      ).withConverter(Itinerary.Converter);
+      await setDoc(dayRef, itinerary);
+    })
+  );
+
+  if (PHOTO) await addPhotoToPlan(userId,itineraryPlanRef, itineraryPlan, PHOTO);
+  else await addPhotoToPlanFromPlaces(userId,itineraryPlanRef, itineraryPlan);
+
+}
+
+export async function storeItineraryPlan(userId, itineraryPlan) {
+  if (itineraryPlan.id !== NoID) await storeItineraryPlanWithID(userId, itineraryPlan);
+  else await storeItineraryPlanNoID(userId, itineraryPlan);
+}
+
+function validation() {
+  const titleError = document.getElementById("title-error");
+  if (TITLE === "") {
+    titleError.textContent = "Asigne un título al itinerario";
+    titleError.style.display = "block";
+    titleError.style.borderColor = "red";
+    return false;
+  } else if (allPlaces.filter((arr) => arr.length === 0).length > 0) {
+    titleError.textContent = "elimine el dia que no visite lugares.";
+    titleError.style.display = "block";
+    titleError.style.borderColor = "red";
+    return false;
+  } else {
+    titleError.style.display = "none";
+    return true;
+  }
+}
+
+function createPlanFromForm() {
+  return new ItineraryPlan(
+    TITLE,
+    DESCRIPTION,
+    allPlaces.at(0).at(0).photo || "",
+    allPlaces.map(
+      (arr, index) =>
+        new Itinerary(`Día ` + String(index + 1).padStart(3, "0"), arr),
+    ),
+    PLAN_ID,
+    SHARED_WITH
+  );
+}
+
+
+closeBtn.addEventListener("click", () => {
+  hideModal()
+})
 
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const save = document.getElementById("save-itinerary");
       save.addEventListener("click", async function () {
-
-        const titleError = document.getElementById("title-error");
-        if (plan.title === "") {
-          titleError.textContent = "Asigne un título al itinerario";
-          titleError.style.display = "block";
-          titleError.style.borderColor = "red";
-          return;
-        } else {
-          titleError.style.display = "none";
-        }
-
-        plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
-        
+        if (!validation()) return
+        modal.querySelector("h2").textContent = "Creando itinerario...";
+        showLoader()
+        showModal()
+        storingItinerary = createPlanFromForm();
         try {
-          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
-            .withConverter(ItineraryPlan.itineraryPlanConverter);
-          await setDoc(itineraryRef, plan)
-          for (const itinerary of plan.itineraries) {
-            const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
-            await setDoc(dayRef, itinerary);
-          }
+          await storeItineraryPlan(user.uid, storingItinerary);
           setSaved(true);
+          hideLoader()
+          modal.querySelector("h2").textContent = "El itinerario ha sido creado con éxito";
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }

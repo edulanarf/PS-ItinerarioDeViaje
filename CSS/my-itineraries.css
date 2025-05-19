@@ -60,7 +60,14 @@ button:hover {
 }
 
 /* VIEW SWITCH */
-.switch-view {
+#switch-view {
+    /*
+    background-color: var(--marron-claro);
+    border: 2px solid var(--marron-oscuro);
+    box-shadow: 0 0 0.5rem var(--marron-oscuro);
+    padding: 0.8rem 2rem;
+    border-radius: 10px;
+     */
     width: 200px;
     justify-content: center;
     align-items: center;
@@ -68,6 +75,9 @@ button:hover {
     margin-bottom: 3rem;
 }
 
+#switch-view:hover {
+    background-color: var(--marron-medio);
+}
 
 /* ACTION BUTTONS */
 #actions {
@@ -77,6 +87,7 @@ button:hover {
     justify-content: center;
 }
 
+/**
 #open-itinerary {
     background-color: var(--marron-claro);
     border: 2px solid var(--marron-medio);
@@ -92,6 +103,7 @@ button:hover {
     border-color: var(--marron-oscuro);
     box-shadow: 0 0 0.5rem var(--marron-oscuro);
 }
+ */
 
 #next-itinerary, #previous-itinerary {
     border: none;
@@ -220,8 +232,7 @@ main {
     flex-direction: column;
     padding: 1rem;
     background-color: var(--oro-suave);
-    border-top-left-radius: 40px;
-    border-bottom-left-radius: 40px;
+    border-radius: 40px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
@@ -231,6 +242,7 @@ main {
     align-items: center;
     padding: 0 2rem;
     overflow: hidden;
+    aspect-ratio: 4 / 2;
     max-height: 250px;
     object-fit: cover;
 }
@@ -274,11 +286,11 @@ main {
 }
 
 .day-container {
+    padding: 1rem 0;
     height: 600px;
     background-color: var(--oro-suave);
     overflow: hidden;
-    border-bottom-right-radius:40px;
-    border-top-right-radius: 40px;
+    border-radius: 40px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
@@ -346,7 +358,7 @@ main {
 .list-container::-webkit-scrollbar-track {
     background: #444;
     border-radius: 10px;
-} 
+}
 
 .list-container::-webkit-scrollbar-thumb {
     background-color: #008cff;

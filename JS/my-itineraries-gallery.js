@@ -1,5 +1,5 @@
 import { ItineraryPlan } from './types.js';
-import {itineraries, currentItinerary, list } from './my-itineraries.js';
+import {itineraries, currentItinerary, list } from './my-itineraries-const.js';
 
 let gallery = document.getElementById("itinerary-gallery-container");
 gallery.style.display = "none";
@@ -11,20 +11,14 @@ let view = "list"
  * @returns {Promise<Element>}
  */
 async function renderItineraryCard(plan) {
-  const preview = document.importNode(card.content, true)
-    .querySelector(".preview");
-
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("itinerary-gallery-card"); // Aquí aplicamos el estilo de tarjeta
-  wrapper.appendChild(preview); // Insertamos el .preview dentro del wrapper
-
-  const intro = preview.querySelector(".intro");
-  intro.src = plan.photo;
-  intro.alt = plan.title;
-  preview.querySelector(".title").innerText = plan.title;
-  wrapper.id = plan.title;
-
-  return wrapper; // Devolvemos el contenedor completo
+  const container = document.importNode(card.content, true)
+    .querySelector(".itinerary-gallery-card")
+  const intro = container.querySelector(".intro");
+  intro.src = plan.photo
+  intro.alt = plan.title
+  container.querySelector(".title").innerText = plan.title
+  container.id = plan.title
+  return container
 }
 
 async function appendItineraryCard(container) {
@@ -43,7 +37,7 @@ export async function galleryView() {
       }
     })
   ).then(() => {
-    document.querySelector(".switch-view").addEventListener("click", () => {
+    document.getElementById("switch-view").addEventListener("click", () => {
       const nextItineraryButton = document.getElementById('next-itinerary');
       const previousItineraryButton = document.getElementById('previous-itinerary');
       if (view === "list") {

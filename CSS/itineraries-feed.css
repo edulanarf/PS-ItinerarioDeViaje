@@ -254,7 +254,6 @@ section.main {
     gap: 3rem;
 }
 .modal-controls button {
-    border: none;
     color: #888;
     border: 2px solid #888;
     border-radius: 0.5rem;
@@ -274,7 +273,7 @@ section.main {
 }
 .modal-controls button.add-to-favortites:hover, .modal-controls button.remove-from-favortites:hover {
     background-color: var(--azul-brillante);
-    color: #fff;    
+    color: #fff;
 }
 
 .hidden {

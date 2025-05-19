@@ -11,7 +11,7 @@ body {
     align-self: center;
     margin: 40px;
     font-size: 2.5rem;
-    color: var(--azul-principal);
+    color: var(--azul-brillante);
     font-weight: bold;
     text-align: center;
 }
@@ -161,6 +161,7 @@ body {
 .content-right {
     flex: 1;
     padding: 20px;
+    background-color: var(--marron-claro); /**/
     border-radius: 10px;
     color: white;
     display: flex;
