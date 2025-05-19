@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestionar Plan Premium</title>
+  <script type="module" src="../JS/manage-plan.js"></script>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+      }
+
+      body {
+          font-family: 'Poppins', sans-serif;
+          min-height: 100vh;
+          background: linear-gradient(270deg, #e0f7fa, #ffe0ec, #e0f7fa);
+          background-size: 600% 600%;
+          animation: gradientShift 15s ease infinite;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 3rem 2rem;
+      }
+
+      @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+      }
+
+      .container {
+          background: white;
+          padding: 3rem 2.5rem;
+          border-radius: 20px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+          max-width: 1200px;
+          width: 100%;
+          text-align: center;
+          animation: fadeIn 0.7s ease;
+      }
+
+      h1 {
+          font-size: 2.6rem;
+          color: #003366;
+          margin-bottom: 2rem;
+      }
+
+      #current-plan-label {
+          font-size: 1.2rem;
+          color: #333;
+          margin-bottom: 3rem;
+      }
+
+      .plans {
+          display: flex;
+          gap: 2.5rem;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding: 2rem 0;
+      }
+
+      .plan {
+          flex: 0 0 320px;
+          background: linear-gradient(135deg, #ffffff, #f1f9ff);
+          border-radius: 16px;
+          padding: 2rem 1.5rem;
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+          transition: all 0.4s ease;
+          scroll-snap-align: center;
+          position: relative;
+          cursor: pointer;
+      }
+
+      .plan:hover {
+          transform: scale(1.05) translateY(-6px);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+          border: 2px solid #00b4d8;
+      }
+
+      .plan.active {
+          border: 2px solid #00bcd4;
+          box-shadow: 0 0 18px rgba(0, 188, 212, 0.5);
+          background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      }
+
+      .plan h2 {
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+      }
+
+      .price {
+          font-size: 1.3rem;
+          font-weight: bold;
+          color: #0077cc;
+          margin-bottom: 1rem;
+      }
+
+      .features {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 2rem;
+          font-size: 0.95rem;
+          color: #444;
+      }
+
+      .features li {
+          margin: 0.4rem 0;
+      }
+
+      .plan button {
+          background: linear-gradient(135deg, #00b4d8, #0077cc);
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          font-size: 1rem;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          animation: pulse 2s infinite;
+      }
+
+      .plan button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 0 12px rgba(0, 183, 255, 0.6);
+      }
+
+      #cancel-button {
+          margin-top: 3rem;
+          background: linear-gradient(135deg, #ff6b6b, #ff3d3d);
+          padding: 12px 24px;
+          border: none;
+          font-size: 1rem;
+          color: white;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: background 0.3s ease;
+      }
+
+      #cancel-button:hover {
+          background: linear-gradient(135deg, #d93636, #cc2222);
+      }
+
+      #back-button {
+          margin-top: 1.5rem;
+          background: transparent;
+          border: 2px solid #0077cc;
+          color: #0077cc;
+          padding: 10px 20px;
+          font-size: 1rem;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+
+      #back-button:hover {
+          background: #0077cc;
+          color: white;
+      }
+
+      @keyframes pulse {
+          0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 119, 204, 0.4); }
+          50% { transform: scale(1.05); box-shadow: 0 0 12px rgba(0, 119, 204, 0.6); }
+          100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 119, 204, 0.4); }
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+
+      @media (max-width: 768px) {
+          .plan {
+              flex: 0 0 85%;
+          }
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Gestionar tu Plan Premium</h1>
+  <div id="current-plan-label">Cargando plan actual...</div>
+
+  <div class="plans">
+    <div class="plan" id="plan-basic">
+      <h2>Plan Básico</h2>
+      <div class="price">4,49 €/mes</div>
+      <ul class="features">
+        <li>Hasta 5 itinerarios</li>
+        <li>Búsqueda extendida</li>
+        <li>Cambio de idioma</li>
+      </ul>
+      <button onclick="updatePlan('basic')">Elegir este plan</button>
+    </div>
+
+    <div class="plan" id="plan-advanced">
+      <h2>Plan Avanzado</h2>
+      <div class="price">9,99 €/mes</div>
+      <ul class="features">
+        <li>Hasta 15 itinerarios</li>
+        <li>Búsqueda extendida</li>
+        <li>Cambio de idioma</li>
+        <li>Acceso anticipado</li>
+      </ul>
+      <button onclick="updatePlan('advanced')">Elegir este plan</button>
+    </div>
+
+    <div class="plan" id="plan-unlimited">
+      <div style="
+          position: absolute;
+          top: -12px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: gold;
+          color: black;
+          padding: 4px 12px;
+          border-radius: 999px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          box-shadow: 0 0 6px rgba(0,0,0,0.2);
+        ">✨ Más popular</div>
+
+      <h2>Plan Ilimitado</h2>
+      <div class="price">19,49 €/mes</div>
+      <ul class="features">
+        <li>Itinerarios ilimitados</li>
+        <li>Funciones avanzadas</li>
+        <li>Soporte prioritario</li>
+      </ul>
+      <button onclick="updatePlan('unlimited')">Elegir este plan</button>
+    </div>
+  </div>
+
+  <button id="cancel-button">Cancelar suscripción</button>
+  <button id="back-button">Volver al inicio</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activar Premium</title>
+  <script type="module" src="../JS/fake-payment.js"></script>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+      body {
+          margin: 0;
+          padding: 0;
+          font-family: 'Poppins', sans-serif;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: linear-gradient(270deg, #e0f7fa, #ffe0ec, #e0f7fa);
+          background-size: 600% 600%;
+          animation: gradientShift 12s ease infinite;
+      }
+
+      @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+      }
+
+      .card {
+          background: white;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+          padding: 3rem 2rem;
+          width: 90%;
+          max-width: 420px;
+          text-align: center;
+          animation: fadeIn 0.7s ease;
+      }
+
+      h2 {
+          font-size: 2rem;
+          color: #0077cc;
+          margin-bottom: 1rem;
+      }
+
+      .plan-box {
+          background: #e6f7ff;
+          border: 2px dashed #66d9ef;
+          padding: 1rem;
+          margin-bottom: 2rem;
+          border-radius: 12px;
+          font-weight: bold;
+          color: #0077cc;
+          font-size: 1.1rem;
+      }
+
+      .form-group {
+          margin-bottom: 1rem;
+          text-align: left;
+      }
+
+      .form-group input {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          font-size: 1rem;
+      }
+
+      .form-group label {
+          display: block;
+          margin-bottom: 0.3rem;
+          font-size: 0.9rem;
+          color: #444;
+      }
+
+      .row {
+          display: flex;
+          gap: 1rem;
+      }
+
+      .row .form-group {
+          flex: 1;
+      }
+
+      #form-error {
+          color: red;
+          font-size: 0.9rem;
+          min-height: 1.2rem;
+          margin-top: 0.5rem;
+      }
+
+      button {
+          background: linear-gradient(to right, #0077cc, #00b4d8);
+          color: white;
+          border: none;
+          padding: 14px;
+          font-size: 1.1rem;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          width: 100%;
+          margin-top: 1rem;
+      }
+
+      button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 8px 20px rgba(0, 183, 255, 0.3);
+      }
+
+      #cancel-payment {
+          background: transparent;
+          color: #0077cc;
+          border: 2px solid #0077cc;
+          margin-top: 1rem;
+      }
+
+      #cancel-payment:hover {
+          background: #0077cc;
+          color: white;
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2>Activar tu plan Premium</h2>
+  <div id="selected-plan" class="plan-box">Plan seleccionado: ...</div>
+
+  <form id="fake-payment-form">
+    <div class="form-group">
+      <label for="card-name">Nombre en la tarjeta</label>
+      <input type="text" id="card-name" placeholder="Ej: Laura Martínez" required />
+    </div>
+    <div class="form-group">
+      <label for="card-number">Número de tarjeta</label>
+      <input type="text" id="card-number" placeholder="Ej: 4242 4242 4242 4242" maxlength="19" required />
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="expiry">Vencimiento</label>
+        <input type="text" id="expiry" placeholder="MM/AA" maxlength="5" required />
+      </div>
+      <div class="form-group">
+        <label for="cvc">CVC</label>
+        <input type="text" id="cvc" placeholder="Ej: 123" maxlength="4" required />
+      </div>
+    </div>
+
+    <div id="form-error"></div>
+    <button type="submit">Confirmar y Activar</button>
+    <button type="button" id="cancel-payment">Cancelar</button>
+  </form>
+</div>
+</body>
+</html>

@@ -41,6 +41,7 @@ function registerUser(email, password, displayName, picture) {
         username: displayName,
         email: userCredential.user.email,
         photoURL: photoURL
+        premium: false
       });
 
       await sendEmailVerification(userCredential.user);

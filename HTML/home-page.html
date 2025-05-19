@@ -66,7 +66,6 @@
             margin-top: 20px;
         }
 
-
         .review {
             background-color: #f7f9fc;
             padding: 15px 20px;
@@ -84,11 +83,56 @@
             border-radius: 0 0 16px 16px;
         }
 
-
         @media (max-width: 768px) {
             .gallery-box, .team-member {
                 flex: 1 1 100%;
             }
+        }
+
+        /* Botón flotante */
+        #premium-float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.4);
+            cursor: pointer;
+            animation: floatPulse 3s ease-in-out infinite;
+            z-index: 1000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #premium-float-btn:hover {
+            transform: scale(1.07);
+            box-shadow: 0 12px 28px rgba(255, 87, 34, 0.6);
+        }
+
+        @keyframes floatPulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* Tooltip personalizado */
+        #premium-float-btn[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            transform: translateX(0%);
+            background: #333;
+            color: #fff;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 999;
         }
     </style>
 </head>
@@ -113,10 +157,11 @@
 </header>
 
 <h2 style="cursor:pointer" onclick="location.href='search-places.html'">Comienza a crear tu itinerario de viaje gratis en minutos</h2>
+
 <main>
     <section class="section">
-        <div class="gallery" >
-            <div class="gallery-box img1" >
+        <div class="gallery">
+            <div class="gallery-box img1">
                 <img src="../mockups/Brujas-_bruselas.png" alt="Viaje 1" />
             </div>
 
@@ -172,6 +217,7 @@
             </div>
         </div>
     </section>
+
     <h2>Conoce al equipo</h2>
     <section class="section">
         <div class="team">
@@ -206,5 +252,14 @@
 <footer>
     © 2025 Itineraries. Todos los derechos reservados.
 </footer>
+
+<!-- Botón flotante premium con tooltip -->
+<button
+  id="premium-float-btn"
+  data-tooltip="Desbloquea funciones avanzadas y crea itinerarios sin límites"
+  onclick="location.href='premium-info.html'">
+    ✨ ¡Hazte Premium!
+</button>
+
 </body>
 </html>
