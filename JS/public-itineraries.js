@@ -120,6 +120,10 @@ document.querySelector('.new-review').addEventListener('click',e=>{
     if (!saved) return;
     getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
       drawReviews(reviews);
+      let count = reviews.length;
+      let average = parseFloat(reviews.reduce((c,v)=>c+v.rating,0)/count).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
+      document.querySelector('.popup-rating-value').textContent = average;
+      document.querySelector('.popup-rating-count').textContent = count;
     });
   });
 })

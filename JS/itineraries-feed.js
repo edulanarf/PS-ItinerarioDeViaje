@@ -291,7 +291,7 @@ function drawItineraries() {
       <div class="itinerary-content">
         <div class="itinerary-title">{{title}}</div>
         <div class="itinerary-created-by">Creado por <span class="value">{{creator}}</span></div>
-        <div class="itinerary-rating">{{rating}}${star} ({{ratingCount}} usuarios)</div>
+        <div class="itinerary-rating"><span class="itinerary-rating-value">{{rating}}</span>${star} (<span class="itinerary-rating-count">{{ratingCount}}</span> usuarios)</div>
         <div class="itinerary-description">{{description}}</div>
       </div>
     </a>
@@ -500,6 +500,17 @@ window.addEventListener("load", () => {
       if (!saved) return;
       getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
         drawReviews(reviews);
+        let count = reviews.length;
+        let average = parseFloat(reviews.reduce((c,v)=>c+v.rating,0)/count).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
+        document.querySelector('.rating-value').textContent = average;
+        document.querySelector('.rating-count').textContent = count;
+        let itinerary = itineraries.find(v => v.id === e.target.dataset.itineraryId);
+        itinerary.rating = average;
+        itinerary.ratingCount = count;
+        document.querySelectorAll('.itinerary[data-id="'+e.target.dataset.itineraryId+'"] .itinerary-rating').forEach(el => {
+          el.querySelector('.itinerary-rating-value').textContent = average;
+          el.querySelector('.itinerary-rating-count').textContent = count;
+        });
       });
     });
   })
@@ -570,7 +581,7 @@ function showModal(itinerary) {
     </a>
   `;
   let html = `
-<div class="rating"><b>Valoración:</b> {{rating}}${star} ({{ratingCount}} usuarios)</div>
+<div class="rating"><b>Valoración:</b> <span class="rating-value">{{rating}}</span>${star} (<span class="rating-count">{{ratingCount}}</span> usuarios)</div>
 <div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>
 `.replace('{{totalCost}}',itinerary.totalCost).replace('{{rating}}',itinerary.rating).replace('{{ratingCount}}',itinerary.ratingCount)+itinerary.days.map(day => {
     let waypoints = [];
