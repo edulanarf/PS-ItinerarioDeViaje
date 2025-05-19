@@ -114,7 +114,7 @@ window.addEventListener("load", () => {
               <div class="infobox-place-container">
                 <h2><b>${place.name}</b></h2>
                 <div><b>Type:</b> ${place.types[0].substring(0,1).toUpperCase()+place.types[0].substring(1)}</div>
-                <div><b>Address:</b> ${place.adr_address}</div>
+                <div><b>Address:</b> ${place.formatted_address}</div>
                 <div><b>Phone:</b> ${place?.formatted_phone_number||'Desconocido'}</div>
                 <div><b>Opening Hours:</b>
                   <ul>
@@ -123,11 +123,17 @@ window.addEventListener("load", () => {
                 </div>
                 <div class="infobox-score">${scoreHtml}</div>
                 <div class="infobox-controls">
-                  <button class="add-to-favorite${favorite?' hidden':''}" onclick="addToFavorites('${place.place_id}','${place.name}',${place.geometry.location.lat()},${place.geometry.location.lng()},'${strip(place.adr_address)}','${photoUrl}')" type="button">Añadir Favorito</button>
+                  <button class="add-to-favorite${favorite?' hidden':''}" type="button">Añadir Favorito</button>
                   <button class="remove-from-favorite${favorite?'':' hidden'}" onclick="removeFromFavorites('${place.place_id}')" type="button">Quitar Favorito</button>
                 </div>
               </div>`;
-          infowindow.setContent(content);
+          let el = document.createElement('div');
+          el.innerHTML = content;
+          el.querySelector('.add-to-favorite').addEventListener('click',() => {
+            console.log(place);
+            addToFavorites(place.place_id,place.name,place.geometry.location.lat(),place.geometry.location.lng(),place.formatted_address,photoUrl);
+          })
+          infowindow.setContent(el);
         } else {
           infowindow.setContent(place.name);
         }
@@ -227,9 +233,9 @@ function loadFavoritesPlaces(user) {
   });
 }
 
-window.addToFavorites = (place_id, name, lat, lng, adr_address, photoUrl) => {
+window.addToFavorites = (place_id, name, lat, lng, formatted_address, photoUrl) => {
   let favoritePlaceRef = doc(db, `users/${currentUser.uid}/favorite-places`,place_id);
-  let place = {place_id,name,lat,lng,adr_address,photoUrl};
+  let place = {place_id,name,lat,lng,formatted_address,photoUrl};
   setDoc(favoritePlaceRef,place).then(()=>{
     favoritesPlaces[place_id] = place;
     document.querySelectorAll('.infobox-controls button').forEach(el => el.classList.toggle('hidden'));
@@ -556,9 +562,4 @@ function initMap() {
   service = new google.maps.places.PlacesService(map);
   infowindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
-}
-
-function strip(html) {
-  let doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || "";
 }
