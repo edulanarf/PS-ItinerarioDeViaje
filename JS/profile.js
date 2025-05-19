@@ -1,7 +1,7 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { auth, db } from "/JS/firebase-config.js";
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-import { MINE } from "./my-itineraries-const.js";
+import { MINE, SHARED } from "./my-itineraries-const.js";
 
 const profileContainer = document.getElementById("profile-info");
 
@@ -38,6 +38,7 @@ onAuthStateChanged(auth, async (user) => {
       <a onclick="location.href='edit-profile.html'">Editar Perfil</a>
       <a onclick="location.href='edit-preferences.html'">Editar Preferencias</a>
       <a onclick="location.href='my-itineraries.html?type=${MINE}'">Mis Itinerarios</a>
+      <a onclick="location.href='my-itineraries.html?type=${SHARED}'">Compartidos Conmigo</a>
       <a onclick="location.href='Favorites-Itineraries.html'">Itinerarios Favoritos</a>
       <a href="#" id="logout-button">Cerrar Sesión</a>
     `;
@@ -52,8 +53,8 @@ onAuthStateChanged(auth, async (user) => {
     // Cerrar si se hace clic fuera
     document.addEventListener("click", function (event) {
       if (!profileWrapper.contains(event.target)) {
-        dropdownMenu.classList.toggle("show");
-        dropdownMenu.classList.toggle("hidden");
+        if (dropdownMenu.classList.contains("show")) dropdownMenu.classList.remove("show");
+        if (!dropdownMenu.classList.contains("hidden")) dropdownMenu.classList.add("hidden");
       }
     });
 

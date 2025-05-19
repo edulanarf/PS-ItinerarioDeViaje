@@ -1,5 +1,5 @@
 import {db} from './firebase-config.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import {
   addDoc,
   collection,
@@ -19,6 +19,7 @@ export async function publishItinerary(itinerary, itineraryId, itineraryPhoto, t
     userRef:userRef,
     photo: itineraryPhoto,
     title: title,
+    id: itineraryId
   });
   await saveItineraryInfo(itinerary, publicItineraryRef);
 
