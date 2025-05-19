@@ -52,13 +52,7 @@
 </header>
 
 <header id="tools">
-    <div id="switch-view">switch view</div>
     <div id="actions">
-        <button id="previous-itinerary">
-            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
         <button id="open-itinerary">open this itinerary</button>
         <button id="share-itinerary">Share this itinerary</button>
         <div id="modal" class="modal hidden">
@@ -88,19 +82,6 @@
                 </form>
             </div>
         </div>
-        <button id="next-itinerary">
-            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0L30 30L0 60" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <script>
-            const actions = document.getElementById('actions');
-            const svgs = actions.querySelectorAll('svg');
-            svgs.forEach(function(svg) {
-                const bbox = svg.querySelector('path').getBBox();
-                svg.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.height} ${bbox.height}`);
-            });
-        </script>
     </div>
 
     <div id="search-actions">
@@ -112,8 +93,9 @@
     </div>
 
     <div id="popup" class="popup">
-        <div class="popup-content">
-            <p></p>
+        <section class="travel-mode-selector"></section>
+        <div class="popup-content"></div>
+        <div id="popup-footer">
             <button id="closePopup">Cerrar</button>
         </div>
     </div>
@@ -134,12 +116,16 @@
                 <img class="intro" src="" alt=""/>
             </div>
             <div class="summary">
-                <div class="title"></div>
+                <div id="separation-title-button">
+                    <div class="title">
+                    </div>
+                    <button class="delete-itinerary">  <img src="../mockups/garbage.png" alt="Papelera"/></button>
+                </div>
                 <div class="description">description</div>
             </div>
             <div class="button-group">
                 <!-- Botón añadido para redirigir al editor -->
-                <button id="edit-itinerary-button">Editar Itinerario</button>
+                <button class="edit-itinerary-button">Editar Itinerario</button>
             </div>
         </article>
 
@@ -154,25 +140,32 @@
 </template>
 
 <template id="gallery-container"></template>
-
 <template id="itinerary-card">
-    <article class="preview" data-type="gallery">
-        <div class="image-preview itinerary-gallery-card">
-            <img class="intro" src="" alt=""/>
-            <div class="tooltip">
-                <div class="summary">
-                    <div class="title"></div>
-                    <div class="description">description</div>
+    <div class="itinerary-gallery-card">
+        <article class="preview" data-type="gallery">
+            <div class="image-preview">
+                <img class="intro" src="" alt="" />
+                <div class="tooltip">
+                    <div class="summary">
+                        <div class="title"></div>
+                        <div class="description">description</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
+    </div>
 </template>
 
 <main>
-    <section id="itinerary-list-container"></section>
-    <section id="itinerary-gallery-container"></section>
+    <button id="switch-view">Cambiar vista</button>
+    <div id="separation-buttons-itinerary">
+        <button id="previous-itinerary">&lt;</button>
+        <section id="itinerary-list-container"></section>
+        <section id="itinerary-gallery-container"></section>
+        <button id="next-itinerary">&gt;</button>
+    </div>
 </main>
+
 
 </body>
 </html>

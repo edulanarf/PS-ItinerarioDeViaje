@@ -55,6 +55,7 @@ export class Place {
     };
     return place.lat && place.lng ? { ...obj, lat: place.lat, lng: place.lng } : obj;
   }
+
 }
 
 export class Itinerary {

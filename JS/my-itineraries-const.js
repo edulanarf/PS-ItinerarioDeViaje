@@ -11,6 +11,11 @@ export const dayButton = document.getElementById("day-button");
 export function currentItineraryPlan(){
   return itineraries[currentItinerary];
 }
+
+export function getPlanFromMyItineraries(itinerary_name){
+  return itineraries[itinerary_name];
+}
+
 export const list = document.getElementById("itinerary-list-container")
 
 export function setCurrent(curr){

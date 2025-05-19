@@ -43,7 +43,7 @@ main {
 /* Inputs */
 #login-email,
 #login-password {
-    border: none;
+    border: 1px solid #ccc; /* Agrega esta línea */
     border-radius: 4px;
     margin: 15px;
     padding-left: 20px;
@@ -54,7 +54,11 @@ main {
     height: 48px;
     box-sizing: border-box;
 }
-
+#login-email:focus,
+#login-password:focus {
+    outline: none;
+    border: 1px solid #09f; /* o el color que desees al enfocar */
+}
 input::placeholder {
     font-family: 'Montserrat', sans-serif;
     font-size: 12px;
@@ -65,7 +69,7 @@ input::placeholder {
 /* Botón login */
 #login-button {
     margin: 15px;
-    background-color: var(--marron-medio);
+    background-color: var(--google-blue);
     cursor: pointer;
     border: none;
     padding: 10px 30px;
@@ -78,7 +82,7 @@ input::placeholder {
 }
 
 #login-button:hover {
-    background-color: var(--marron-oscuro);
+    background-color: #1a66cc;
 }
 
 /* Google login */

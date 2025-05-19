@@ -1,9 +1,9 @@
 // noinspection JSUnresolvedReference
 
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { setSaved } from './saved-verification.js';
 import { auth, fetchFileFromUrl, getAnItineraryPlan } from "./firebase-config.js";
 import { Itinerary, ItineraryPlan, NoID, Place } from "./types.js";
-
 
 
 let map, service, infowindow, circle;
@@ -296,11 +296,9 @@ function initMap() {
 
   const input = document.getElementById("search-input");
   const searchBox = new google.maps.places.SearchBox(input);
-  console.log("void", searchBox.getPlaces());
 
-  searchBox.addListener("places_changed", async () => {
+  searchBox.addListener("places_changed", () => {
     const places = searchBox.getPlaces();
-    console.log(" search places",places);
     if (!places.length) return;
 
     markers.forEach((m) => m.setMap(null));
@@ -312,23 +310,21 @@ function initMap() {
     infowindow.setContent(place.name);
     infowindow.open(map, marker);
     createCircle(place.geometry.location);
-    await fetchNearbyPlaces(place.geometry.location);
+    fetchNearbyPlaces(place.geometry.location);
   });
 
   const reloadBtn = document.getElementById("reload-button");
-  reloadBtn.addEventListener('click', async function(event) {
+  reloadBtn.addEventListener('click', function(event) {
     event.preventDefault();
-    console.log(searchBox);
     const places = searchBox.getPlaces();
-    console.log(" reload places",places);
     if (!places.length) return;
-    await fetchNearbyPlaces(places[0].geometry.location);
+    fetchNearbyPlaces(places[0].geometry.location);
   });
-  document.getElementById("select-container").addEventListener('change', async function(event) {
+  document.getElementById("select-container").addEventListener('change', function(event) {
     event.preventDefault();
     const places = searchBox.getPlaces();
     if (!places.length) return;
-    await fetchNearbyPlaces(places[0].geometry.location);
+    fetchNearbyPlaces(places[0].geometry.location);
   })
 
   //Añado area base en el mapa
@@ -377,7 +373,7 @@ function createCircle(center) {
   });
 }
 
-async function fetchNearbyPlaces(location) {
+function fetchNearbyPlaces(location) {
   const req = { location, radius: radius, keyword: selectedCategory };
   service.nearbySearch(req, (results, status) => {
     if (status !== google.maps.places.PlacesServiceStatus.OK) return;
@@ -453,7 +449,6 @@ function calculatePrice(category, place) {
 
 async function addToItinerary(place) {
 
-  console.log("reading",dayCurrent, allPlaces);
   //Mensaje error repetido
   const repeatError = document.getElementById("repeat-error");
   if (allPlaces[dayCurrent-1].find(p => p.name === place.name)) {

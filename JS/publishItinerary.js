@@ -8,19 +8,24 @@ import {
   setDoc, updateDoc
 } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
-export async function publishItinerary(itinerary, itineraryTitle, itineraryPhoto) {
+export async function publishItinerary(itinerary, itineraryId, itineraryPhoto, title) {
   const user = getAuth().currentUser;
   const userRef = user.uid;
-  if (await isPublic(userRef, itineraryTitle)) {
+  if (await isPublic(userRef, itineraryId)) {
     console.log('El itinerario ya está publicado')
     return;
   }
   const publicItineraryRef = await addDoc(collection(db, 'publicItineraries'), {
     userRef:userRef,
     photo: itineraryPhoto,
-    title: itineraryTitle,
+    title: title,
   });
   await saveItineraryInfo(itinerary, publicItineraryRef);
+
+  await updateDoc(doc(db, 'users', userRef, "itineraries", itineraryId), {
+    publishedRef: publicItineraryRef,
+    published: true
+  });
 }
 
 async function saveItineraryInfo(itinerary, publicItineraryRefId) {
@@ -44,12 +49,13 @@ async function saveItineraryInfo(itinerary, publicItineraryRefId) {
         lng: place.lng
       }))
     });
+
   }
 }
 
-async function isPublic(userRef, itineraryTitle) {
-  console.log(userRef, itineraryTitle);
-  const itineraryRef = doc(db, 'users', userRef, 'itineraries', itineraryTitle);
+async function isPublic(userRef, itineraryId) {
+  console.log(userRef, itineraryId);
+  const itineraryRef = doc(db, 'users', userRef, 'itineraries', itineraryId);
   const itinerary = await getDoc(itineraryRef);
 
   if (!itinerary.data().hasOwnProperty('published')) {

@@ -25,7 +25,7 @@
     padding: 6px 12px;
     border-radius: 8px;
     font-size: 14px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
     transition: opacity 0.3s ease;
     pointer-events: none;
     opacity: 0;
@@ -35,4 +35,12 @@
 /* Mostrar tooltip al hacer hover */
 .itinerary-gallery-card:hover .tooltip {
     opacity: 1;
+}
+
+#itinerary-gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+    width: 80vw;
 }

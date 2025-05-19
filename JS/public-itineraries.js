@@ -1,6 +1,8 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from './firebase-config.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import{addFavoriteItinerary} from './addFavorite.js'
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { deleteFavoriteId } from './deleteFavorite.js';
 
 async function loadItineraries() {
   const itinerariesContainer = document.getElementById("itineraries-container");
@@ -55,10 +57,16 @@ async function loadItineraries() {
           }
 
           const favoriteBtn = document.querySelector(".popup-favorite");
-          favoriteBtn.onclick = () => {
-            addFavoriteItinerary(itineraryDoc.id);
 
-          };
+          onAuthStateChanged(auth, async user => {
+            if (user) {
+              await updateFavoriteButtonState(user, itineraryDoc.id, favoriteBtn);
+            } else {
+              favoriteBtn.textContent = "Inicia sesión para guardar";
+              favoriteBtn.disabled = true;
+              favoriteBtn.onclick = null;
+            }
+          });
 
           // Imagen
           const img = document.createElement("img");
@@ -123,3 +131,32 @@ async function loadItineraries() {
 }
 
 document.addEventListener("DOMContentLoaded", loadItineraries);
+
+
+async function updateFavoriteButtonState(user, itineraryId, favoriteBtn) {
+  const favoritesRef = collection(db, "users", user.uid, "favorites");
+  const favoritesSnapshot = await getDocs(favoritesRef);
+  let isFavorite = false;
+  let userDocFavoriteRef = null;
+
+  favoritesSnapshot.forEach(doc => {
+    if (doc.data().itineraryRef === itineraryId) {
+      isFavorite = true;
+      userDocFavoriteRef = doc.id;
+    }
+  });
+
+  if (isFavorite) {
+    favoriteBtn.textContent = "Eliminar de favoritos";
+    favoriteBtn.onclick = async () => {
+      await deleteFavoriteId(userDocFavoriteRef);
+      await updateFavoriteButtonState(user, itineraryId, favoriteBtn); // 🔁 recarga el botón
+    };
+  } else {
+    favoriteBtn.textContent = "Añadir a favoritos";
+    favoriteBtn.onclick = async () => {
+      await addFavoriteItinerary(itineraryId);
+      await updateFavoriteButtonState(user, itineraryId, favoriteBtn); // 🔁 recarga el botón
+    };
+  }
+}

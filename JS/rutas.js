@@ -55,7 +55,8 @@
       const mapContainer = document.createElement("div");
       mapContainer.id = `map-day-${dayIndex}`;
       mapContainer.classList.add('map-container');
-      mapContainer.style.height = "400px";
+      mapContainer.style.height = "300px";
+      mapContainer.style.minHeight = "300px";
       mapContainer.style.marginBottom = "10px";
 
       const dayLabel = document.createElement("div");
@@ -72,7 +73,7 @@
       const popupContent = popup.querySelector('.popup-content');
 
       popupContent.appendChild(dayContainer);
-      popup.appendChild(closeButton);
+
 
       const map = new google.maps.Map(mapContainer, {
         zoom: 14
@@ -116,9 +117,9 @@
 
             const infoContainer = document.createElement("div");
             infoContainer.innerHTML = `
-            <strong>Ruta ${letraInicio} ➝ ${letraFin}</strong><br>
-            Tiempo estimado: ${tiempo}<br>
-            Distancia: ${distancia}
+        <strong>Ruta ${letraInicio} ➝ ${letraFin}</strong>
+        <div class="tiempo">Tiempo estimado: ${tiempo}</div>
+        <div class="distancia">Distancia: ${distancia}</div>
             `;
             infoContainer.style.color = "black";
             dayContainer.appendChild(infoContainer);
@@ -139,13 +140,13 @@
 
       const travelModeSection = document.createElement('section');
       travelModeSection.innerHTML = `
-    <label for="travelMode">Selecciona el modo de transporte:</label>
     <select id="travelMode">
         <option value="DRIVING">Coche/Moto</option>
         <option value="WALKING">Caminando</option>
         <option value="BICYCLING">Bicicleta</option>
     </select>
   `;
+      travelModeSection.classList.add('travel-mode-selector');
       popupContent.appendChild(travelModeSection);
       // Mostrar el popup
       popup.classList.add('show');

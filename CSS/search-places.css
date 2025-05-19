@@ -40,7 +40,7 @@ input:invalid {
     width: 65%;
     display: flex;
     flex-direction: column;
-    background-color: var(--naranja-suave);
+    background-color: var(--oro-suave);
     border-radius: 16px;
     padding: 1rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -62,7 +62,6 @@ input:invalid {
     flex-wrap: wrap;
 }
 
-/* Inputs */
 #search-input {
     padding: 12px 20px;
     font-size: 15px;
@@ -72,12 +71,13 @@ input:invalid {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     transition: all 0.3s ease;
+    background-color: white;
 }
 
 #search-input:focus {
     outline: none;
-    border-color: var(--borgona-profundo);
-    box-shadow: 0 0 10px var(--rojo-oxido);
+    border-color: #0077cc; /* tono más oscuro de #09f */
+    box-shadow: 0 0 10px #33aaff; /* sombra azul clara */
 }
 
 #select-container {
@@ -88,7 +88,7 @@ input:invalid {
     border-radius: 0;
     border: none;
     background-color: #fff;
-    border-left: 1px solid var(--crema-ligera);
+    border-left: 1px solid #cceeff; /* azul claro pastel */
 }
 
 /* Botón recargar */
@@ -100,7 +100,7 @@ input:invalid {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--rojo-oscuro);
+    background-color: #09f; /* azul principal */
     cursor: pointer;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -201,7 +201,7 @@ input:invalid {
 #right-section {
     width: 30%;
     background-color: #fff;
-    border: 2px solid var(--crema-ligera);
+    border: 8px solid var(--crema-ligera);
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -215,7 +215,6 @@ input:invalid {
 h3 {
     margin: 0;
     font-size: 1.2rem;
-    color: var(--rojo-oscuro);
     text-align: center;
 }
 
@@ -223,6 +222,22 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.delete-button{
+    background-color: transparent; /* Fondo transparente */
+    padding: 8px 12px; /* Espaciado interno */
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+    outline: none;
+}
+
+.delete-button img{
+    width: 20px;
 }
 
 #itinerary-title {
@@ -238,12 +253,12 @@ h3 {
 
 #itinerary-title:focus {
     outline: none;
-    border-color: var(--borgona-profundo);
-    box-shadow: 0 0 10px var(--rojo-oxido);
+    border-color: #339cff; /* azul intermedio */
+    box-shadow: 0 0 8px #339cff;
 }
 
 #itinerary-description {
-    width: 100%;
+    width: 50%;
     padding: 10px 15px;
     font-size: 14px;
     border-radius: 10px;
@@ -259,14 +274,14 @@ h3 {
 
 #itinerary-description:focus {
     outline: none;
-    border-color: var(--rojo-oxido);
-    box-shadow: 0 0 8px var(--rojo-oxido);
+    border-color: #339cff; /* azul intermedio */
+    box-shadow: 0 0 8px #339cff;
 }
 
 #save-itinerary {
     font-size: 14px;
     padding: 0.75rem 1.5rem;
-    background-color: var(--rojo-oscuro);
+    background-color: #09f;
     color: white;
     border: none;
     border-radius: 12px;
@@ -278,7 +293,7 @@ h3 {
 }
 
 #save-itinerary:hover {
-    background-color: var(--borgona-profundo);
+    background-color: #0077cc;
 }
 
 /* Botones por día */
@@ -323,7 +338,7 @@ h3 {
 #save-day-button {
     font-size: 14px;
     padding: 0.75rem 1.5rem;
-    background-color: var(--rojo-oscuro);
+    background-color: #09f; /* azul principal */
     color: white;
     border: none;
     border-radius: 12px;
@@ -332,7 +347,7 @@ h3 {
 }
 
 #save-day-button:hover {
-    background-color: var(--borgona-profundo);
+    background-color: #0077cc; /* azul más oscuro para el hover */
 }
 
 /* Lista del itinerario */

@@ -4,7 +4,14 @@ import { ItineraryPlan, Itinerary, Place } from "./types.js";
 import { galleryView } from './my-itineraries-gallery.js';
 import { verRutaBtn } from './rutas.js';
 import { getDownloadURL, ref, uploadBytes } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js';
-import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc
+} from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { publishItinerary } from './publishItinerary.js';
 import {
   currentItinerary,
@@ -13,8 +20,8 @@ import {
   setCurrent,
   template,
   dayButton,
-  SHARED, currentItineraryPlan
-} from "./my-itineraries-const.js";
+  SHARED, currentItineraryPlan, getPlanFromMyItineraries
+} from './my-itineraries-const.js';
 
 
 let session = null;
@@ -135,13 +142,15 @@ async function init(user) {
 }
 
 async function showItinerary(before, after){
+  const scrollY = window.scrollY;
   let from = document.querySelector(`[data-name="${before}"][data-type=list]`);
+  from.classList.remove("visible");
   from.style.display = "none";
   from.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
   from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up", "down");
   console.log(from);
   let to = document.querySelector(`[data-name="${after}"][data-type=list]`);
-  console.log(to, itineraries[after].itineraries.at(0));
+  to.classList.add("visible");
   currentDay = itineraries[after].itineraries.at(0).name;
   currentRoutes = itineraries[after].itineraries;
 
@@ -160,18 +169,49 @@ async function showItinerary(before, after){
   shareButton.innerText = "publicar";
   shareButton.classList.add("publicar");
   shareButton.style.cursor = "pointer";
-  shareButton.addEventListener("click", async () => {
-    const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
-    currentItineraryTitle = currentContainer.dataset.name;
-    const itinerary = itineraries[currentItineraryTitle];
-    const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${itinerary.title}`);
-    const itineraryPhotoRef = await getDoc(itineraryDocRef);
-    currentItineraryPhoto = itineraryPhotoRef.data().photo;
-    await publishItinerary(currentRoutes, currentItineraryTitle, currentItineraryPhoto);
-  });
+
+
+
+  const currentContainer = document.querySelector(".my-itineraries.visible");
+  currentItineraryTitle = currentContainer.dataset.name;
+  const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`);
+  const itinerarySnapshot = await getDoc(itineraryDocRef);
+  const itineraryData = itinerarySnapshot.data()
+
+  if(itineraryData.published){
+    shareButton.innerText = "Publicado";
+    shareButton.addEventListener("click", async () => {
+      const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
+      currentItineraryTitle = currentContainer.dataset.name;
+      const itinerary = itineraries[currentItineraryTitle];
+      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`);
+      const itineraryPhotoRef = await getDoc(itineraryDocRef);
+      const currentItineraryPublishedRef = itineraryPhotoRef.data().publishedRef;
+      deleteDoc(currentItineraryPublishedRef);
+
+      const daysCollectionRef = collection(db, `publicItineraries/${getPlanFromMyItineraries(after).id}/days`);
+      const daysSnapshot = await getDocs(daysCollectionRef);
+      const daysDeletePromises = daysSnapshot.docs.map(async doc => await deleteDoc(doc.ref));
+      await Promise.all(daysDeletePromises);
+
+      await updateDoc(itineraryDocRef, {
+        published:false
+      })
+      window.location.reload();
+    });
+  } else {
+    shareButton.innerText = "publicar";
+    shareButton.addEventListener("click", async () => {
+      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`);
+      await publishItinerary(currentRoutes, getPlanFromMyItineraries(after).id, getPlanFromMyItineraries(after).photo, getPlanFromMyItineraries(after).title);
+      window.location.reload();
+    });
+  }
+
   buttonGroup.appendChild(shareButton);
 
   to.style.display = "grid";
+  window.scrollTo(0, scrollY); //Para cada vez q se renderiza el contenido
 }
 
 async function nextItinerary(current) {
@@ -250,6 +290,38 @@ async function renderItinerary(plan) {
       intro.src = photoURL;
     }
   });
+
+
+  const deleteButton = container.querySelector('.delete-itinerary');
+  if (deleteButton) {
+    deleteButton.addEventListener('click', async () => {
+      const confirmDelete = confirm(`¿Estás seguro de eliminar el itinerario "${plan.title}"?`);
+      if (confirmDelete) {
+        try {
+          // Eliminar de Firestore
+          const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${plan.id}`);
+          await deleteDoc(itineraryDocRef);
+
+          const itineraryDaysDocRef = collection(db, `users/${session.uid}/itineraries/${plan.id}/days`);
+          const daysSnapshot = await getDocs(itineraryDaysDocRef);
+          for (const dayDoc of daysSnapshot.docs) {
+            await deleteDoc(dayDoc.ref);
+          }
+
+          // Eliminar del DOM
+          container.remove();
+
+          // Eliminar de la variable en memoria
+          delete itineraries[plan.title];
+
+          console.log(`Itinerario "${plan.title}" eliminado correctamente.`);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error al eliminar el itinerario:", error);
+        }
+      }
+    });
+  }
 
   intro.addEventListener("click", () => inputFile.click());
 

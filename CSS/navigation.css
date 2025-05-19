@@ -7,6 +7,7 @@
     background-color: white;
     padding: 2rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
 
@@ -59,6 +60,7 @@
     font-weight: bold;
     text-decoration: none;
     width: fit-content;
+    font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
 }
 
 .nav-button:hover {
@@ -89,6 +91,7 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
+    margin-right: 10px;
 }
 
 
@@ -111,6 +114,7 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #dropdown-menu a {
@@ -139,8 +143,8 @@
     padding: 0.6rem 1.2rem;
     border-radius: 10px;
     font-weight: bold;
-    font-size: 1rem;
-    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
     text-decoration: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;

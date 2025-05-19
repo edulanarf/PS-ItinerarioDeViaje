@@ -20,9 +20,5 @@ export async function addFavoriteItinerary(itinerary) {
     await addDoc(newItineraryRef, {
       itineraryRef: itinerary
     });
-
-    console.log("Añadido a favoritos:", itinerary);
-  } else {
-    console.log("Este itinerario ya está en favoritos.");
   }
 }
