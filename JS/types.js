@@ -58,19 +58,36 @@ export class Place {
 }
 
 export class Itinerary {
+  get name() {
+    return this._name;
+  }
+
+  set name(value) {
+    this._name = value;
+  }
+
+  get places() {
+    return this._places;
+  }
+
+  set places(value) {
+    this._places = value;
+  }
 
   /**
    * @param {string} name
    * @param {Place[]}places
    */
   constructor(name, places = []) {
-    this.name = name;
+    this._name = name;
     /**
      * @type {Place[]}
      */
-    this.places = places;
-
+    this._places = places;
   }
+
+
+
 
   toString() {
     return this.name + ":\n" + this.places.map(p => "\t-" + p.toString()).join('\n')
@@ -95,6 +112,34 @@ export class Itinerary {
   };
 }
 
+export class ItineraryPlanReference {
+  constructor(author, id) {
+    this._author = author
+    this._plan = id
+  }
+
+  get author() {
+    return this._author;
+  }
+
+  get plan() {
+    return this._plan;
+  }
+
+  static Converter = {
+    toFirestore: function(ipRef) {
+      return {
+        author: ipRef.author,
+        plan: ipRef.plan
+      }
+    },
+    fromFirestore: function(snapshot, options) {
+      let data   = snapshot.data(options);
+      return new ItineraryPlanReference(data.author, data.plan);
+    }
+}
+}
+
 export class ItineraryPlan {
   /**
    *
@@ -111,7 +156,7 @@ export class ItineraryPlan {
     this._description = description;
     this._photo = photo;
     this.id = id;
-    this.sharedWith = sharedWith
+    this._sharedWith = sharedWith
   }
 
 
@@ -137,6 +182,14 @@ export class ItineraryPlan {
 
   set photo(value) {
     this._photo = value;
+  }
+
+  get sharedWith(){
+    return this._sharedWith
+  }
+
+  set sharedWith(value){
+    this._sharedWith = value
   }
 
   static toFirestore(plan) {

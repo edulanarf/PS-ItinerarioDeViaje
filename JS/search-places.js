@@ -1,11 +1,9 @@
 // noinspection JSUnresolvedReference
 
 import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { auth } from './firebase-config.js';
-import { Itinerary, ItineraryPlan, Place } from './types.js';
+import { auth, fetchFileFromUrl, getAnItineraryPlan } from "./firebase-config.js";
+import { Itinerary, ItineraryPlan, NoID, Place } from "./types.js";
 
-//module
-import {currentItineraryPlan} from './my-itineraries-const.js';
 
 
 let map, service, infowindow, circle;
@@ -16,9 +14,20 @@ let priceString;
 let counterDay = 1;
 let radius = 2000;
 
-export let PLAN_ID = ""
+/**
+ * @type {ItineraryPlan}
+ */
+let editingItinerary = null;
+
+export let PLAN_ID = NoID
 export let TITLE = ""
 export let DESCRIPTION = ""
+export let SHARED_WITH = []
+
+/**
+ * @type {File}
+ */
+export let PHOTO = null
 
 /**
  * @type {Place[][]}
@@ -40,35 +49,37 @@ let dayCurrent = 1
 let counter = 0;
 
 
+async function prepareToEditExistingItinerary(user) {
+  // Crear un objeto URL a partir de la URL actual
+  const url = new URL(window.location.href);
+  // Obtener la query parameters usando URLSearchParams
+  const params = new URLSearchParams(url.search);
+  // Acceder a un parámetro específico
+  const paramValue = params.get("edit");
+  /* si se esta editando:
+  la url seria algo como ..../HTML/search-places.html?edit=true
+  si no se esta editando:
+  la url seria algo como ..../HTML/search-places.html
+   */
+
+  if (paramValue) {
+    console.log("editing");
+    editingItinerary = await getAnItineraryPlan(user.uid, decodeURIComponent(paramValue));
+    console.log(editingItinerary);
+    await renderExisting();
+  } else {
+    console.log("creating");
+  }
+}
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "../HTML/user-login.html"
+  } else {
+    prepareToEditExistingItinerary(user).then(()=> console.log("ready"));
   }
 })
 
-// Crear un objeto URL a partir de la URL actual
-const url = new URL(window.location.href);
-// Obtener la query parameters usando URLSearchParams
-const params = new URLSearchParams(url.search);
-// Acceder a un parámetro específico
-const paramValue = params.get('edit');
-/* si se esta editando:
-la url seria algo como ..../HTML/search-places.html?edit=true
-si no se esta editando:
-la url seria algo como ..../HTML/search-places.html
- */
-/**
- * @type {ItineraryPlan}
- */
-let editingItinerary = null
-if (paramValue) {
-  console.log("editing");
-  editingItinerary = currentItineraryPlan()
-  PLAN_ID = editingItinerary.id
-  await renderExisting()
-} else {
-  console.log("creating");
-}
 
 
 
@@ -131,7 +142,7 @@ async function newDay(){
   console.log("new day",allPlaces);
 }
 async function deleteDay(day){
-  allPlaces.splice(day,1);
+  allPlaces.splice(day-1,1);
   console.log("day deleted",allPlaces);
 }
 
@@ -185,8 +196,8 @@ async function switchDay(from, to) {
  * @param {number} day
  * @param {Itinerary} itinerary
  */
-async function renderPlacesForDay(day, itinerary) {
-  let list = document.querySelector(`[data-day="${day}"]`).querySelector("ul");
+async function renderExistingPlacesForDay(day, itinerary) {
+  let list = document.querySelector(`[data-day="${day}"]`).querySelector('ul');
   await Promise.all(
     itinerary.places.map(async (place) => {
     list.appendChild(await createPlaceItem(place, day));
@@ -250,19 +261,26 @@ async function renderNewDay(index){
  */
 async function renderNewDayForExisting(index, itinerary) {
   await renderNewDay(index)
-  await renderPlacesForDay(index, itinerary)
+  await renderExistingPlacesForDay(index, itinerary)
   await switchDay(index-1, index)
 }
 
 async function renderExisting(){
   document.getElementById("itinerary-title").value = editingItinerary.title;
   document.getElementById("itinerary-description").value = editingItinerary.description;
-  await renderPlacesForDay(1, editingItinerary.itineraries.at(0))
+  PLAN_ID = editingItinerary.id
+  TITLE = editingItinerary.title
+  DESCRIPTION = editingItinerary.description
+  SHARED_WITH = editingItinerary.sharedWith
+  renderItineraryPreview(editingItinerary.photo)
+  console.log("rendered image");
+  PHOTO = await fetchFileFromUrl(editingItinerary.photo, "preview")
+  console.log("fetched");
+  await renderExistingPlacesForDay(1, editingItinerary.itineraries.at(0))
   editingItinerary.itineraries.map(async (itinerary, index) => {
     if (index === 0) return;
     await renderNewDayForExisting(index + 1, itinerary);
   })
-  dayCurrent = editingItinerary.itineraries.length;
 }
 
 
@@ -460,7 +478,7 @@ async function addToItinerary(place) {
 
   //Mensaje error Elegir un hotel
   const notHotelError = document.getElementById("not-hotel-error");
-  if (counterDay === 1 && allPlaces[dayCurrent-1].length === 0 && selectedCategory !== "Hotel") {
+  if (counterDay === 1 && allPlaces[0].length === 0 && selectedCategory !== "Hotel") {
     notHotelError.textContent = "No se ha añadido un hotel";
     notHotelError.style.display = "block";
     notHotelError.style.borderColor = "red";
@@ -536,12 +554,72 @@ document.getElementById("itinerary-title").addEventListener("input", function (e
     TITLE = e.target.value
 });
 
-document.getElementById("itinerary-description").addEventListener("input", function(e)  {
-    DESCRIPTION = e.target.value
-});
+document
+  .getElementById("itinerary-description")
+  .addEventListener("input", function (e) {
+    DESCRIPTION = e.target.value;
+  });
 
-daySelector.addEventListener('change', async function(event) {
+daySelector.addEventListener("change", async function (event) {
   event.preventDefault();
   console.log("switching from selector", dayCurrent, daySelector.value);
-  await switchDay(dayCurrent,Number(daySelector.value))
-})
+  await switchDay(dayCurrent, Number(daySelector.value));
+});
+
+
+//ITINERARY PHOTO
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+
+function handleFile(event) {
+  const file = event.target.files[0];
+  if (file) {
+    showPreview(file);
+  }
+}
+
+function renderItineraryPreview(url) {
+  preview.src = url;
+  preview.style.display = "block";
+}
+
+function showPreview(file) {
+  dropzone.style.borderColor = '#ccc';
+  if (!file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    renderItineraryPreview(e.target.result);
+  };
+  reader.readAsDataURL(file);
+  PHOTO = file;
+}
+
+// Click para abrir selector
+dropzone.addEventListener('click', () => fileInput.click());
+
+// Al seleccionar archivo con el input
+fileInput.addEventListener('change', handleFile);
+
+// Soporte para arrastrar y soltar
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = '#555';
+});
+
+dropzone.addEventListener('dragleave', () => {
+  dropzone.style.borderColor = '#ccc';
+});
+
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  /**
+   *
+   * @type {File}
+   */
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    showPreview(file);
+  }
+});
+

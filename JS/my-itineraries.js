@@ -13,7 +13,7 @@ import {
   setCurrent,
   template,
   dayButton,
-  SHARED
+  SHARED, currentItineraryPlan
 } from "./my-itineraries-const.js";
 
 
@@ -30,6 +30,7 @@ let currentItineraryPhoto;
 onAuthStateChanged(auth, (user) => {
   if (user) {
     session = user;
+    console.log(user.uid);
     const params = new URLSearchParams(window.location.search);
     const value = params.get("type");
     if (value === SHARED){
@@ -122,10 +123,12 @@ export async function listView() {
 }
 
 async function init(user) {
+  console.log("init");
   await getPlans(user.uid).then(data => {
     data.forEach((it) => {
       itineraries[it.title] = it;
     });
+    console.log(itineraries["guardando fotos"]);
   }).catch(err => console.error(err)).then(() => {
     setCurrent(Object.keys(itineraries).at(0))
   });
@@ -136,8 +139,9 @@ async function showItinerary(before, after){
   from.style.display = "none";
   from.querySelector(`ul[data-day="${currentDay}"]`).style.display = "none";
   from.querySelector(`button[data-day="${currentDay}"]`).classList.replace("up", "down");
-
+  console.log(from);
   let to = document.querySelector(`[data-name="${after}"][data-type=list]`);
+  console.log(to, itineraries[after].itineraries.at(0));
   currentDay = itineraries[after].itineraries.at(0).name;
   currentRoutes = itineraries[after].itineraries;
 
@@ -273,9 +277,9 @@ async function appendItinerary(container) {
 
 document.getElementById('open-itinerary').addEventListener('click', () => {
   if (currentItinerary) {
-    const encodedId = encodeURIComponent(currentItinerary);
-    window.location.href = `edit-itinerary.html?id=${encodedId}`;
+    window.location.href = `search-places.html?edit=${encodeURIComponent(currentItineraryPlan().id)}`
   } else {
     alert("No hay itinerario seleccionado.");
   }
 });
+

@@ -5,6 +5,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import {
   collection,
+  CollectionReference,
   deleteDoc,
   doc,
   getDoc,
@@ -12,10 +13,21 @@ import {
   getFirestore,
   query,
   where,
-  CollectionReference
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
-import { Itinerary, ItineraryPlan, User } from "./types.js";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  listAll,
+  ref,
+  uploadBytes,
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
+import {
+  Itinerary,
+  ItineraryPlan,
+  ItineraryPlanReference,
+  User,
+} from "./types.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCpB77wDXu-mNsKKIFg6BddH6DTminG9g",
@@ -76,12 +88,9 @@ export async function getUsers(names) {
     chunks.map((chunk) => {
       const q = query(usersRef, where("username", "in", chunk));
       return getDocs(q).then((querySnapshot) => {
-        console.log(querySnapshot);
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          console.log("read data", data);
           const username = data.name;
-          console.log("read", username);
           // Verificación estricta
           if (chunk.includes(username)) {
             foundUsers[username] = doc.id;
@@ -106,10 +115,8 @@ export async function getUserData(userId) {
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const userData = docSnap.data();
-    console.log("User data:", userData);
     // Now you can work with the userData object
-    return userData;
+    return await docSnap.data();
   } else {
     console.log("No such document!");
     return null;
@@ -154,7 +161,7 @@ function getItinerariesRef(userId) {
  */
 function getSharedItinerariesRef(userId) {
   return collection(db, `users/${userId}/shared`).withConverter(
-    ItineraryPlan.Converter,
+    ItineraryPlanReference.Converter,
   );
 }
 
@@ -179,7 +186,8 @@ async function fetchDaysForPlan(itinerariesRef, plan) {
     Itinerary.Converter,
   );
   const docs = [];
-  (await getDocs(daysRef)).forEach((doc) => docs.push(doc));
+  let snap = await getDocs(daysRef)
+  snap.forEach((doc) => docs.push(doc));
   const days = [];
   await Promise.all(docs.map(async (doc) => days.push(await doc.data())));
   return days;
@@ -199,12 +207,34 @@ export async function getPlans(userId) {
 }
 
 /**
+ *
+ * @param sharedItinerariesRef - ref of ItineraryPlanReference collection
+ * @returns {Promise<ItineraryPlan[]>}
+ */
+async function getSharedItinerariesPlans(sharedItinerariesRef) {
+  /**
+   * @type {ItineraryPlanReference[]}
+   */
+  const references = [];
+  const plans = [];
+  const querySnapshot = await getDocs(sharedItinerariesRef);
+
+  querySnapshot.forEach((doc) => references.push(doc.data()));
+  await Promise.all(
+    references.map(async (ref) => {
+      plans.push(await getAnItineraryPlan(ref.author, ref.plan));
+    }),
+  );
+  return plans;
+}
+
+/**
  * @param {string} userId
  * @returns {Promise<ItineraryPlan[]>}
  */
 export async function getShared(userId) {
   try {
-    return await getItinerariesPlans(getSharedItinerariesRef(userId));
+    return await getSharedItinerariesPlans(getSharedItinerariesRef(userId));
   } catch (error) {
     console.error("Error getting itineraries: ", error);
     return [];
@@ -218,11 +248,11 @@ export async function getShared(userId) {
 export async function getItinerariesPlans(itinerariesRef) {
   try {
     const itineraryPlans = await fetchItineraryPlans(itinerariesRef);
-    console.log(itineraryPlans);
     return await Promise.all(
       itineraryPlans.map(async (plan) => {
-        await fetchDaysForPlan(itinerariesRef, plan).then((arr) =>{
+        await fetchDaysForPlan(itinerariesRef, plan).then((arr) => {
           plan.itineraries.push(...arr);
+          if (plan.id === "HtitI6sc2ThjYMTPv0EO") console.log(arr);
         });
         return plan;
       }),
@@ -231,4 +261,146 @@ export async function getItinerariesPlans(itinerariesRef) {
     console.error("Error getting itineraries plans: ", error);
     return [];
   }
+}
+
+export async function getAnItineraryPlan(userId, itineraryPlanId) {
+  let col = collection(db, userPlansFirestorePath(userId)).withConverter(
+    ItineraryPlan.Converter,
+  );
+  let ref = doc(db, planFirestorePath(userId, itineraryPlanId)).withConverter(
+    ItineraryPlan.Converter,
+  );
+  /**
+   * @type {ItineraryPlan}
+   */
+  let plan = (await getDoc(ref)).data();
+  await fetchDaysForPlan(col, plan).then((arr) => {
+    plan.itineraries.push(...arr);
+  });
+  return plan;
+}
+
+/*
+STORAGE
+ */
+
+export async function deleteImage(path) {
+  try {
+    await deleteObject(ref(storage, path));
+  } catch (error) {
+    if (error.code === "storage/object-not-found") {
+      console.log("ℹ️ No había imagen anterior que eliminar.");
+    } else {
+      console.warn(
+        "⚠️ Error al intentar eliminar la imagen anterior:",
+        error.message,
+      );
+    }
+  }
+}
+
+export async function deleteStorageFolderContents(folderPath) {
+  const folderRef = ref(storage, folderPath);
+
+  try {
+    const result = await listAll(folderRef);
+
+    // Borra archivos directamente en la carpeta
+    await Promise.all(result.items.map((itemRef) => deleteObject(itemRef)));
+
+    console.log(`🧹 Se borraron todos los archivos de ${folderPath}`);
+  } catch (err) {
+    console.error("❌ Error al borrar carpeta:", err);
+  }
+}
+
+/**
+ *
+ * @param {string }path
+ * @param {File} photo
+ * @returns {Promise<string>}
+ */
+export async function storeImage(path, photo) {
+  const storageRef = ref(storage, path);
+
+  await deleteImage(path);
+
+  await uploadBytes(storageRef, photo);
+  return await getDownloadURL(storageRef);
+}
+
+function getExtensionFromMime(type) {
+  const map = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+  };
+  return map[type] || "bin";
+}
+
+export function proxyUrl(url) {
+  return `http://localhost:3000/proxy-image?url=${encodeURIComponent(url)}`;
+}
+
+export async function fetchFileFromUrl(url, filename = "photo") {
+  const response = await fetch(proxyUrl(url));
+  if (!response.ok) throw new Error("❌ No se pudo obtener el recurso");
+
+  const blob = await response.blob();
+  const extension = getExtensionFromMime(blob.type);
+  return new File([blob], `${filename}.${extension}`, { type: blob.type });
+}
+
+export async function storeImageFromUrl(path, originalUrl) {
+  const proxiedUrl = proxyUrl(originalUrl);
+  try {
+    const response = await fetch(proxiedUrl);
+    if (!response.ok)
+      throw new Error("No se pudo obtener la imagen desde el proxy");
+
+    const blob = await response.blob();
+
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, blob);
+    console.log(`✅ Imagen subida a: ${path}`);
+    return await getDownloadURL(storageRef);
+  } catch (err) {
+    console.error("❌ Error al subir imagen desde URL:", err);
+  }
+}
+
+/*
+ PATHS in DB
+ */
+
+//STORAGE
+export function profileStoragePath(userID) {
+  return `Users/${userID}/ProfilePicture/picture`;
+}
+export function userPlansStoragePath(userID) {
+  return `Users/${userID}/itineraries`;
+}
+export function planStoragePath(userID, planID) {
+  return `${userPlansStoragePath(userID)}/${planID}`;
+}
+export function planPreviewStoragePath(userID, planID) {
+  return `${planStoragePath(userID, planID)}/preview`;
+}
+export function planDaysStoragePath(userID, planID) {
+  return `${planStoragePath(userID, planID)}/days`;
+}
+export function placeStoragePath(userID, planID, day, index) {
+  return `${planDaysStoragePath(userID, planID)}/${day}-${String(index).padStart(3, "0")}`;
+}
+//FIRESTORE
+export function userPlansFirestorePath(userID) {
+  return `users/${userID}/itineraries`;
+}
+export function planFirestorePath(userID, planID) {
+  return `${userPlansFirestorePath(userID)}/${planID}`;
+}
+
+export function itinerariesOfPlansFirestorePath(userID, planID) {
+  return `${planFirestorePath(userID, planID)}/days`;
 }

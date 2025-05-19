@@ -11,11 +11,16 @@
   <link rel="stylesheet" href="/CSS/search-places.css">
   <link rel="stylesheet" href="/CSS/colors.css">
   <link rel="stylesheet" href="../CSS/navigation.css">
+  <link rel="stylesheet" href="../CSS/modalWindow.css"/>
+
 
   <script type="module" src="/JS/my-itineraries-const.js"></script>
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
   <script type="module" src="/JS/profile.js"></script>
+  <script type="module" src="/JS/modalFloatingWindow.js"></script>
+  <script type="module" src="../JS/search-places.js"></script>
+  <script type="module" src="../JS/saveItinerary.js"></script>
 </head>
 <body>
 
@@ -73,10 +78,13 @@
 </div>
   <section id="right-section">
     <div id="separation-itinerary">
-      <button id="save-itinerary">Guardar Itinerario</button>
-      <div id="day-buttons-container">
-
+      <div class="image-dropzone" id="dropzone">
+        <label for="fileInput" class="image-overlay">Haz clic o arrastra una imagen aquí</label>
+        <img id="preview" src="" alt="itinerary photo" style="display: none;" />
+        <input type="file" id="fileInput" accept="image/*">
       </div>
+      <button id="save-itinerary">Guardar Itinerario</button>
+      <!-- <div id="day-buttons-container"></div> -->
       <label for="itinerary-title"></label>
       <input type="text" id="itinerary-title" placeholder="Título:">
       <span id="title-error" class="error-message"> <strong>Asigne un título al itinerario</strong></span>
@@ -117,10 +125,16 @@
     </section>
     <div id="warning" style="display: none;"></div>
     <button id="save-day-button">Añadir un nuevo día</button>
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2></h2>
+        <div id="loading" class="loader hidden"></div>
+      </div>
+    </div>
   </section>
 </div>
 
-<script type="module" src="../JS/search-places.js"></script>
-<script type="module" src="../JS/saveItinerary.js"></script>
+
 </body>
 </html>

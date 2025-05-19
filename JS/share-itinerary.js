@@ -1,17 +1,20 @@
-import { auth, db, deleteAllDocumentsInCollection, getUsers } from "./firebase-config.js";
+import { auth, db, getUsers } from "./firebase-config.js";
 import { currentItineraryPlan } from "./my-itineraries-const.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { Itinerary, ItineraryPlan } from "./types.js";
+import { ItineraryPlan, ItineraryPlanReference } from "./types.js";
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { closeBtn, hideModal, showModal} from "./modalFloatingWindow.js";
 
-const modal = document.getElementById('modal');
 const openBtn = document.getElementById('share-itinerary');
-const closeBtn = document.querySelector('.close-button');
 const form = document.getElementById('names-form');
 const namesContainer = document.querySelector('.name-group');
 const addNameButton = document.getElementById('add-name');
 const nameInputTemplate = document.getElementById('name-input-container');
 const errorMessage = document.createElement('p'); // Mensaje de error
 const successMessage = document.createElement('p') // mensaje de exito
+
+let AUTHOR = ""
+
 
 // Agregar el mensaje de error al contenedor
 errorMessage.style.color = 'red';
@@ -23,7 +26,7 @@ form.insertBefore(successMessage, errorMessage);
 
 // Abrir el modal
 openBtn.addEventListener('click', () => {
-  modal.classList.remove('hidden');
+  showModal()
 });
 
 // Cerrar el modal
@@ -31,10 +34,16 @@ closeBtn.addEventListener('click', () => {
   closeModal()
 });
 
+onAuthStateChanged(auth, (user) => {
+  if( user) {
+    AUTHOR = user.uid
+  }
+})
+
 function closeModal(){
   errorMessage.display = 'none';
   successMessage.display = 'none';
-  modal.classList.add('hidden');
+  hideModal()
   let names = document.querySelectorAll('.name-input-container');
   names[0].querySelector('.name-input').value = '';
   for (let i = 1; i < names.length; i++) names[i].remove();
@@ -111,6 +120,7 @@ form.addEventListener('submit', async (e) => {
 
     // Limpiar mensaje de error al iniciar la validación
     errorMessage.style.display = 'none';
+
     // proceed to share
     await Promise.all(
       Object.values(users.foundUserIds).map(userId => shareThisItineraryTo(userId, itineraryPlan))
@@ -131,20 +141,11 @@ form.addEventListener('submit', async (e) => {
 
 
 async function shareThisItineraryTo(userId, itineraryPlan) {
-  const itineraryRef = doc(db, "users", userId, "shared", itineraryPlan.id).withConverter(ItineraryPlan.Converter)
-  await setDoc(itineraryRef, itineraryPlan)
+  const planReference = new ItineraryPlanReference(AUTHOR, itineraryPlan.id)
+
+  const itineraryRef = doc(db, "users", userId, "shared", itineraryPlan.id).withConverter(ItineraryPlanReference.Converter)
+  await setDoc(itineraryRef, planReference)
     .then(async ()=> {
-      await deleteAllDocumentsInCollection(`users/${userId}/shared/${itineraryPlan.id}/days`)
       console.log("shared:", itineraryPlan.id,":", itineraryPlan.title,"to",userId);
     })
-    .then(async () => {
-      await Promise.all(
-        itineraryPlan.itineraries.map(itinerary => {
-          console.log(itinerary, Itinerary.toFirestore(itinerary));
-          const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.Converter);
-          return setDoc(dayRef, itinerary);
-        })
-      ).then(()=> console.log("shared days of", itineraryPlan.id,":", itineraryPlan.title,"to",userId))
-    })
-
 }
