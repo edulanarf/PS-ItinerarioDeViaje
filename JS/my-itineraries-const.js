@@ -1,8 +1,13 @@
+import { ItineraryPlan } from "./types.js";
 export const itineraries = {};
 export let currentItinerary = "";
 export const template = document.getElementById("itinerary-container");
 export const dayButton = document.getElementById("day-button");
 
+/**
+ *
+ * @returns {ItineraryPlan}
+ */
 export function currentItineraryPlan(){
   return itineraries[currentItinerary];
 }
