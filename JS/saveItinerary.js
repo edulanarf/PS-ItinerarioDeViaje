@@ -72,7 +72,7 @@ async function canSaveNewItinerary(userUid) {
             if (!canSave) {
               modal.querySelector("h2").textContent = "Has alcanzado el límite de itinerarios para tu plan.\n Por favor, actualiza a Premium para guardar más.";
               hideLoader()
-              setTimeout(() => hideModal(), 2000)
+              setTimeout(() => hideModal(), 3000)
               return;
             }
           }
