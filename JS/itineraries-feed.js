@@ -130,8 +130,10 @@ function drawItineraries() {
     if (itineraries.length===0) return;
     let name = [];
     if(creator) name.push(`creado por ${creator}`);
-    if (categories||cities) name.push('con visita');
-    if (categories) name.push(`a ${categories.join(', ')}`);
+    if (categories) {
+      name.push('con visita');
+      name.push(`a ${categories.join(', ')}`);
+    }
     if (cities) name.push(`en ${cities.join(', ')}`);
     name = name.join(' ');
     name = name.substring(0,1).toUpperCase() + name.substring(1);
@@ -193,12 +195,22 @@ function drawItineraries() {
       const citiesChunk = cities.slice(i, i + localitiesChunkSize).map(city => city.name.split(',').slice(0,1).join());
       let f2Itineraries = applyCitiesFilter(f1Itineraries,citiesChunk);
       if (searchLocalities.length > 0 && searchCategories.length === 0) {
-        pushGroup(f2Itineraries,creatorName,null,citiesChunk)
+        pushGroup(f2Itineraries,creatorName,null,citiesChunk);
+        if (userId == null) {
+          followed.forEach(userId => {
+            pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,null,citiesChunk);
+          });
+        }
       }
       for (let j = 0; j < categories.length; j += categoriesChunkSize) {
         const categoriesChunk = categories.slice(j, j + categoriesChunkSize);
         let f3Itineraries = applyCategoriesFilter(f2Itineraries,categoriesChunk);
         pushGroup(f3Itineraries,creatorName,categoriesChunk,citiesChunk);
+        if (userId == null && searchCategories.length > 0) {
+          followed.forEach(userId => {
+            pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,categoriesChunk,citiesChunk);
+          });
+        }
       }
     }
   });
