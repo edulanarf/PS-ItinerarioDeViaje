@@ -61,20 +61,24 @@ async function canSaveNewItinerary(userUid) {
       const save = document.getElementById("save-itinerary");
       save.addEventListener("click", async function () {
         if (!validation()) return
-        modal.querySelector("h2").textContent = "Creando itinerario...";
+        storingItinerary = createPlanFromForm();
+        let creating = storingItinerary.id === NoID
+        modal.querySelector("h2").textContent = creating ? "Creando itinerario..." : "Actualizando itinerario...";
         showLoader()
         showModal()
-        storingItinerary = createPlanFromForm();
         try {
-          const canSave = await canSaveNewItinerary(user.uid);
-          if (!canSave) {
-            alert("Has alcanzado el límite de itinerarios para tu plan. Por favor, actualiza a Premium para guardar más.");
-            return;
+          if (storingItinerary.id === NoID) {
+            const canSave = await canSaveNewItinerary(user.uid);
+            if (!canSave) {
+              alert("Has alcanzado el límite de itinerarios para tu plan. Por favor, actualiza a Premium para guardar más.");
+              hideLoader()
+              return;
+            }
           }
           await storeItineraryPlan(user.uid, storingItinerary);
           setSaved(true);
           hideLoader()
-          modal.querySelector("h2").textContent = "El itinerario ha sido creado con éxito";
+          modal.querySelector("h2").textContent = `El itinerario ha sido ${creating? "creado": "modificado"} con éxito`;
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
         }
