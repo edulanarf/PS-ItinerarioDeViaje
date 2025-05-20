@@ -137,8 +137,8 @@ onAuthStateChanged(auth, async (user) => {
   dropdownMenu.innerHTML = `
     <a href="edit-profile.html">Editar Perfil</a>
     <a href="edit-preferences.html">Editar Preferencias</a>
-    <a href="my-itineraries.html?type=${MINE}'">Mis Itinerarios</a>
-    <a href="my-itineraries.html?type=${SHARED}'">Compartidos Conmigo</a>
+    <a href="my-itineraries.html?type=${MINE}">Mis Itinerarios</a>
+    <a href="my-itineraries.html?type=${SHARED}">Compartidos Conmigo</a>
     <a href="Favorites-Itineraries.html">Itinerarios Favoritos</a>
     <a href="manage-plan.html">Gestionar Plan Premium</a>
     <button id="logout-button">Cerrar Sesión</button>
