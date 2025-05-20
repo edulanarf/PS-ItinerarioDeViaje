@@ -486,11 +486,13 @@ window.addEventListener("load", () => {
     if (!link) return;
     e.preventDefault();
     e.stopPropagation();
-    panTo(link.dataset.lat,link.dataset.lng);
     let container = link.closest('.itinerary-day-places');
     let previousDayOld = previousDay;
     previousDay = container.dataset.day;
-    if (previousDay===previousDayOld) return;
+    if (previousDay===previousDayOld) {
+      panTo(link.dataset.lat,link.dataset.lng);
+      return;
+    }
     placeWaypoints(JSON.parse(container.dataset.waypoints));
   });
 });
