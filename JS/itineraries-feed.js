@@ -39,7 +39,7 @@ async function loadItineraries() {
   return itineraries;
 }
 
-let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [], previousDay = null;
+let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [], favoritePlaces = [], previousDay = null;
 let map, service, directionsService, directionsRenderer, geocoder, marker;
 const allCategories = ['Hotel','Restaurante','Cafetería','Museo','Parque','Centro comercial','Aeropuerto'];
 
@@ -51,7 +51,8 @@ onAuthStateChanged(auth, async (user) => {
       loadUsers(),
       loadItineraries(),
       loadFavorites(),
-      loadFollowed()
+      loadFollowed(),
+      loadFavoritePlaces()
     ])
     drawItineraries();
   } else {
@@ -113,163 +114,100 @@ async function loadFollowed() {
   return followed = (await getDocs(usersRef)).docs.map(userDoc => userDoc.data().userRef);
 }
 
+async function loadFavoritePlaces() {
+  const fPlacesRef = collection(db, 'users', currentUser.uid, 'favorite-places');
+  return favoritePlaces = (await getDocs(fPlacesRef)).docs.map(fPlaceDoc => fPlaceDoc.data());
+}
+
 function drawItineraries() {
   let itinerariesGroups = [];
   let cities = searchLocalities.length === 0 ? preferences.cities : searchLocalities;
   let categories = searchCategories.length === 0 ? preferences.categories : searchCategories;
+  let creators = searchCreators.length === 0 ? [null] : searchCreators;
   let duration = preferences.duration;
-  let f1Itineraries = itineraries.filter(itinerary => itinerary.days.length >= duration.from && itinerary.days.length <= duration.to);
-  if (searchCreators.length === 0) {
-    cities.forEach(city => {
-      categories.forEach(category => {
-        let f2Itineraries = f1Itineraries.filter(itinerary => {
-          return itinerary.days.findIndex(day => {
-            return day.places.findIndex(place => {
-              return (
-                place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                &&
-                place.category === category
-              );
-            }) !== -1;
+  let f0Itineraries = itineraries.filter(itinerary => itinerary.days.length >= duration.from && itinerary.days.length <= duration.to);
+  const pushGroup = (itineraries, creator, categories, cities) => {
+    if (itineraries.length===0) return;
+    let name = [];
+    if(creator) name.push(`creado por ${creator}`);
+    if (categories||cities) name.push('con visita');
+    if (categories) name.push(`a ${categories.join(', ')}`);
+    if (cities) name.push(`en ${cities.join(', ')}`);
+    name = name.join(' ');
+    name = name.substring(0,1).toUpperCase() + name.substring(1);
+    itinerariesGroups.push({
+      name,
+      itineraries
+    });
+  };
+  const applyCreatorFilter = (itineraries, userId) => {
+    return itineraries.filter(itinerary => itinerary.userRef === userId);
+  };
+  const applyCitiesFilter = (itineraries, cities) => {
+    return itineraries.filter(itinerary => {
+      return cities.findIndex(city => {
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return place.address.endsWith(', '+city);
           }) !== -1;
-        });
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-          itineraries: f2Itineraries
-        });
-      });
+        }) === -1;
+      }) === -1;
     });
+  };
+  const applyCategoriesFilter = (itineraries, categories) => {
+    return itineraries.filter(itinerary => {
+      return categories.findIndex(category => {
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return place.category === category;
+          }) !== -1;
+        }) === -1;
+      }) === -1;
+    });
+  }
+  const applyFPlacesFilter = (itineraries, fPlaces) => {
+    return itineraries.filter(itinerary => {
+      return fPlaces.findIndex(fPlace => {
+        const street = fPlace.formatted_address.split(',')[0];
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return (
+              place.name === fPlace.name
+              &&
+              place.address.startsWith(street+',')
+            );
+          }) !== -1;
+        }) === -1;
+      }) === -1;
+    });
+  }
+  const localitiesChunkSize = Math.max(searchLocalities.length,1);
+  const categoriesChunkSize = Math.max(searchCategories.length,1);
+  creators.forEach(userId => {
+    let f1Itineraries = userId ? applyCreatorFilter(f0Itineraries,userId) : f0Itineraries;
+    let creatorName = userId ? users[userId].username : null;
+    if (userId && searchLocalities.length === 0 && searchCategories.length === 0) {
+      pushGroup(f1Itineraries,creatorName,null,null);
+    }
+    for (let i = 0; i < cities.length; i += localitiesChunkSize) {
+      const citiesChunk = cities.slice(i, i + localitiesChunkSize).map(city => city.name.split(',').slice(0,1).join());
+      let f2Itineraries = applyCitiesFilter(f1Itineraries,citiesChunk);
+      if (searchLocalities.length > 0 && searchCategories.length === 0) {
+        pushGroup(f2Itineraries,creatorName,null,citiesChunk)
+      }
+      for (let j = 0; j < categories.length; j += categoriesChunkSize) {
+        const categoriesChunk = categories.slice(j, j + categoriesChunkSize);
+        let f3Itineraries = applyCategoriesFilter(f2Itineraries,categoriesChunk);
+        pushGroup(f3Itineraries,creatorName,categoriesChunk,citiesChunk);
+      }
+    }
+  });
+  if (searchCreators.length === 0 && searchLocalities.length === 0 && searchCategories.length === 0) {
     followed.forEach(userId => {
-      if (searchCategories.length > 0 && searchLocalities.length > 0) {
-        cities.forEach(city => {
-          categories.forEach(category => {
-            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-              return itinerary.days.findIndex(day => {
-                return day.places.findIndex(place => {
-                  return (
-                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                    &&
-                    place.category === category
-                  );
-                }) !== -1;
-              }) !== -1;
-            });
-            if (f2Itineraries.length === 0) return;
-            itinerariesGroups.push({
-              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-              itineraries: f2Itineraries
-            });
-          });
-        });
-      } else if (searchCategories.length) {
-        categories.forEach(category => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.category === category
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} con visita a ${category}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else if (searchLocalities.length) {
-        cities.forEach(city => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else {
-        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Creados por ${users[userId].username}`,
-          itineraries: f2Itineraries
-        });
-      }
+      pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,null,null);
     });
-  } else {
-    searchCreators.forEach(userId => {
-      if (searchCategories.length > 0 && searchLocalities.length > 0) {
-        cities.forEach(city => {
-          categories.forEach(category => {
-            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-              return itinerary.days.findIndex(day => {
-                return day.places.findIndex(place => {
-                  return (
-                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                    &&
-                    place.category === category
-                  );
-                }) !== -1;
-              }) !== -1;
-            });
-            if (f2Itineraries.length === 0) return;
-            itinerariesGroups.push({
-              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-              itineraries: f2Itineraries
-            });
-          });
-        });
-      } else if (searchCategories.length) {
-        categories.forEach(category => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.category === category
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} con visita a ${category}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else if (searchLocalities.length) {
-        cities.forEach(city => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else {
-        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Creados por ${users[userId].username}`,
-          itineraries: f2Itineraries
-        });
-      }
+    favoritePlaces.forEach(favoritePlace => {
+      pushGroup(applyFPlacesFilter(f0Itineraries,[favoritePlace]),null,[favoritePlace.name],null);
     });
   }
   const star = `
@@ -320,13 +258,13 @@ function drawFilters() {
   let html = '';
   html += searchLocalities.map(city => {
     return `<a href="#" class="search-filter" data-type="locality" data-place_id="${city.place_id}">&times; ${city.name.split(',').slice(0,1).join()}</a>`;
-  }).join();
+  }).join('');
   html += searchCategories.map(category => {
     return `<a href="#" class="search-filter" data-type="category" data-name="${category}">&times; ${category}</a>`;
-  }).join();
+  }).join('');
   html += searchCreators.map(userId => {
     return `<a href="#" class="search-filter" data-type="creator" data-user_id="${userId}">&times; ${users[userId].username}</a>`;
-  }).join();
+  }).join('');
   document.querySelector('.current-filters').innerHTML = html;
 }
 
