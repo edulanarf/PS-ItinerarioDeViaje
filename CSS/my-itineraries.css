@@ -47,7 +47,6 @@ button:hover {
     gap: 6rem;
     padding: 2rem 0;
     background-color: #f5f7fa;
-    margin-top: 2rem; /* Separación del header */
     z-index: 5;
     position: relative;
 }
