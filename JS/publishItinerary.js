@@ -19,7 +19,7 @@ export async function publishItinerary(itinerary, itineraryId, itineraryPhoto, t
     userRef:userRef,
     photo: itineraryPhoto,
     title: title,
-    id: itineraryId
+    itineraryId: itineraryId
   });
   await saveItineraryInfo(itinerary, publicItineraryRef);
 
