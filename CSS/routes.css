@@ -75,7 +75,7 @@
 }
 
 .close:hover {
-    color: var(--cta-rojo-hover);
+    color: darkred;
 }
 
 .travel-mode-selector {

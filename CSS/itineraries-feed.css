@@ -267,7 +267,6 @@ section.main {
     gap: 2rem;
 }
 .modal-controls button, .new-review {
-    border: none;
     color: #888;
     border: 2px solid #888;
     border-radius: 0.5rem;
@@ -287,7 +286,7 @@ section.main {
 }
 .modal-controls .modal-controls-left button:hover, .new-review:hover {
     background-color: var(--azul-brillante);
-    color: #fff;    
+    color: #fff;
 }
 
 .hidden {

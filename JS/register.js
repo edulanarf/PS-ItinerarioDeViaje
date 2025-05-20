@@ -40,7 +40,7 @@ function registerUser(email, password, displayName, picture) {
       await setDoc(usersCollection, {
         username: displayName,
         email: userCredential.user.email,
-        photoURL: photoURL
+        photoURL: photoURL,
         premium: false
       });
 

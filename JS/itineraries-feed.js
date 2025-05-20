@@ -596,7 +596,7 @@ function placeWaypoints(waypoints) {
     travelMode: 'DRIVING'
   };
   directionsService.route(request,(result, status)=>{
-    if (status == 'OK') {
+    if (status === 'OK') {
       directionsRenderer.setDirections(result);
     }
   });

@@ -94,6 +94,7 @@
 
       alert("✅ Perfil actualizado correctamente.");
       location.reload();
+      setTimeout(()=> {window.location.href = "/HTML/home-page.html"}, 2000)
 
     } catch (error) {
       console.error("Error al actualizar perfil:", error);

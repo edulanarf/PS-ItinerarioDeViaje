@@ -11,6 +11,8 @@ import { request } from "/JS/places.js";
 import { priceLevels } from "/JS/price-levels.js";
 import { auth, db } from "./firebase-config.js";
 
+let map, service, marker, infowindow, geocoder, currentUser, places;
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
@@ -24,8 +26,6 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = "../HTML/user-login.html";
   }
 });
-
-let map, service, marker, infowindow, geocoder, currentUser, places;
 
 window.addEventListener("load", () => {
   document.querySelectorAll(".nav-tabs > a").forEach((el) => {

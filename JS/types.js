@@ -9,8 +9,20 @@ export class Place {
    * @param {string} address
    * @param {string} date - should be Date
    * @param {string} category
+   * @param lat
+   * @param lng
    */
-  constructor(name,photo,price,rating,address,date,category,lat=undefined,lng=undefined) {
+  constructor(
+    name,
+    photo,
+    price,
+    rating,
+    address,
+    date,
+    category,
+    lat = undefined,
+    lng = undefined
+  ) {
     this.name = name;
     this.photo = photo;
     this.price = price;
@@ -23,68 +35,116 @@ export class Place {
   }
 
   toString() {
-    return this.name + [":",this.category,this.date,this.address].join("\n\t+ ")
+    return (
+      this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
+    );
+
   }
 
-  toFirestore() {
-    return {
-      name: this.name,
-      photo: this.photo,
-      price: this.price,
-      rating: this.rating,
-      address: this.address,
-      date: this.date,
-      category: this.category,
-      lat: this.lat,
-      lng: this.lng
+  static toLi(place){
+    let div = document.createElement("div")
+    div.innerHTML = `&bull; ${place.name}:<br>
+    <strong>Tipo:</strong> ${place.category}<br>
+    <strong>Dirección:</strong> ${place.address}`
+    return div
+  }
+
+  static toFirestore(place){
+    let obj = {
+      name: place.name,
+      photo: place.photo,
+      price: place.price,
+      rating: place.rating,
+      address: place.address,
+      date: place.date,
+      category: place.category,
     };
+    return place.lat && place.lng ? { ...obj, lat: place.lat, lng: place.lng } : obj;
   }
 
 }
 
 export class Itinerary {
+  get name() {
+    return this._name;
+  }
+
+  set name(value) {
+    this._name = value;
+  }
+
+  get places() {
+    return this._places;
+  }
+
+  set places(value) {
+    this._places = value;
+  }
 
   /**
    * @param {string} name
    * @param {Place[]}places
    */
-  constructor(name, places) {
-    this.name = name;
-    this.places = places? places : [];
+  constructor(name, places = []) {
+    this._name = name;
+    /**
+     * @type {Place[]}
+     */
+    this._places = places;
   }
+
+
+
 
   toString() {
     return this.name + ":\n" + this.places.map(p => "\t-" + p.toString()).join('\n')
   }
 
-  toFirestore() {
+  static toFirestore(itinerary) {
     return {
-      name: this.name,
-      places: this.places.map(p => p.toFirestore())
+      name: itinerary.name,
+      places: itinerary.places.map(p => Place.toFirestore(p))
     };
   }
 
   // noinspection JSUnusedGlobalSymbols
-  static itineraryConverter = {
+  static Converter = {
     toFirestore: function(itinerary) {
-      return itinerary.toFirestore();
+      return Itinerary.toFirestore(itinerary);
     },
     fromFirestore: async function(snapshot, options) {
       const data = snapshot.data(options);
-      const places = data.places ? await Promise.all(data.places.map(placeData => new Place(
-        placeData.name,
-        placeData.photo,
-        placeData.price,
-        placeData.rating,
-        placeData.address,
-        placeData.date,
-        placeData.category,
-        placeData.lat,
-        placeData.lng
-      ))) : [];
-      return new Itinerary(data.name, places)
+      return new Itinerary(data.name, data.places)
     }
   };
+}
+
+export class ItineraryPlanReference {
+  constructor(author, id) {
+    this._author = author
+    this._plan = id
+  }
+
+  get author() {
+    return this._author;
+  }
+
+  get plan() {
+    return this._plan;
+  }
+
+  static Converter = {
+    toFirestore: function(ipRef) {
+      return {
+        author: ipRef.author,
+        plan: ipRef.plan
+      }
+    },
+    fromFirestore: function(snapshot, options) {
+      let data   = snapshot.data(options);
+      return new ItineraryPlanReference(data.author, data.plan);
+    }
+}
 }
 
 export class ItineraryPlan {
@@ -94,12 +154,16 @@ export class ItineraryPlan {
    * @param {string} photo
    * @param {string} description
    * @param {Itinerary[]} itineraries
+   * @param {string} id
+   * @param {string[]} sharedWith
    */
-  constructor(title, description, photo,itineraries) {
+  constructor(title, description, photo, itineraries, id=NoID, sharedWith = []) {
     this.itineraries = itineraries;
     this._title = title;
     this._description = description;
     this._photo = photo;
+    this.id = id;
+    this._sharedWith = sharedWith
   }
 
 
@@ -127,22 +191,73 @@ export class ItineraryPlan {
     this._photo = value;
   }
 
-  toFirestore() {
+  get sharedWith(){
+    return this._sharedWith
+  }
+
+  set sharedWith(value){
+    this._sharedWith = value
+  }
+
+  static toFirestore(plan) {
     return {
-      title: this._title,
-      photo: this._photo,
-      description: this._description,
+      title: plan._title,
+      photo: plan._photo,
+      description: plan._description,
+      sharedWith: plan.sharedWith
     }
   }
 
   // noinspection JSUnusedGlobalSymbols
-  static itineraryPlanConverter = {
+  static Converter = {
     toFirestore: function(itineraryPlan) {
-      return itineraryPlan.toFirestore();
+      return ItineraryPlan.toFirestore(itineraryPlan);
     },
     fromFirestore: function(snapshot, options) {
       const data = snapshot.data(options);
-      return new ItineraryPlan(data.title,data.description,data.photo,[] );
+      return new ItineraryPlan(data.title, data.description, data.photo, [], snapshot.id, data.sharedWith? data.sharedWith : []);
     }
   };
 }
+
+export class UserReference {
+  constructor(id=NoID,name) {
+    this.id = id;
+    this.name = name;
+  }
+}
+
+export class User extends UserReference{
+  /**
+   * @param {string} name
+   * @param {string} email
+   * @param {string} photoURL
+   * @param {string} id
+   */
+  constructor(name,email,photoURL,id) {
+    super(id,name)
+    this.email = email;
+    this.photoURL = photoURL;
+  }
+
+  toFirestore() {
+    return {
+      username: this.name,
+      photoURL: this.photoUrl,
+      email: this.email,
+      id: this.id
+    }
+  }
+  static Converter = {
+    toFirestore: function(User) {
+      return User.toFirestore();
+    },
+    fromFirestore: function(snapshot, options) {
+      const data = snapshot.data(options);
+      console.log("data",data);
+      return new User(data.username,data.email,data.photoURL,snapshot.id);
+    }
+  };
+}
+
+export const NoID = "NoID"
