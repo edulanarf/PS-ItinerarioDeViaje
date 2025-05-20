@@ -190,6 +190,9 @@ function drawItineraries() {
     let creatorName = userId ? users[userId].username : null;
     if (userId && searchLocalities.length === 0 && searchCategories.length === 0) {
       pushGroup(f1Itineraries,creatorName,null,null);
+      favoritePlaces.forEach(favoritePlace => {
+        pushGroup(applyFPlacesFilter(f1Itineraries,[favoritePlace]),creatorName,[favoritePlace.name],null);
+      });
     }
     for (let i = 0; i < cities.length; i += localitiesChunkSize) {
       const citiesChunk = cities.slice(i, i + localitiesChunkSize).map(city => city.name.split(',').slice(0,1).join());
@@ -198,7 +201,7 @@ function drawItineraries() {
         pushGroup(f2Itineraries,creatorName,null,citiesChunk);
         if (userId == null) {
           followed.forEach(userId => {
-            pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,null,citiesChunk);
+            pushGroup(applyCreatorFilter(f2Itineraries,userId),users[userId].username,null,citiesChunk);
           });
         }
       }
@@ -208,7 +211,7 @@ function drawItineraries() {
         pushGroup(f3Itineraries,creatorName,categoriesChunk,citiesChunk);
         if (userId == null && searchCategories.length > 0) {
           followed.forEach(userId => {
-            pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,categoriesChunk,citiesChunk);
+            pushGroup(applyCreatorFilter(f2Itineraries,userId),users[userId].username,categoriesChunk,citiesChunk);
           });
         }
       }

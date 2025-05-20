@@ -125,6 +125,8 @@ section.main {
     justify-content: center;
     background-color: lightgray;
     cursor: pointer;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 .config-button img {
     width: 30px;
