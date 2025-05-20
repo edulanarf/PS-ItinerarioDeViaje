@@ -24,6 +24,7 @@ import {
 
 
 let session = null;
+let viewingShared = false;
 
 
 let currentDay = "";
@@ -38,12 +39,14 @@ onAuthStateChanged(auth, (user) => {
     const params = new URLSearchParams(window.location.search);
     const value = params.get("type");
     if (value === SHARED){
+      viewingShared = true;
       document.getElementById('share-itinerary').classList.add('hidden');
       initShared(user).then(() => {
         listView().then(() => console.log("list ready"));
         galleryView().then(() => console.log("gallery ready"));
       }).then(() => console.log("changed, and finished"));
     } else { //MINE
+      viewingShared = false;
       document.getElementById('share-itinerary').classList.remove('hidden');
       init(user).then(() => {
         listView().then(() => console.log("list ready"));
@@ -150,13 +153,79 @@ export async function listView() {
 }
 
 async function init(user) {
-  await getPlans(user.uid).then(data => {
-    data.forEach((it) => {
-      itineraries[it.title] = it;
+  await getPlans(user.uid)
+    .then((data) => {
+      data.forEach((it) => {
+        itineraries[it.title] = it;
+      });
+    })
+    .catch((err) => console.error(err))
+    .then(() => {
+      setCurrent(Object.keys(itineraries).at(0));
     });
-  }).catch(err => console.error(err)).then(() => {
-    setCurrent(Object.keys(itineraries).at(0))
-  });
+}
+
+async function publish(after, buttonGroup) {
+  //SHARE
+  const shareButton = document.createElement("button");
+  shareButton.innerText = "publicar";
+  shareButton.classList.add("publicar");
+  shareButton.style.cursor = "pointer";
+
+  const currentContainer = document.querySelector(".my-itineraries.visible");
+  currentItineraryTitle = currentContainer.dataset.name;
+  const itineraryDocRef = doc(
+    db,
+    `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`,
+  );
+  const itinerarySnapshot = await getDoc(itineraryDocRef);
+  const itineraryData = itinerarySnapshot.data();
+
+  if (itineraryData.published) {
+    shareButton.innerText = "Publicado";
+    shareButton.addEventListener("click", async () => {
+      const currentContainer = document.querySelector(
+        ".my-itineraries[style='display: grid;']",
+      );
+      currentItineraryTitle = currentContainer.dataset.name;
+      const itineraryDocRef = doc(
+        db,
+        `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`,
+      );
+      const itineraryPhotoRef = await getDoc(itineraryDocRef);
+      const currentItineraryPublishedRef =
+        itineraryPhotoRef.data().publishedRef;
+      deleteDoc(currentItineraryPublishedRef);
+
+      const daysCollectionRef = collection(
+        db,
+        `publicItineraries/${getPlanFromMyItineraries(after).id}/days`,
+      );
+      const daysSnapshot = await getDocs(daysCollectionRef);
+      const daysDeletePromises = daysSnapshot.docs.map(
+        async (doc) => await deleteDoc(doc.ref),
+      );
+      await Promise.all(daysDeletePromises);
+
+      await updateDoc(itineraryDocRef, {
+        published: false,
+      });
+      window.location.reload();
+    });
+  } else {
+    shareButton.innerText = "publicar";
+    shareButton.addEventListener("click", async () => {
+      await publishItinerary(
+        currentRoutes,
+        getPlanFromMyItineraries(after).id,
+        getPlanFromMyItineraries(after).photo,
+        getPlanFromMyItineraries(after).title,
+      );
+      window.location.reload();
+    });
+  }
+
+  buttonGroup.appendChild(shareButton);
 }
 
 export async function showItinerary(before, after){
@@ -179,50 +248,7 @@ export async function showItinerary(before, after){
   buttonGroup.innerHTML = "";
   buttonGroup.appendChild(verRutaBtn);
 
-
-  //SHARE
-  const shareButton = document.createElement("button");
-  shareButton.innerText = "publicar";
-  shareButton.classList.add("publicar");
-  shareButton.style.cursor = "pointer";
-
-
-
-  const currentContainer = document.querySelector(".my-itineraries.visible");
-  currentItineraryTitle = currentContainer.dataset.name;
-  const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`);
-  const itinerarySnapshot = await getDoc(itineraryDocRef);
-  const itineraryData = itinerarySnapshot.data()
-
-  if(itineraryData.published){
-    shareButton.innerText = "Publicado";
-    shareButton.addEventListener("click", async () => {
-      const currentContainer = document.querySelector(".my-itineraries[style='display: grid;']");
-      currentItineraryTitle = currentContainer.dataset.name;
-      const itineraryDocRef = doc(db, `users/${session.uid}/itineraries/${getPlanFromMyItineraries(after).id}`);
-      const itineraryPhotoRef = await getDoc(itineraryDocRef);
-      const currentItineraryPublishedRef = itineraryPhotoRef.data().publishedRef;
-      deleteDoc(currentItineraryPublishedRef);
-
-      const daysCollectionRef = collection(db, `publicItineraries/${getPlanFromMyItineraries(after).id}/days`);
-      const daysSnapshot = await getDocs(daysCollectionRef);
-      const daysDeletePromises = daysSnapshot.docs.map(async doc => await deleteDoc(doc.ref));
-      await Promise.all(daysDeletePromises);
-
-      await updateDoc(itineraryDocRef, {
-        published:false
-      })
-      window.location.reload();
-    });
-  } else {
-    shareButton.innerText = "publicar";
-    shareButton.addEventListener("click", async () => {
-      await publishItinerary(currentRoutes, getPlanFromMyItineraries(after).id, getPlanFromMyItineraries(after).photo, getPlanFromMyItineraries(after).title);
-      window.location.reload();
-    });
-  }
-
-  buttonGroup.appendChild(shareButton);
+  if (!viewingShared) await publish(after, buttonGroup);
 
   to.style.display = "grid";
   window.scrollTo(0, scrollY); //Para cada vez q se renderiza el contenido
@@ -308,6 +334,8 @@ async function renderItinerary(plan) {
 
 
   const deleteButton = container.querySelector('.delete-itinerary');
+  if (viewingShared) deleteButton.style.display = "none";
+
   if (deleteButton) {
     deleteButton.addEventListener('click', async () => {
       const confirmDelete = confirm(`¿Estás seguro de eliminar el itinerario "${plan.title}"?`);
