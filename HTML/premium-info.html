@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Planes Premium</title>
+  <style>
+      body {
+          font-family: 'Segoe UI', sans-serif;
+          margin: 0;
+          padding: 0;
+          background: linear-gradient(to right, #f0f8ff, #dbefff);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+      }
+
+      .container {
+          max-width: 1000px;
+          padding: 2rem;
+          background: white;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          text-align: center;
+          animation: fadeIn 0.6s ease;
+      }
+
+      h1 {
+          font-size: 2.8rem;
+          margin-bottom: 1rem;
+          color: #003366;
+      }
+
+      .plans {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 1.5rem;
+          margin-top: 2rem;
+      }
+
+      .plan {
+          background: linear-gradient(to top right, #f9f9f9, #ffffff);
+          border-radius: 16px;
+          padding: 1.5rem;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .plan:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
+
+      .plan h2 {
+          font-size: 1.6rem;
+          margin-bottom: 0.5rem;
+      }
+
+      .plan .price {
+          font-size: 1.4rem;
+          color: #0077cc;
+          margin-bottom: 1rem;
+          font-weight: bold;
+      }
+
+      .plan .features {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 1rem;
+      }
+
+      .plan .features li {
+          margin: 0.5rem 0;
+          font-size: 1rem;
+      }
+
+      .plan button {
+          background: #0077cc;
+          color: white;
+          border: none;
+          padding: 10px 18px;
+          border-radius: 8px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background 0.3s ease;
+      }
+
+      .plan button:hover {
+          background: #005fa3;
+      }
+
+      a {
+          display: block;
+          margin-top: 2rem;
+          color: #555;
+          text-decoration: none;
+      }
+
+      a:hover {
+          color: #0077cc;
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Elige tu Plan Premium</h1>
+  <div class="plans">
+    <div class="plan" style="border-top: 6px solid #66ccff;">
+      <h2>Plan Básico</h2>
+      <p class="price">4,49 €/mes</p>
+      <ul class="features">
+        <li>Hasta 5 itinerarios</li>
+        <li>Búsqueda extendida</li>
+        <li>Cambio de idioma</li>
+      </ul>
+      <button onclick="selectPlan('basic')">Elegir Plan</button>
+    </div>
+    <div class="plan" style="border-top: 6px solid #f7c84c;">
+      <h2>Plan Avanzado</h2>
+      <p class="price">9,99 €/mes</p>
+      <ul class="features">
+        <li>Hasta 15 itinerarios</li>
+        <li>Búsqueda extendida</li>
+        <li>Cambio de idioma</li>
+        <li>Acceso anticipado a novedades</li>
+      </ul>
+      <button onclick="selectPlan('advanced')">Elegir Plan</button>
+    </div>
+    <div class="plan" style="border-top: 6px solid #ff6666;">
+      <h2>Plan Ilimitado</h2>
+      <p class="price">19,49 €/mes</p>
+      <ul class="features">
+        <li>Itinerarios ilimitados</li>
+        <li>Todas las funciones activadas</li>
+        <li>Soporte prioritario</li>
+      </ul>
+      <button onclick="selectPlan('unlimited')">Elegir Plan</button>
+    </div>
+  </div>
+
+  <a href="home-page.html">⬅ Volver al inicio</a>
+</div>
+
+<script>
+  function selectPlan(planType) {
+    // ✅ Redirección real a la pasarela de pago simulada
+    window.location.href = `fake-payment.html?plan=${planType}`;
+  }
+</script>
+</body>
+</html>

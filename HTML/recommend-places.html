@@ -20,15 +20,15 @@
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
         <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
         <a class="nav-button" onclick="location.href='public-itineraries.html'">Itnerarios</a>
-        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
-        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear Itinerarios</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación De Itinerarios</a>
       </div>
     </section>
     <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
@@ -45,6 +45,7 @@
       <a class="active" href="#popular">Popular</a>
       <a href="#up">Subiendo</a>
       <a href="#new">Nuevo</a>
+      <a href="#favorites">Favoritos</a>
     </div>
     <div class="tab-content">
       <div class="show" id="popular">
@@ -54,6 +55,9 @@
         Cargando...
       </div>
       <div id="new">
+        Cargando...
+      </div>
+      <div id="favorites">
         Cargando...
       </div>
       <div id="preferences">

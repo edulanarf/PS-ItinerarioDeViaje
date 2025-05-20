@@ -14,6 +14,7 @@ import{addFavoriteItinerary} from './addFavorite.js'
 import{removeFavoriteItinerary} from './removeFavorite.js'
 import { addFollowedUser } from "./addFollowed.js";
 import { removeFollowedUser } from "./removeFollowed.js";
+import { addItineraryReview, getItineraryRating, getItineraryReviews, drawReviews } from './itinerariesReviewsUtils.js';
 
 async function loadItineraries() {
   const itinerariesRef = collection(db, "publicItineraries");
@@ -24,6 +25,9 @@ async function loadItineraries() {
     itineraryData.days = (await getDocs(collection(db,`${itineraryDoc.ref.path}/days`))).docs.map(snap => {
       return snap.data();
     })
+    let rating = await getItineraryRating(itineraryDoc.ref.id);
+    itineraryData.rating = parseFloat(rating.averageRating||0).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
+    itineraryData.ratingCount = rating.ratingCount||0;
     itineraryData.id = itineraryDoc.id;
     itineraryData.totalCost = itineraryData.days.reduce((c,v)=>{
       return c+v.places.reduce((c,v)=>{
@@ -35,7 +39,7 @@ async function loadItineraries() {
   return itineraries;
 }
 
-let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [], previousDay = null;
+let currentUser, users, preferences, itineraries, searchCategories = [], searchLocalities = [], searchCreators = [], favorites = [], followed = [], favoritePlaces = [], previousDay = null;
 let map, service, directionsService, directionsRenderer, geocoder, marker;
 const allCategories = ['Hotel','Restaurante','Cafetería','Museo','Parque','Centro comercial','Aeropuerto'];
 
@@ -47,7 +51,8 @@ onAuthStateChanged(auth, async (user) => {
       loadUsers(),
       loadItineraries(),
       loadFavorites(),
-      loadFollowed()
+      loadFollowed(),
+      loadFavoritePlaces()
     ])
     drawItineraries();
   } else {
@@ -109,165 +114,107 @@ async function loadFollowed() {
   return followed = (await getDocs(usersRef)).docs.map(userDoc => userDoc.data().userRef);
 }
 
+async function loadFavoritePlaces() {
+  const fPlacesRef = collection(db, 'users', currentUser.uid, 'favorite-places');
+  return favoritePlaces = (await getDocs(fPlacesRef)).docs.map(fPlaceDoc => fPlaceDoc.data());
+}
+
 function drawItineraries() {
   let itinerariesGroups = [];
   let cities = searchLocalities.length === 0 ? preferences.cities : searchLocalities;
   let categories = searchCategories.length === 0 ? preferences.categories : searchCategories;
+  let creators = searchCreators.length === 0 ? [null] : searchCreators;
   let duration = preferences.duration;
-  let f1Itineraries = itineraries.filter(itinerary => itinerary.days.length >= duration.from && itinerary.days.length <= duration.to);
-  if (searchCreators.length === 0) {
-    cities.forEach(city => {
-      categories.forEach(category => {
-        let f2Itineraries = f1Itineraries.filter(itinerary => {
-          return itinerary.days.findIndex(day => {
-            return day.places.findIndex(place => {
-              return (
-                place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                &&
-                place.category === category
-              );
-            }) !== -1;
+  let f0Itineraries = itineraries.filter(itinerary => itinerary.days.length >= duration.from && itinerary.days.length <= duration.to);
+  const pushGroup = (itineraries, creator, categories, cities) => {
+    if (itineraries.length===0) return;
+    let name = [];
+    if(creator) name.push(`creado por ${creator}`);
+    if (categories||cities) name.push('con visita');
+    if (categories) name.push(`a ${categories.join(', ')}`);
+    if (cities) name.push(`en ${cities.join(', ')}`);
+    name = name.join(' ');
+    name = name.substring(0,1).toUpperCase() + name.substring(1);
+    itinerariesGroups.push({
+      name,
+      itineraries
+    });
+  };
+  const applyCreatorFilter = (itineraries, userId) => {
+    return itineraries.filter(itinerary => itinerary.userRef === userId);
+  };
+  const applyCitiesFilter = (itineraries, cities) => {
+    return itineraries.filter(itinerary => {
+      return cities.findIndex(city => {
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return place.address.endsWith(', '+city);
           }) !== -1;
-        });
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-          itineraries: f2Itineraries
-        });
-      });
+        }) === -1;
+      }) === -1;
     });
-    followed.forEach(userId => {
-      if (searchCategories.length > 0 && searchLocalities.length > 0) {
-        cities.forEach(city => {
-          categories.forEach(category => {
-            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-              return itinerary.days.findIndex(day => {
-                return day.places.findIndex(place => {
-                  return (
-                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                    &&
-                    place.category === category
-                  );
-                }) !== -1;
-              }) !== -1;
-            });
-            if (f2Itineraries.length === 0) return;
-            itinerariesGroups.push({
-              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-              itineraries: f2Itineraries
-            });
-          });
-        });
-      } else if (searchCategories.length) {
-        categories.forEach(category => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.category === category
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} con visita a ${category}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else if (searchLocalities.length) {
-        cities.forEach(city => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else {
-        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Creados por ${users[userId].username}`,
-          itineraries: f2Itineraries
-        });
-      }
-    });
-  } else {
-    searchCreators.forEach(userId => {
-      if (searchCategories.length > 0 && searchLocalities.length > 0) {
-        cities.forEach(city => {
-          categories.forEach(category => {
-            let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-              return itinerary.days.findIndex(day => {
-                return day.places.findIndex(place => {
-                  return (
-                    place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                    &&
-                    place.category === category
-                  );
-                }) !== -1;
-              }) !== -1;
-            });
-            if (f2Itineraries.length === 0) return;
-            itinerariesGroups.push({
-              name: `Creados por ${users[userId].username} con visita a ${category} en ${city.name.split(',').slice(0,1).join()}`,
-              itineraries: f2Itineraries
-            });
-          });
-        });
-      } else if (searchCategories.length) {
-        categories.forEach(category => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.category === category
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} con visita a ${category}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else if (searchLocalities.length) {
-        cities.forEach(city => {
-          let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId).filter(itinerary => {
-            return itinerary.days.findIndex(day => {
-              return day.places.findIndex(place => {
-                return (
-                  place.address.endsWith(', '+city.name.split(',').slice(0,1).join())
-                );
-              }) !== -1;
-            }) !== -1;
-          });
-          if (f2Itineraries.length === 0) return;
-          itinerariesGroups.push({
-            name: `Creados por ${users[userId].username} en ${city.name.split(',').slice(0,1).join()}`,
-            itineraries: f2Itineraries
-          });
-        });
-      } else {
-        let f2Itineraries = f1Itineraries.filter(itinerary => itinerary.userRef === userId);
-        if (f2Itineraries.length === 0) return;
-        itinerariesGroups.push({
-          name: `Creados por ${users[userId].username}`,
-          itineraries: f2Itineraries
-        });
-      }
+  };
+  const applyCategoriesFilter = (itineraries, categories) => {
+    return itineraries.filter(itinerary => {
+      return categories.findIndex(category => {
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return place.category === category;
+          }) !== -1;
+        }) === -1;
+      }) === -1;
     });
   }
+  const applyFPlacesFilter = (itineraries, fPlaces) => {
+    return itineraries.filter(itinerary => {
+      return fPlaces.findIndex(fPlace => {
+        const street = fPlace.formatted_address.split(',')[0];
+        return itinerary.days.findIndex(day => {
+          return day.places.findIndex(place => {
+            return (
+              place.name === fPlace.name
+              &&
+              place.address.startsWith(street+',')
+            );
+          }) !== -1;
+        }) === -1;
+      }) === -1;
+    });
+  }
+  const localitiesChunkSize = Math.max(searchLocalities.length,1);
+  const categoriesChunkSize = Math.max(searchCategories.length,1);
+  creators.forEach(userId => {
+    let f1Itineraries = userId ? applyCreatorFilter(f0Itineraries,userId) : f0Itineraries;
+    let creatorName = userId ? users[userId].username : null;
+    if (userId && searchLocalities.length === 0 && searchCategories.length === 0) {
+      pushGroup(f1Itineraries,creatorName,null,null);
+    }
+    for (let i = 0; i < cities.length; i += localitiesChunkSize) {
+      const citiesChunk = cities.slice(i, i + localitiesChunkSize).map(city => city.name.split(',').slice(0,1).join());
+      let f2Itineraries = applyCitiesFilter(f1Itineraries,citiesChunk);
+      if (searchLocalities.length > 0 && searchCategories.length === 0) {
+        pushGroup(f2Itineraries,creatorName,null,citiesChunk)
+      }
+      for (let j = 0; j < categories.length; j += categoriesChunkSize) {
+        const categoriesChunk = categories.slice(j, j + categoriesChunkSize);
+        let f3Itineraries = applyCategoriesFilter(f2Itineraries,categoriesChunk);
+        pushGroup(f3Itineraries,creatorName,categoriesChunk,citiesChunk);
+      }
+    }
+  });
+  if (searchCreators.length === 0 && searchLocalities.length === 0 && searchCategories.length === 0) {
+    followed.forEach(userId => {
+      pushGroup(applyCreatorFilter(f0Itineraries,userId),users[userId].username,null,null);
+    });
+    favoritePlaces.forEach(favoritePlace => {
+      pushGroup(applyFPlacesFilter(f0Itineraries,[favoritePlace]),null,[favoritePlace.name],null);
+    });
+  }
+  const star = `
+    <svg class="star-single-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+    </svg>
+  `;
   const groupTemplate = `
     <div class="destination">
       <div class="destination-header"><h2>{{name}}</h2></div>
@@ -282,6 +229,7 @@ function drawItineraries() {
       <div class="itinerary-content">
         <div class="itinerary-title">{{title}}</div>
         <div class="itinerary-created-by">Creado por <span class="value">{{creator}}</span></div>
+        <div class="itinerary-rating"><span class="itinerary-rating-value">{{rating}}</span>${star} (<span class="itinerary-rating-count">{{ratingCount}}</span> usuarios)</div>
         <div class="itinerary-description">{{description}}</div>
       </div>
     </a>
@@ -292,6 +240,8 @@ function drawItineraries() {
         .replace('{{id}}',itinerary.id)
         .replace('{{title}}',itinerary.title)
         .replace('{{photo}}',itinerary.photo)
+        .replace('{{rating}}',itinerary.rating)
+        .replace('{{ratingCount}}',itinerary.ratingCount)
         .replace('{{description}}',itinerary.description||'')
         .replace('{{creator}}',users[itinerary.userRef]?.username||'')
         ;
@@ -308,13 +258,13 @@ function drawFilters() {
   let html = '';
   html += searchLocalities.map(city => {
     return `<a href="#" class="search-filter" data-type="locality" data-place_id="${city.place_id}">&times; ${city.name.split(',').slice(0,1).join()}</a>`;
-  }).join();
+  }).join('');
   html += searchCategories.map(category => {
     return `<a href="#" class="search-filter" data-type="category" data-name="${category}">&times; ${category}</a>`;
-  }).join();
+  }).join('');
   html += searchCreators.map(userId => {
     return `<a href="#" class="search-filter" data-type="creator" data-user_id="${userId}">&times; ${users[userId].username}</a>`;
-  }).join();
+  }).join('');
   document.querySelector('.current-filters').innerHTML = html;
 }
 
@@ -350,7 +300,6 @@ window.addEventListener("load", () => {
     moved = true;
     // How far the mouse has been moved
     const dx = e.clientX - pos.x;
-    console.log(pos.left - dx);;
 
     // Scroll the element
     ele.scrollLeft = pos.left - dx;
@@ -460,6 +409,49 @@ window.addEventListener("load", () => {
       document.querySelector('.add-to-favortites').classList.remove('hidden');
     });
   });
+  document.querySelector('.show-reviews').addEventListener('click',e=>{
+    getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+      drawReviews(reviews);
+      document.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.add('hidden'));
+      let reviewsContent = document.querySelector('.modal-reviews-content');
+      reviewsContent.classList.remove('hidden');
+      e.target.classList.add('hidden');
+      document.querySelector('.show-itinerary').classList.remove('hidden');
+    });
+  });
+  document.querySelector('.show-itinerary').addEventListener('click',e=>{
+      document.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.remove('hidden'));
+      let reviewsContent = document.querySelector('.modal-reviews-content');
+      reviewsContent.classList.add('hidden');
+      e.target.classList.add('hidden');
+      document.querySelector('.show-reviews').classList.remove('hidden');
+  });
+  document.querySelector('.form-rating').addEventListener('click',e=>{
+    const svg = e.target.closest('svg');
+    if (!svg) return;
+    Array.from(svg.parentElement.children).forEach(el => el.classList.remove('selected'));
+    svg.classList.add('selected');
+  });
+  document.querySelector('.new-review').addEventListener('click',e=>{
+    let rating = Array.from(document.querySelector('.form-rating').children).reverse().findIndex(v => v.classList.contains('selected'))+1;
+    addItineraryReview(e.target.dataset.itineraryId,rating,document.querySelector('.modal-reviews-form textarea').value).then(saved => {
+      if (!saved) return;
+      getItineraryReviews(e.target.dataset.itineraryId).then(reviews => {
+        drawReviews(reviews);
+        let count = reviews.length;
+        let average = parseFloat(reviews.reduce((c,v)=>c+v.rating,0)/count).toFixed(2).replace(/(\.[1-9]?)0+$/,'$1').replace(/\.$/,'');
+        document.querySelector('.rating-value').textContent = average;
+        document.querySelector('.rating-count').textContent = count;
+        let itinerary = itineraries.find(v => v.id === e.target.dataset.itineraryId);
+        itinerary.rating = average;
+        itinerary.ratingCount = count;
+        document.querySelectorAll('.itinerary[data-id="'+e.target.dataset.itineraryId+'"] .itinerary-rating').forEach(el => {
+          el.querySelector('.itinerary-rating-value').textContent = average;
+          el.querySelector('.itinerary-rating-count').textContent = count;
+        });
+      });
+    });
+  })
   document.querySelector('.follow').addEventListener('click',e=>{
     addFollowedUser(e.target.dataset.userId).then(() => {
       e.target.classList.add('hidden');
@@ -493,6 +485,11 @@ function showModal(itinerary) {
   modal.querySelector('.modal-header').textContent = itinerary.title;
   modal.querySelector('.modal-itinerary-created-by .value').textContent = users[itinerary.userRef].username||'';
   modal.querySelector('.modal-itinerary-description').textContent = itinerary.description||'';
+  const star = `
+    <svg class="star-single" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+    </svg>
+  `;
   const dayTemplate = `
     <div class="itinerary-day">
       <div class="itinerary-day-header">{{name}}</div>
@@ -516,12 +513,15 @@ function showModal(itinerary) {
           Precio: <span class="value">{{price}}</span> €
         </div>
         <div class="itinerary-day-place-rating">
-          Rating: <span class="value">{{rating}}</span> ★
+          Valoración: <span class="value">{{rating}}</span>${star}
         </div>
       </div>
     </a>
   `;
-  let html = `<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>`.replace('{{totalCost}}',itinerary.totalCost)+itinerary.days.map(day => {
+  let html = `
+<div class="rating"><b>Valoración:</b> <span class="rating-value">{{rating}}</span>${star} (<span class="rating-count">{{ratingCount}}</span> usuarios)</div>
+<div class="total-cost"><b>Coste total:</b> {{totalCost}}€</div>
+`.replace('{{totalCost}}',itinerary.totalCost).replace('{{rating}}',itinerary.rating).replace('{{ratingCount}}',itinerary.ratingCount)+itinerary.days.map(day => {
     let waypoints = [];
     let placesHtml = day.places.map(place => {
       waypoints.push({lat:place.lat,lng:place.lng});
@@ -545,8 +545,13 @@ function showModal(itinerary) {
   modal.querySelector('.itinerary-days').innerHTML = html;
   let addToFavoritesBtn = modal.querySelector('.add-to-favortites');
   let removeFromFavoritesBtn = modal.querySelector('.remove-from-favortites');
+  let showReviewsBtn = modal.querySelector('.show-reviews');
+  let showItineraryBtn = modal.querySelector('.show-itinerary');
+  let newReviewBtn = modal.querySelector('.new-review');
   addToFavoritesBtn.dataset.itineraryId = itinerary.id;
   removeFromFavoritesBtn.dataset.itineraryId = itinerary.id;
+  showReviewsBtn.dataset.itineraryId = itinerary.id;
+  newReviewBtn.dataset.itineraryId = itinerary.id;
   if (favorites.includes(itinerary.id)) {
     removeFromFavoritesBtn.classList.remove('hidden');
     addToFavoritesBtn.classList.add('hidden');
@@ -554,6 +559,10 @@ function showModal(itinerary) {
     addToFavoritesBtn.classList.remove('hidden');
     removeFromFavoritesBtn.classList.add('hidden');
   }
+  showReviewsBtn.classList.remove('hidden');
+  showItineraryBtn.classList.add('hidden');
+  modal.querySelectorAll('.modal-itinerary-content, .itinerary-map').forEach(el => el.classList.remove('hidden'));
+  modal.querySelector('.modal-reviews-content').classList.add('hidden');
   let addToFolloedBtn = modal.querySelector('.follow');
   let removeFromFollowedBtn = modal.querySelector('.stop-following');
   addToFolloedBtn.dataset.userId = itinerary.userRef;
@@ -587,7 +596,7 @@ function placeWaypoints(waypoints) {
     travelMode: 'DRIVING'
   };
   directionsService.route(request,(result, status)=>{
-    if (status == 'OK') {
+    if (status === 'OK') {
       directionsRenderer.setDirections(result);
     }
   });

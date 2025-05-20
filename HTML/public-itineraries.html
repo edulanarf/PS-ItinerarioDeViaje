@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/CSS/public-itineraries.css"/>
   <link rel="stylesheet" href="/CSS/carousel.css"/>
   <link rel="stylesheet" href="/CSS/itinerary-gallery-card.css"/>
+  <link rel="stylesheet" href="/CSS/itineraries-reviews.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
@@ -21,41 +22,74 @@
   <script type="module" src="/JS/public-itineraries.js"></script>
   <script type="module" src="/JS/addFavorite.js"></script>
   <script type="module" src="/JS/deleteFavorite.js"></script>
+  <script type="module" src="/JS/itinerariesReviewsUtils.js"></script>
 </head>
 <body>
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
         <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
-        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
-        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
-        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear Itinerario</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación De Lugares</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación De Itinerarios</a>
       </div>
     </section>
     <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
 </header>
 <h1 id="title-public-itineraries"> Tu viaje comienza aquí!</h1>
+<input type="text" id="search-itinerary" placeholder="Buscar itinerario...">
 
 <div class="popup hidden">
   <div class="popup-content">
     <div class="content-left">
       <span class="popup-title"></span>
       <div id="popup-days"></div>
+      <div id="popup-reviews" class="popup-hidden">
+        <div class="modal-reviews-form">
+          <div class="form-rating">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+          </div>
+          <div class="form-group">
+            <label for="reviewText">Reseña (Opcional)</label>
+            <textarea name="reviewText" id="reviewText" rows="10"></textarea>
+          </div>
+          <div class="modal-reviews-controls">
+            <button class="new-review">Valora tu experiencia</button>
+          </div>
+        </div>
+        <div class="modal-reviews-list"></div>
+      </div>
     </div>
 
     <div class="content-right">
       <h3>Resumen del viaje</h3>
+      <div id="popup-rating">Valoración: <span class="popup-rating-value"></span> ★ (<span class="popup-rating-count"></span> usuarios)</div>
       <p id="total-price"></p>
       <p id="total-days"></p>
       <p id="total-places"></p>
       <div id="popup-map" class="popup-map"></div>
       <button class="popup-favorite"></button>
+      <button class="popup-show-reviews">Ver reseñas</button>
     </div>
   </div>
   <div class="popup-footer">

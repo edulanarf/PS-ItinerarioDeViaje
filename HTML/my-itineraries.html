@@ -36,8 +36,8 @@
 <header id="navigation">
     <nav id="session-navbar">
         <div id="us">
-            <img id="logo" src="../mockups/logo.png" alt="logo"/>
-            <div id="brand-name">Itineraries</div>
+            <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+            <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
         </div>
         <section id="links-section">
             <div id="links">
@@ -53,8 +53,10 @@
 
 <header id="tools">
     <div id="actions">
+        <button id="switch-view">Cambiar vista</button>
         <button id="open-itinerary">open this itinerary</button>
         <button id="share-itinerary">Share this itinerary</button>
+
         <div id="modal" class="modal hidden">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
@@ -98,11 +100,12 @@
         <div id="popup-footer">
             <button id="closePopup">Cerrar</button>
         </div>
+
     </div>
 </header>
 
 <template id="day-button">
-    <button tabindex="0" class="day-button down"></button>
+    <option tabindex="0" class="day-button down"></option>
 </template>
 
 <template>
@@ -130,7 +133,10 @@
         </article>
 
         <section class="day-container">
-            <div class="days"></div>
+            <label>
+                <select class="days">
+                </select>
+            </label>
             <div class="content">
                 <div class="side-bar"></div>
                 <div class="list-container"></div>
@@ -157,7 +163,6 @@
 </template>
 
 <main>
-    <button id="switch-view">Cambiar vista</button>
     <div id="separation-buttons-itinerary">
         <button id="previous-itinerary">&lt;</button>
         <section id="itinerary-list-container"></section>

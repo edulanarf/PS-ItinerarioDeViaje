@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/CSS/reset-stylesheet.css" />
   <link rel="stylesheet" href="/CSS/colors.css"/>
   <link rel="stylesheet" href="/CSS/itineraries-feed.css"/>
+  <link rel="stylesheet" href="/CSS/itineraries-reviews.css"/>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -15,19 +16,26 @@
   <script type="module" src="/JS/my-itineraries-const.js"></script>
   <script type="module" src="/JS/profile.js"></script>
   <script type="module" src="/JS/itineraries-feed.js"></script>
+  <script type="module" src="/JS/itinerariesReviewsUtils.js"></script>
+  <script type="module" src="/JS/addFavorite.js"></script>
+  <script type="module" src="/JS/removeFavorite.js"></script>
+  <script type="module" src="/JS/addFollowed.js"></script>
+  <script type="module" src="/JS/removeFollowed.js"></script>
+  <script type="module" src="/JS/places.js"></script>
+  <script type="module" src="/JS/price-levels.js"></script>
 </head>
 <body>
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
         <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
-        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
-        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear Itinerario</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación De Lugares</a>
       </div>
     </section>
     <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
@@ -70,18 +78,55 @@
     <div class="modal-header"></div>
     <div class="modal-content">
       <div class="modal-itinerary-created-by">
-        Creado por <span class="value">Edu</span> <button type="button" class="follow">Seguir</button> <button class="stop-following hidden" type="button">Dejar de seguir</button>
+        Creado por <span class="value"></span> <button type="button" class="follow">Seguir</button> <button class="stop-following hidden" type="button">Dejar de seguir</button>
       </div>
-      <div class="modal-itinerary-description">
-      </div>
-      <div class="itinerary-days">
+      <div class="modal-itinerary-content">
+        <div class="modal-itinerary-description">
+        </div>
+        <div class="itinerary-days">
+        </div>
       </div>
       <div class="itinerary-map" id="map"></div>
+      <div class="modal-reviews-content hidden">
+        <div class="modal-reviews-form">
+          <div class="form-rating">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+            </svg>
+          </div>
+          <div class="form-group">
+            <label for="reviewText">Reseña (Opcional)</label>
+            <textarea name="reviewText" id="reviewText" rows="10"></textarea>
+          </div>
+          <div class="modal-reviews-controls">
+            <button class="new-review">Valora tu experiencia</button>
+          </div>
+        </div>
+        <div class="modal-reviews-list"></div>
+      </div>
     </div>
     <div class="modal-controls">
-      <button class="add-to-favortites" type="button">Añadir a favortios</button>
-      <button class="remove-from-favortites hidden" type="button">Quitar de favortios</button>
-      <button class="close" type="button">Cerrar</button>
+      <div class="modal-controls-left">
+        <button class="add-to-favortites" type="button">Añadir a favortios</button>
+        <button class="remove-from-favortites hidden" type="button">Quitar de favortios</button>
+        <button class="show-reviews">Ver reseñas</button>
+        <button class="show-itinerary hidden">Ver itinerario</button>
+      </div>
+      <div class="modal-controls-right">
+        <button class="close" type="button">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

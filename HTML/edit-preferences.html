@@ -12,21 +12,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
+  <script type="module" src="/JS/my-itineraries-const.js"></script>
+  <script type="module" src="/JS/profile.js"></script>
+  <script type="module" src="/JS/places.js"></script>
+  <script type="module" src="/JS/price-levels.js"></script>
 </head>
 <body>
 
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
         <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
-        <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
-        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
-        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+        <a class="nav-button" onclick="location.href='search-places.html'">Crear Itinerario</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación De Lugares</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación De Itinerarios</a>
       </div>
     </section>
     <div id="preferences-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>

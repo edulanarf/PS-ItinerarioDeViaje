@@ -104,7 +104,23 @@ window.addEventListener('load',()=>{
     setDoc(preferencesRef, preferences).then(() => alert('Preferences updated.'));
     return false;
   });
-  geocoder = new google.maps.Geocoder();
+  const locationsSearch = document.querySelector("#locations-search");
+  const searchBox = new google.maps.places.SearchBox(locationsSearch);
+  searchBox.addListener('places_changed',()=>{
+    const places = searchBox.getPlaces();
+    if (!places.length) return;
+    const place = places[0];
+    if(preferences.cities.find(city => city.place_id === place.place_id)) return;
+    preferences.cities.push({
+      place_id: place.place_id,
+      name: place.formatted_address,
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng()
+    });
+    locationsSearch.value = '';
+    refreshSelectedLocations();
+  });
+  /*geocoder = new google.maps.Geocoder();
   let timeout;
   document
     .querySelector("#locations-search")
@@ -128,7 +144,7 @@ window.addEventListener('load',()=>{
           }
         });
       }, 500);
-    });
+    });*/
   document.querySelector('.locations-list').addEventListener('click',e=>{
     if (e.target.tagName !== 'A') return;
     if(preferences.cities.find(city => city.place_id === e.target.dataset.place_id)) return;

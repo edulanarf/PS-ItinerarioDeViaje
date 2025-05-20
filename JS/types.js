@@ -35,12 +35,18 @@ export class Place {
   }
 
   toString() {
-    return this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
+    return (
+      this.name + [":", this.category, this.date, this.address].join("\n\t+ ")
+    );
 
   }
 
   static toLi(place){
-    return place.name + [":", place.category, place.date, place.address].join("\n\t+ ")
+    let div = document.createElement("div")
+    div.innerHTML = `&bull; ${place.name}:<br>
+    <strong>Tipo:</strong> ${place.category}<br>
+    <strong>Dirección:</strong> ${place.address}`
+    return div
   }
 
   static toFirestore(place){

@@ -56,6 +56,7 @@ export function checkAuthState() {
   });
 }
 
+
 export { app, auth, storage, db };
 
 /**

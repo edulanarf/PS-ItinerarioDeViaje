@@ -12,8 +12,8 @@
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='index.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='index.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
@@ -22,33 +22,43 @@
         <a class="nav-button" onclick="location.href='user-reset-password.html'">Recuperar Contraseña</a>
       </div>
     </section>
+    <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
   </nav>
 </header>
-
+<h2>Comienza a crear tu itinerario de viaje gratis en minutos</h2>
 <main>
-
   <section class="section">
-    <h2>Comienza a crear tu itinerario de viaje gratis en minutos</h2>
-    <div class="gallery-row">
-      <div class="gallery-box">
-        <img src="../mockups/argentina.jpg" alt="Viaje 1" />
-      </div>
-      <div class="gallery-box">
-        <img src="../mockups/Italia.jpg" alt="Viaje 2" />
-      </div>
-    </div>
-    <div class="gallery-row">
-      <div class="gallery-box">
-        <img src="../mockups/hotel.jpg" alt="Hotel 1" />
-      </div>
-      <div class="gallery-box">
-        <img src="../mockups/restaurante.jpeg" alt="Restaurante 1" />
-      </div>
+    <div class="gallery" >
+        <div class="gallery-box img1" >
+          <img src="../mockups/Brujas-_bruselas.png" alt="Viaje 1" />
+        </div>
+
+        <div class="gallery-box img2">
+          <img src="../mockups/mapa.PNG" alt="Viaje 2" />
+        </div>
+
+        <div class="gallery-box">
+          <div class="info-content">
+            <h3>Viaje a Brujas</h3>
+            <p><strong>Coste estimado:</strong> 720€ por persona</p>
+
+            <h4>Lugares a visitar:</h4>
+            <ul>
+              <li>Grand Place</li>
+              <li>Atomium</li>
+              <li>Centro histórico de Brujas</li>
+              <li>Minnewaterpark</li>
+            </ul>
+
+            <h4>Alojamiento:</h4>
+            <p>Hotel NH Collection Brussels Centre</p>
+          </div>
+        </div>
     </div>
   </section>
 
+  <h2>Valoración de nuestros usuarios</h2>
   <section class="section">
-    <h2>Valoración de nuestros usuarios</h2>
     <p style="font-size: 1.2em; margin-bottom: 20px;">
       ⭐⭐⭐⭐☆ <strong>4.0</strong> de 5 estrellas basado en <strong>200 opiniones</strong>
     </p>
@@ -75,9 +85,8 @@
       </div>
     </div>
   </section>
-
+  <h2>Conoce al equipo</h2>
   <section class="section">
-    <h2>Conoce al equipo</h2>
     <div class="team">
       <div class="team-member">
         <strong>Eduardo Arbelo Rua-Figueroa</strong><br />
@@ -98,8 +107,8 @@
     </div>
   </section>
 
+  <h2>Contacto</h2>
   <section class="section">
-    <h2>Contacto</h2>
     <p>¿Tienes dudas, sugerencias o quieres colaborar con nosotros?</p>
     <p>
       Escríbenos a <a href="mailto:contacto@itineraries.com">contacto@itineraries.com</a> o síguenos en nuestras redes sociales.
@@ -115,9 +124,7 @@
     </div>
   </section>
 </main>
-<footer>
-  © 2025 Itineraries. Todos los derechos reservados.
-</footer>
+
 <script>
   const cta = document.getElementById('cta-final');
   const overlay = cta.querySelector('.cta-overlay');
@@ -137,8 +144,8 @@
       cta.style.transform = `scale(${scale})`;
 
       // Fade in del overlay y del contenido
-      overlay.style.opacity = `${progress * 0.8}`; // Máximo 0.8 de opacidad
-      content.style.opacity = `${progress}`;
+      overlay.style.opacity = progress * 0.8; // Máximo 0.8 de opacidad
+      content.style.opacity = progress;
       content.style.transform = `scale(${0.95 + progress * 0.05})`;
     }
   });

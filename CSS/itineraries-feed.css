@@ -184,8 +184,10 @@ section.main {
 .modal-container {
     width: 100%;
     max-width: 60rem;
+    max-height: 100%;
     background-color: #fff;
     border-radius: 10px;
+    overflow-y: scroll;
 }
 .modal-header {
     padding: 1rem 3rem 0.5rem;
@@ -250,10 +252,21 @@ section.main {
     padding: 1rem 3rem;
     display: flex;
     flex-direction: row;
-    justify-content: end;
-    gap: 3rem;
+    justify-content: space-between;
 }
-.modal-controls button {
+.modal-controls-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    gap: 2rem;
+}
+.modal-controls-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 2rem;
+}
+.modal-controls button, .new-review {
     color: #888;
     border: 2px solid #888;
     border-radius: 0.5rem;
@@ -266,12 +279,12 @@ section.main {
     background-color: #888;
     color: #fff;
 }
-.modal-controls button.add-to-favortites, .modal-controls button.remove-from-favortites {
+.modal-controls .modal-controls-left button, .new-review {
     border: 2px solid var(--azul-brillante);
     color: var(--azul-brillante);
     transition: all 0.3s ease;
 }
-.modal-controls button.add-to-favortites:hover, .modal-controls button.remove-from-favortites:hover {
+.modal-controls .modal-controls-left button:hover, .new-review:hover {
     background-color: var(--azul-brillante);
     color: #fff;
 }

@@ -59,26 +59,6 @@ button:hover {
     align-items: end;
 }
 
-/* VIEW SWITCH */
-#switch-view {
-    /*
-    background-color: var(--marron-claro);
-    border: 2px solid var(--marron-oscuro);
-    box-shadow: 0 0 0.5rem var(--marron-oscuro);
-    padding: 0.8rem 2rem;
-    border-radius: 10px;
-     */
-    width: 200px;
-    justify-content: center;
-    align-items: center;
-    align-self: center;
-    margin-bottom: 3rem;
-}
-
-#switch-view:hover {
-    background-color: var(--marron-medio);
-}
-
 /* ACTION BUTTONS */
 #actions {
     display: flex;
@@ -86,24 +66,6 @@ button:hover {
     align-items: center;
     justify-content: center;
 }
-
-/**
-#open-itinerary {
-    background-color: var(--marron-claro);
-    border: 2px solid var(--marron-medio);
-    border-radius: 12px;
-    padding: 1rem 2rem;
-    margin-top: 1rem;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-#open-itinerary:hover {
-    background-color: var(--marron-medio);
-    border-color: var(--marron-oscuro);
-    box-shadow: 0 0 0.5rem var(--marron-oscuro);
-}
- */
 
 #next-itinerary, #previous-itinerary {
     border: none;
@@ -213,10 +175,12 @@ button:hover {
 
 /* MAIN CONTENT */
 main {
-    padding: 5rem 3rem 3rem;
+    padding: 2rem 2rem;
     flex: 1;
     background-color: #f5f7fa;
 }
+
+
 
 /* ITINERARY LIST VIEW */
 .my-itineraries {
@@ -225,6 +189,7 @@ main {
     gap: 2rem;
     overflow: hidden;
     max-height: 100%;
+    border-radius: 30px;
 }
 
 .preview {
@@ -232,8 +197,9 @@ main {
     flex-direction: column;
     padding: 1rem;
     background-color: var(--oro-suave);
-    border-radius: 40px;
+    border-bottom-left-radius: 40px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    min-height: 400px;
 }
 
 .image-preview {
@@ -242,7 +208,6 @@ main {
     align-items: center;
     padding: 0 2rem;
     overflow: hidden;
-    aspect-ratio: 4 / 2;
     max-height: 250px;
     object-fit: cover;
 }
@@ -275,7 +240,6 @@ main {
 
 .description {
     font-size: 1.2rem;
-    color: #333;
 }
 
 /* DAYS SECTION */
@@ -286,11 +250,11 @@ main {
 }
 
 .day-container {
-    padding: 1rem 0;
     height: 600px;
     background-color: var(--oro-suave);
     overflow: hidden;
-    border-radius: 40px;
+    border-bottom-right-radius:40px;
+    border-top-right-radius: 40px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
@@ -302,9 +266,13 @@ main {
     align-items: center;
     justify-content: center;
     max-width: 470px;
+    background:  var(--beige-calido);
+    justify-self:  center;
+    width:  80%;
+    border-radius: 0 10px 0 0;
 }
 
-.days button {
+.days option {
     width: 100px;
     height: 40px;
     background-color: #ccc;
@@ -320,7 +288,7 @@ main {
     justify-content: center;
 }
 
-.days button:hover {
+.days option:hover {
     background-color: #bbb;
     border-color: #999;
     color: black;
@@ -387,8 +355,8 @@ main {
 /* GALLERY VIEW */
 #itinerary-gallery-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-template-rows: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
     padding: 16px;
     overflow-y: auto;
@@ -404,7 +372,7 @@ main {
 }
 
 #itinerary-gallery-container .preview {
-    background-color: inherit;
+    background-color: #dbefff;
     padding: 0;
     height: 100%;
     width: 100%;

@@ -27,15 +27,15 @@
 <header id="navigation">
   <nav id="session-navbar">
     <div id="us">
-      <img id="logo" src="../mockups/logo.png" alt="logo" />
-      <div id="brand-name">Itineraries</div>
+      <img id="logo" src="../mockups/logo.png" alt="logo" onclick="location.href='home-page.html'" style="cursor: pointer;"/>
+      <div id="brand-name" onclick="location.href='home-page.html'" style="cursor: pointer">Itineraries</div>
     </div>
     <section id="links-section">
       <div id="links">
         <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
         <a class="nav-button" onclick="location.href='public-itineraries.html'">Itnerarios</a>
-        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación de lugares</a>
-        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación de itinerarios</a>
+        <a class="nav-button" onclick="location.href='recommend-places.html'">Recomendación De Lugares</a>
+        <a class="nav-button" onclick="location.href='itineraries-feed.html'">Recomendación De Itinerarios</a>
       </div>
     </section>
     <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
@@ -107,7 +107,7 @@
       </template>
       <template id="day-container">
         <div data-day="" class="day-container">
-          <button class="delete-button">Eliminar</button>
+          <button class="delete-button">Eliminar día</button>
           <h1 class="day"></h1>
           <ul class="itinerary-list"></ul>
         </div>

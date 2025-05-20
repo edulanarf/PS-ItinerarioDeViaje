@@ -225,7 +225,7 @@ h3 {
 }
 
 .delete-button{
-    background-color: transparent; /* Fondo transparente */
+    background-color: #09f; /* Fondo transparente */
     padding: 8px 12px; /* Espaciado interno */
     cursor: pointer;
     border-radius: 5px;
@@ -234,6 +234,10 @@ h3 {
     justify-content: center;
     transition: background-color 0.3s, transform 0.2s;
     outline: none;
+}
+
+.delete-button:hover {
+    background-color: #0077cc;
 }
 
 .delete-button img{

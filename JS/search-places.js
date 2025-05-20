@@ -5,6 +5,7 @@ import { setSaved } from './saved-verification.js';
 import { auth, fetchFileFromUrl, getAnItineraryPlan } from "./firebase-config.js";
 import { Itinerary, ItineraryPlan, NoID, Place } from "./types.js";
 
+setSaved(true)
 
 let map, service, infowindow, circle;
 let markers = [];
@@ -13,7 +14,6 @@ let price;
 let priceString;
 let counterDay = 1;
 let radius = 2000;
-
 /**
  * @type {ItineraryPlan}
  */
@@ -123,6 +123,7 @@ async function createPlaceItem(place,day){
   })
   await addPlaceToMatrix(day,place)
   console.log("createplaceitem", clone);
+  setSaved(false)
   return clone
 }
 
@@ -235,6 +236,7 @@ async function createDayElement(index){
     await renumberDays(index)
     daySelector.value = `${index-1}`
     await switchDay(index-1,index-1)
+    setSaved(false)
   })
   await newDay()
   await updateSelector()
@@ -407,6 +409,7 @@ function fetchNearbyPlaces(location) {
       addBtn.className = "add-button";
       addBtn.addEventListener("click", async () => {
         await addToItinerary(place);
+        setSaved(false)
       });
 
       li.appendChild(addBtn);
@@ -500,6 +503,7 @@ async function addToItinerary(place) {
   )
 
   await renderNewPlaceForDay(aPlace, dayCurrent);
+  setSaved(false)
 }
 
 function showPlaceInfo(place) {
@@ -523,7 +527,6 @@ document.getElementById("select-container").addEventListener("change", (e) => {
 });
 
 document.getElementById("save-day-button").addEventListener("click", async (_) => {
-  console.log("current day from adding", dayCurrent, "places", allPlaces);
   if (allPlaces[dayCurrent-1].length === 0) {
     // Si está vacía, mostramos el mensaje de advertencia
     const warning = document.getElementById("warning");
