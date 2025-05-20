@@ -70,8 +70,8 @@ async function canSaveNewItinerary(userUid) {
           if (storingItinerary.id === NoID) {
             const canSave = await canSaveNewItinerary(user.uid);
             if (!canSave) {
-              alert("Has alcanzado el límite de itinerarios para tu plan. Por favor, actualiza a Premium para guardar más.");
-              hideLoader()
+              modal.querySelector("h2").textContent = "Has alcanzado el límite de itinerarios para tu plan. Por favor, actualiza a Premium para guardar más.";
+              setTimeout(() => hideLoader(), 3000)
               return;
             }
           }
