@@ -389,3 +389,807 @@ h3 {
     font-weight: bold;
     margin-top: 10px;
 }
+
+/* Estilos para botón deshabilitado cuando se usa plantilla */
+#save-day-button:disabled {
+    background-color: #6c757d !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#save-day-button:disabled:hover {
+    background-color: #6c757d !important;
+}
+
+/* ======== ESTILOS PARA PLANTILLAS ======== */
+
+/* Botón de usar plantilla */
+.template-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.template-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Modal de plantillas */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 25px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Lista de plantillas */
+#templates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.template-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.template-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.template-info {
+    flex: 1;
+}
+
+.template-info h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.template-info p {
+    margin: 0 0 8px 0;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.template-info small {
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.apply-template-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.apply-template-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* Estado sin plantillas */
+#no-templates {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+#no-templates p {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+}
+
+#no-templates a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+#no-templates a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .template-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .apply-template-btn {
+        align-self: flex-end;
+    }
+    
+    .template-btn {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+}
+
+/* ======== WIDGET DE CLIMA ======== */
+
+#day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#day-header h1 {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Estilos para el widget del clima simplificado */
+.weather-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.weather-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+.weather-loading,
+.weather-info,
+.weather-error {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.weather-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.weather-main {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.weather-location-temp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.weather-location {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.weather-temp {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.weather-date-selector {
+    display: flex;
+    justify-content: center;
+}
+
+.weather-date-input {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.weather-date-input:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.weather-date-input:hover {
+    background: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.weather-error {
+    color: #ffebee;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive para el widget de clima */
+@media (max-width: 768px) {
+    #day-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    #day-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .weather-container {
+        padding: 15px;
+        min-height: 80px;
+    }
+    
+    .weather-location-temp {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .weather-location {
+        font-size: 1rem;
+    }
+    
+    .weather-temp {
+        font-size: 1.8rem;
+        padding: 6px 12px;
+    }
+    
+    .weather-date-input {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}
+
+/* ======== MODAL DE EDICIÓN MASIVA DE TRANSPORTES ======== */
+
+.transport-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.transport-btn:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.transport-selection {
+    text-align: center;
+}
+
+.transport-selection p {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.transport-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.transport-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    position: relative;
+}
+
+.transport-option:hover {
+    border-color: #28a745;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+    transform: translateY(-2px);
+}
+
+.transport-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.transport-option input[type="radio"]:checked + .transport-icon {
+    transform: scale(1.2);
+    color: #28a745;
+}
+
+.transport-option input[type="radio"]:checked ~ .transport-name {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.transport-option:has(input[type="radio"]:checked) {
+    border-color: #28a745;
+    background-color: #f8fff9;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+
+.transport-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.transport-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.transport-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.apply-transport-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.apply-transport-btn:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.cancel-transport-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cancel-transport-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Responsive para el modal de transportes */
+@media (max-width: 768px) {
+    .transport-options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .transport-option {
+        padding: 12px;
+    }
+    
+    .transport-icon {
+        font-size: 1.5rem;
+    }
+    
+    .transport-name {
+        font-size: 12px;
+    }
+    
+    .transport-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .apply-transport-btn,
+    .cancel-transport-btn {
+        width: 100%;
+    }
+}
+
+/* ======== ESTILOS PARA EL CLIMA Y RUTA ======== */
+
+/* Actualizar estilos del clima para incluir ubicación */
+.weather-location {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.weather-note {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    font-style: italic;
+    color: #fff3cd;
+    background: rgba(255, 193, 7, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+/* Estilos para el selector de fecha y hora */
+.date-time-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.date-input-group,
+.time-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.date-input-group label,
+.time-input-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: white;
+    opacity: 0.9;
+}
+
+.date-input,
+.time-input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.date-input:focus,
+.time-input:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.date-input:hover,
+.time-input:hover {
+    background: white;
+}
+
+/* Estilos para el cuadro de ruta */
+.route-container {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.route-container h4 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.route-loading,
+.route-content,
+.route-error {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.route-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.route-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.route-distance,
+.route-duration,
+.route-transport {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.route-steps {
+    max-height: 150px;
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 10px;
+}
+
+.route-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.route-step-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.route-error span {
+    color: #ffebee;
+    font-style: italic;
+}
+
+/* Estilos para el minimapa de la ruta */
+.route-map-container {
+    position: relative;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.route-minimap {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    position: relative;
+}
+
+.route-map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 10;
+}
+
+.route-map-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-map-btn:hover {
+    background: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.route-map-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive para ruta */
+@media (max-width: 768px) {
+    .route-container {
+        padding: 12px;
+    }
+    
+    .route-container h4 {
+        font-size: 1rem;
+    }
+    
+    .route-summary {
+        gap: 4px;
+    }
+    
+    .route-distance,
+    .route-duration,
+    .route-transport {
+        font-size: 0.8rem;
+    }
+    
+    .route-steps {
+        max-height: 120px;
+    }
+    
+    .route-step {
+        font-size: 0.8rem;
+    }
+    
+    .route-minimap {
+        height: 150px;
+    }
+    
+    .route-map-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}

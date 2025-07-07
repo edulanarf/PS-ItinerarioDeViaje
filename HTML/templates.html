@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Plantillas - Itinerarios de Viaje</title>
+    <link rel="stylesheet" href="/CSS/reset-stylesheet.css">
+    <link rel="stylesheet" href="/CSS/navigation.css">
+    <link rel="stylesheet" href="/CSS/colors.css">
+    <link rel="stylesheet" href="/CSS/templates.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <header id="navigation">
+        <nav id="session-navbar">
+            <div id="us">
+                <img id="logo" src="/mockups/logo.png" alt="logo" />
+                <div id="brand-name">Itineraries</div>
+            </div>
+            <section id="links-section">
+                <div id="links">
+                    <a class="nav-button" onclick="location.href='home-page.html'">Home</a>
+                    <a class="nav-button" onclick="location.href='search-places.html'">Crear itinerarios</a>
+                    <a class="nav-button" onclick="location.href='my-itineraries.html'">Mis Itinerarios</a>
+                    <a class="nav-button" onclick="location.href='templates.html'">Plantillas</a>
+                </div>
+            </section>
+            <div id="profile-info" style="display: flex; align-items: center; gap: 10px; margin-left: auto;"></div>
+        </nav>
+    </header>
+
+    <div class="templates-container">
+        <div class="templates-header">
+            <h1>Mis Plantillas</h1>
+            <p>Guarda y reutiliza tus itinerarios favoritos como plantillas</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="create-smart-template" class="btn btn-primary">
+                    ✨ Crear Plantilla Inteligente
+                </button>
+                <button onclick="createManualTemplate()" class="btn btn-secondary">
+                    🧪 Crear Plantilla Manual
+                </button>
+            </div>
+        </div>
+
+        <div id="templates-container">
+            <!-- Las plantillas se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Modal para crear itinerario desde plantilla -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Crear Itinerario desde Plantilla</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="newTitle">Título del Itinerario:</label>
+                    <input type="text" id="newTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Fecha de Inicio:</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Itinerario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para crear plantilla inteligente -->
+    <div id="smartTemplateModal" class="modal">
+        <div class="modal-content smart-template-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Crear Plantilla Inteligente</h3>
+                <span class="close" onclick="closeSmartTemplateModal()">&times;</span>
+            </div>
+            
+            <div class="smart-template-wizard">
+                <!-- Paso 1: Información básica -->
+                <div class="wizard-step" id="step1">
+                    <h4>Paso 1: Información Básica</h4>
+                    <div class="form-group">
+                        <label for="templateName">Nombre de la Plantilla:</label>
+                        <input type="text" id="templateName" placeholder="Ej: Aventura Cultural" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateDescription">Descripción:</label>
+                        <textarea id="templateDescription" placeholder="Describe tu estilo de viaje..." rows="3"></textarea>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="nextStep(2)" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Ciudad de destino -->
+                <div class="wizard-step" id="step2">
+                    <h4>Paso 2: Ciudad de Destino</h4>
+                    <div class="form-group">
+                        <label for="templateCity">¿A qué ciudad vas a viajar?</label>
+                        <div class="search-container">
+                            <input type="text" id="templateCity" placeholder="Escribe el nombre de la ciudad..." required>
+                            <div id="city-suggestions" class="suggestions-container" style="display: none;"></div>
+                        </div>
+                        <small class="form-text">Escribe el nombre de la ciudad y selecciona una de las opciones que aparecen</small>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="prevStep(1)" class="btn btn-secondary">Anterior</button>
+                        <button type="button" onclick="validateCityAndNext()" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Duración del viaje -->
+                <div class="wizard-step" id="step3">
+                    <h4>Paso 3: Duración del Viaje</h4>
+                    <div class="form-group">
+                        <label for="templateDays">¿Cuántos días va a durar tu viaje?</label>
+                        <input type="number" id="templateDays" min="1" max="30" placeholder="Ej: 7" required>
+                        <small class="form-text">Ingresa el número exacto de días (entre 1 y 30)</small>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="prevStep(2)" class="btn btn-secondary">Anterior</button>
+                        <button type="button" onclick="nextStep(4)" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 4: Tipo de actividades -->
+                <div class="wizard-step" id="step4">
+                    <h4>Paso 4: Tipo de Actividades</h4>
+                    <p>Selecciona las actividades que te interesan:</p>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="museos"> Museos y Cultura</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="restaurantes"> Restaurantes y Gastronomía</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="naturaleza"> Naturaleza y Parques</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="shopping"> Shopping y Compras</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="noche"> Vida Nocturna</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" value="deportes"> Deportes y Aventura</label>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="prevStep(3)" class="btn btn-secondary">Anterior</button>
+                        <button type="button" onclick="nextStep(5)" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Ritmo del viaje -->
+                <div class="wizard-step" id="step5">
+                    <h4>Paso 5: Ritmo del Viaje</h4>
+                    <p>¿Cómo prefieres el ritmo de tu viaje?</p>
+                    <div class="form-group">
+                        <label><input type="radio" name="pace" value="relajado"> Relajado - Poco a poco, sin prisas</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="radio" name="pace" value="moderado"> Moderado - Equilibrado entre actividades y descanso</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="radio" name="pace" value="intenso"> Intenso - Muchas actividades, aprovechar al máximo</label>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="prevStep(4)" class="btn btn-secondary">Anterior</button>
+                        <button type="button" onclick="nextStep(6)" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 6: Presupuesto -->
+                <div class="wizard-step" id="step6">
+                    <h4>Paso 6: Presupuesto</h4>
+                    <p>¿Cuál es tu presupuesto aproximado?</p>
+                    <div class="form-group">
+                        <label><input type="radio" name="budget" value="bajo"> Bajo - Económico y accesible</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="radio" name="budget" value="medio"> Medio - Equilibrado entre calidad y precio</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="radio" name="budget" value="alto"> Alto - Lujo y experiencias premium</label>
+                    </div>
+                    <div class="wizard-navigation">
+                        <button type="button" onclick="prevStep(5)" class="btn btn-secondary">Anterior</button>
+                        <button type="button" onclick="createSmartTemplate()" class="btn btn-success">Crear Plantilla Inteligente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/JS/profile.js"></script>
+    <script type="module" src="/JS/templates.js"></script>
+</body>
+</html> 

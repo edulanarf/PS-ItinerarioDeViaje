@@ -1,0 +1,200 @@
+/* Variables CSS para temas de colores y tipografías */
+
+:root {
+  /* Tema Clásico (Default) */
+  --primary-color: #008cff;
+  --secondary-color: #e63946;
+  --accent-color: #f4a261;
+  --background-color: #f5f7fa;
+  --surface-color: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #dddddd;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --font-family: 'Montserrat', sans-serif;
+}
+
+/* Tema Océano */
+[data-theme="ocean"] {
+  --primary-color: #006994;
+  --secondary-color: #00b4d8;
+  --accent-color: #90e0ef;
+  --background-color: #f0f8ff;
+  --surface-color: #ffffff;
+  --text-primary: #1e3a8a;
+  --text-secondary: #475569;
+  --border-color: #cbd5e1;
+  --shadow-color: rgba(0, 105, 148, 0.1);
+}
+
+/* Tema Bosque */
+[data-theme="forest"] {
+  --primary-color: #059669;
+  --secondary-color: #10b981;
+  --accent-color: #34d399;
+  --background-color: #f0fdf4;
+  --surface-color: #ffffff;
+  --text-primary: #064e3b;
+  --text-secondary: #374151;
+  --border-color: #d1fae5;
+  --shadow-color: rgba(5, 150, 105, 0.1);
+}
+
+/* Tema Atardecer */
+[data-theme="sunset"] {
+  --primary-color: #dc2626;
+  --secondary-color: #ea580c;
+  --accent-color: #f59e0b;
+  --background-color: #fef2f2;
+  --surface-color: #ffffff;
+  --text-primary: #7f1d1d;
+  --text-secondary: #6b7280;
+  --border-color: #fecaca;
+  --shadow-color: rgba(220, 38, 38, 0.1);
+}
+
+/* Tema Lavanda */
+[data-theme="lavender"] {
+  --primary-color: #7c3aed;
+  --secondary-color: #a855f7;
+  --accent-color: #c084fc;
+  --background-color: #faf5ff;
+  --surface-color: #ffffff;
+  --text-primary: #581c87;
+  --text-secondary: #6b7280;
+  --border-color: #e9d5ff;
+  --shadow-color: rgba(124, 58, 237, 0.1);
+}
+
+/* Modo Oscuro - Tema Clásico */
+[data-theme="default"][data-dark="true"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #ef4444;
+  --accent-color: #f59e0b;
+  --background-color: #1f2937;
+  --surface-color: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #4b5563;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modo Oscuro - Tema Océano */
+[data-theme="ocean"][data-dark="true"] {
+  --primary-color: #0ea5e9;
+  --secondary-color: #06b6d4;
+  --accent-color: #67e8f9;
+  --background-color: #0c4a6e;
+  --surface-color: #0e7490;
+  --text-primary: #e0f2fe;
+  --text-secondary: #bae6fd;
+  --border-color: #0891b2;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modo Oscuro - Tema Bosque */
+[data-theme="forest"][data-dark="true"] {
+  --primary-color: #22c55e;
+  --secondary-color: #16a34a;
+  --accent-color: #4ade80;
+  --background-color: #14532d;
+  --surface-color: #166534;
+  --text-primary: #dcfce7;
+  --text-secondary: #bbf7d0;
+  --border-color: #15803d;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modo Oscuro - Tema Atardecer */
+[data-theme="sunset"][data-dark="true"] {
+  --primary-color: #ef4444;
+  --secondary-color: #f97316;
+  --accent-color: #fbbf24;
+  --background-color: #7f1d1d;
+  --surface-color: #991b1b;
+  --text-primary: #fef2f2;
+  --text-secondary: #fecaca;
+  --border-color: #b91c1c;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modo Oscuro - Tema Lavanda */
+[data-theme="lavender"][data-dark="true"] {
+  --primary-color: #a855f7;
+  --secondary-color: #c084fc;
+  --accent-color: #d8b4fe;
+  --background-color: #581c87;
+  --surface-color: #6b21a8;
+  --text-primary: #faf5ff;
+  --text-secondary: #e9d5ff;
+  --border-color: #7c3aed;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Variables de tipografía */
+[data-font="montserrat"] {
+  --font-family: 'Montserrat', sans-serif;
+}
+
+[data-font="roboto"] {
+  --font-family: 'Roboto', sans-serif;
+}
+
+[data-font="poppins"] {
+  --font-family: 'Poppins', sans-serif;
+}
+
+/* Aplicar variables globalmente */
+* {
+  font-family: var(--font-family);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Aplicar colores a elementos comunes */
+.nav-button {
+  background-color: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.nav-button:hover {
+  background-color: var(--primary-color);
+  color: var(--surface-color);
+}
+
+.edit-preferences-container {
+  background-color: var(--surface-color);
+  box-shadow: 0 8px 24px var(--shadow-color);
+}
+
+.edit-preferences-container h2 {
+  color: var(--primary-color);
+}
+
+.form-group label {
+  color: var(--text-primary);
+}
+
+.form-group input {
+  border-color: var(--border-color);
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+}
+
+#save-button {
+  background-color: var(--primary-color);
+  color: var(--surface-color);
+}
+
+#save-button:hover {
+  background-color: var(--secondary-color);
+} 

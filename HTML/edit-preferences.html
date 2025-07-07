@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Editar Perfil</title>
   <link rel="stylesheet" href="../CSS/reset-stylesheet.css" />
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUYz9qNsXfTDn8MYnmCCsqqGpKFUxhQu0&libraries=places&loading=async"></script>
   <link rel="stylesheet" href="../CSS/colors.css" />
+  <link rel="stylesheet" href="../CSS/themes.css" />
+  <link rel="stylesheet" href="../CSS/global-themes.css" />
   <link rel="stylesheet" href="../CSS/edit-preferences.css" />
   <link rel="stylesheet" href="../CSS/navigation.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Roboto:wght@300;400;500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
+  <script type="module" src="/JS/theme-loader.js"></script>
 </head>
 <body>
 
@@ -101,6 +104,64 @@
         </div>
         <input id="locations-search" type="text" name="search">
         <div class="locations-list hidden">
+        </div>
+      </div>
+
+      <!-- Sección de Personalización Visual -->
+      <div class="form-group">
+        <label>Personalización Visual</label>
+        
+        <!-- Selector de Colores -->
+        <div class="color-theme-section">
+          <h4>Esquema de Colores</h4>
+          <div class="color-options">
+            <div class="color-option" data-theme="default">
+              <div class="color-preview default-theme"></div>
+              <span>Clásico</span>
+            </div>
+            <div class="color-option" data-theme="ocean">
+              <div class="color-preview ocean-theme"></div>
+              <span>Océano</span>
+            </div>
+            <div class="color-option" data-theme="forest">
+              <div class="color-preview forest-theme"></div>
+              <span>Bosque</span>
+            </div>
+            <div class="color-option" data-theme="sunset">
+              <div class="color-preview sunset-theme"></div>
+              <span>Atardecer</span>
+            </div>
+            <div class="color-option" data-theme="lavender">
+              <div class="color-preview lavender-theme"></div>
+              <span>Lavanda</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selector de Tipografía -->
+        <div class="typography-section">
+          <h4>Tipografía</h4>
+          <div class="typography-options">
+            <div class="typography-option" data-font="montserrat">
+              <span class="font-preview montserrat">Montserrat</span>
+            </div>
+            <div class="typography-option" data-font="roboto">
+              <span class="font-preview roboto">Roboto</span>
+            </div>
+            <div class="typography-option" data-font="poppins">
+              <span class="font-preview poppins">Poppins</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modo Oscuro -->
+        <div class="dark-mode-section">
+          <h4>Modo Oscuro</h4>
+          <div class="toggle-switch">
+            <input type="checkbox" id="dark-mode-toggle" class="toggle-input">
+            <label for="dark-mode-toggle" class="toggle-label"></label>
+            <span class="toggle-text">Activar modo oscuro</span>
+          </div>
         </div>
       </div>
 

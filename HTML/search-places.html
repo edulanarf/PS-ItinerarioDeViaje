@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buscar Lugar y Lugares Cercanos</title>
   <link rel="stylesheet" href="/CSS/reset-stylesheet.css">
-  <!-- AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo&libraries=places&async&defer"></script>
+  <!-- AIzaSyDUYz9qNsXfTDn8MYnmCCsqqGpKFUxhQu0 -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUYz9qNsXfTDn8MYnmCCsqqGpKFUxhQu0&libraries=places&loading=async"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/CSS/search-places.css">
   <link rel="stylesheet" href="/CSS/colors.css">
@@ -14,6 +14,7 @@
   <script type="module" src="/JS/firebase-config.js"></script>
   <script type="module" src="/JS/types.js"></script>
   <script type="module" src="/JS/profile.js"></script>
+  <script type="module" src="/JS/weather-service.js"></script>
 </head>
 <body>
 
@@ -72,6 +73,9 @@
   <section id="right-section">
     <div id="separation-itinerary">
       <button id="save-itinerary">Guardar Itinerario</button>
+      <button id="use-template-btn" class="template-btn">Usar Plantilla</button>
+      <button id="clear-template-btn" class="template-btn" style="background-color: #dc3545; display: none;">Limpiar Plantilla</button>
+      <button id="edit-transport-btn" class="transport-btn">Editar Todos los Transportes</button>
       <div id="day-buttons-container">
 
       </div>
@@ -83,7 +87,65 @@
     </div>
     <h3>Organiza tu día: </h3>
     <section id="places">
-      <h1 id="day"></h1>
+      <div id="day-header">
+        <h1 id="day"></h1>
+        
+        <!-- Widget del clima simplificado -->
+        <div id="weather-widget" class="weather-container">
+          <div class="weather-loading" style="display: none;">
+            <div class="weather-spinner"></div>
+            <span>Cargando clima...</span>
+          </div>
+          <div class="weather-info" style="display: none;">
+            <div class="weather-main">
+              <div class="weather-location-temp">
+                <span id="weather-location" class="weather-location"></span>
+                <span id="weather-temp" class="weather-temp"></span>
+              </div>
+              <div class="weather-date-selector">
+                <input type="date" id="day-date" class="weather-date-input">
+              </div>
+            </div>
+          </div>
+          <div class="weather-error" style="display: none;">
+            <span>No disponible</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cuadro de ruta -->
+      <div id="route-info" class="route-container">
+        <h4>Ruta del Día</h4>
+        <div class="route-loading" style="display: none;">
+          <div class="route-spinner"></div>
+          <span>Calculando ruta...</span>
+        </div>
+        <div class="route-content" style="display: none;">
+          <div class="route-summary">
+            <span id="route-distance" class="route-distance"></span>
+            <span id="route-duration" class="route-duration"></span>
+            <span id="route-transport" class="route-transport"></span>
+          </div>
+          
+          <!-- Minimapa de la ruta -->
+          <div class="route-map-container">
+            <div id="route-minimap" class="route-minimap"></div>
+            <div class="route-map-controls">
+              <button id="zoom-in-route" class="route-map-btn">+</button>
+              <button id="zoom-out-route" class="route-map-btn">-</button>
+              <button id="fit-route" class="route-map-btn">🗺️</button>
+            </div>
+          </div>
+          
+          <div id="route-steps" class="route-steps">
+            <!-- Los pasos de la ruta se mostrarán aquí -->
+          </div>
+        </div>
+        <div class="route-error" style="display: none;">
+          <span>No hay suficientes lugares para calcular la ruta</span>
+        </div>
+      </div>
+      
       <ul id="itinerary-list"></ul>
     </section>
     <section id="errors">
@@ -96,7 +158,76 @@
   </section>
 </div>
 
+<!-- Modal para seleccionar plantilla -->
+<div id="templateModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Seleccionar Plantilla</h3>
+      <span class="close" onclick="closeTemplateModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div id="templates-list">
+        <!-- Las plantillas se cargarán aquí dinámicamente -->
+      </div>
+      <div id="no-templates" style="display: none;">
+        <p>No tienes plantillas guardadas. <a href="templates.html">Crear plantillas</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para edición masiva de transportes -->
+<div id="transportModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Editar Todos los Transportes</h3>
+      <span class="close" onclick="closeTransportModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="transport-selection">
+        <p>Selecciona el medio de transporte para todos los tramos del itinerario:</p>
+        <div class="transport-options">
+          <label class="transport-option">
+            <input type="radio" name="transport" value="coche" checked>
+            <span class="transport-icon">🚗</span>
+            <span class="transport-name">Coche</span>
+          </label>
+          <label class="transport-option">
+            <input type="radio" name="transport" value="a-pie">
+            <span class="transport-icon">🚶</span>
+            <span class="transport-name">A pie</span>
+          </label>
+          <label class="transport-option">
+            <input type="radio" name="transport" value="bicicleta">
+            <span class="transport-icon">🚲</span>
+            <span class="transport-name">Bicicleta</span>
+          </label>
+          <label class="transport-option">
+            <input type="radio" name="transport" value="transporte-publico">
+            <span class="transport-icon">🚌</span>
+            <span class="transport-name">Transporte público</span>
+          </label>
+          <label class="transport-option">
+            <input type="radio" name="transport" value="taxi">
+            <span class="transport-icon">🚕</span>
+            <span class="transport-name">Taxi</span>
+          </label>
+          <label class="transport-option">
+            <input type="radio" name="transport" value="tren">
+            <span class="transport-icon">🚆</span>
+            <span class="transport-name">Tren</span>
+          </label>
+        </div>
+        <div class="transport-actions">
+          <button id="apply-transport-btn" class="apply-transport-btn">Aplicar a Todos los Tramos</button>
+          <button id="cancel-transport-btn" class="cancel-transport-btn" onclick="closeTransportModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="module" src="../JS/search-places.js"></script>
-<script type="module" src="../JS/saveItinerary.js"></script>
+<script type="module" src="../JS/saveItinerary-fixed.js"></script>
 </body>
 </html>

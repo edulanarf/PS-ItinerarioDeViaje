@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Lugar y Lugares Cercanos</title>
 
-    <!-- AIzaSyBYPg2L1_fMdQgupzewQu5npLAMEkM0_Bo -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=key&libraries=places&async&defer"></script>
+    <!-- AIzaSyDUYz9qNsXfTDn8MYnmCCsqqGpKFUxhQu0 -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUYz9qNsXfTDn8MYnmCCsqqGpKFUxhQu0&libraries=places&loading=async"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="../CSS/reset-stylesheet.css" rel="stylesheet">
     <link rel="stylesheet" href="/CSS/colors.css">
@@ -73,15 +73,20 @@
                         }
                     </script>
                 </div>
-                <button id="edit-button">
-                    <a href="search-places.html">Edit itinerary</a>
-                </button>
+                <div id="action-buttons">
+                    <button id="edit-button">
+                        <a href="search-places.html">Edit itinerary</a>
+                    </button>
+                    <button id="save-template-button" class="template-btn">
+                        Guardar como Plantilla
+                    </button>
+                </div>
             </div>
 
         </div>
     </div>
 </main>
 
-<script type="module" src="../JS/search-places.js"></script>
+<script type="module" src="../JS/view-itinerary.js"></script>
 </body>
 </html>

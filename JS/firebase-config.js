@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { collection, doc, getDoc, getDocs, getFirestore } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-storage.js";
 import { Itinerary, ItineraryPlan } from './types.js';
 
@@ -14,12 +14,30 @@ const firebaseConfig = {
   measurementId: "G-CKN1D6S9GR"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const storage = getStorage(app);
-const db = getFirestore(app, "itinerariosdeviaje");
+// Inicializar Firebase con manejo de errores
+let app, auth, storage, db;
+
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  storage = getStorage(app);
+  db = getFirestore(app);
+  console.log("Firebase inicializado correctamente");
+} catch (error) {
+  console.error("Error al inicializar Firebase:", error);
+  // Crear objetos mock para evitar errores
+  app = null;
+  auth = null;
+  storage = null;
+  db = null;
+}
 
 export function checkAuthState() {
+  if (!auth) {
+    console.warn("Firebase Auth no está disponible");
+    return null;
+  }
+  
   onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("Usuario autenticado:", user.email);
@@ -31,20 +49,28 @@ export function checkAuthState() {
   });
 }
 
-
-export { app, auth, storage, db };
+export { app, auth, db, storage };
 
 export async function getUserData(userId) {
-  const docRef = doc(db, "users", userId);
-  const docSnap = await getDoc(docRef);
+  if (!db) {
+    console.warn("Firestore no está disponible");
+    return null;
+  }
 
-  if (docSnap.exists()) {
-    const userData = docSnap.data();
-    console.log("User data:", userData);
-    // Now you can work with the userData object
-    return userData;
-  } else {
-    console.log("No such document!");
+  try {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      console.log("User data:", userData);
+      return userData;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting user data:", error);
     return null;
   }
 }
@@ -54,32 +80,32 @@ export async function getUserData(userId) {
  * @returns {Promise<ItineraryPlan[]>}
  */
 export async function getPlans(userId){
-  const itinerariesRef = collection(db, `users/${userId}/itineraries`)
-    .withConverter(ItineraryPlan.itineraryPlanConverter);
+  if (!db) {
+    console.warn("Firestore no está disponible");
+    return [];
+  }
+
   try {
+    const itinerariesRef = collection(db, `users/${userId}/itineraries`)
+      .withConverter(ItineraryPlan.itineraryPlanConverter);
     const querySnapshot = await getDocs(itinerariesRef);
     console.log(querySnapshot);
-    /**
-     * @type {ItineraryPlan[]}
-     */
+    
     const itineraryPlans = [];
-    /**
-     * @type {ItineraryPlan[]}
-     */
     const processed = []
+    
     await querySnapshot.forEach((file) => {
       itineraryPlans.push(file.data())
       console.log(itineraryPlans);
     })
+    
     await Promise.all(itineraryPlans.map(async (plan) => {
       const daysRef = collection(itinerariesRef, plan.title, 'days')
         .withConverter(Itinerary.itineraryConverter);
       const daySnapshot = await getDocs(daysRef);
       const files = []
-      /**
-       * @type {Itinerary[]}
-       */
       const days = []
+      
       await daySnapshot.forEach((file) =>  { files.push(file) })
       await Promise.all(files.map(async file => {
         let a = await file.data()
@@ -91,7 +117,6 @@ export async function getPlans(userId){
           processed.push(plan)
           console.log(plan);
         });
-
     }));
 
     processed.values().forEach(

@@ -1,40 +1,101 @@
-
-import { db, auth } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 import { doc, setDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
-import {onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import { auth, db } from './firebase-config.js';
+import { LocalStorageManager } from './local-storage.js';
 import { getSaved, setSaved } from './saved-verification.js';
+import { plan } from './search-places.js';
 import { Itinerary, ItineraryPlan } from './types.js';
-import { plan } from './search-places.js'
 
 //Guardar itinerario
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const save = document.getElementById("save-itinerary");
+      if (!save) {
+        console.warn("Botón de guardar no encontrado");
+        return;
+      }
+      
       save.addEventListener("click", async function () {
 
         const titleError = document.getElementById("title-error");
-        if (plan.title === "") {
+        
+        // Validar que el plan exista y tenga un título
+        if (!plan || !plan.title || plan.title === "") {
           titleError.textContent = "Asigne un título al itinerario";
           titleError.style.display = "block";
           titleError.style.borderColor = "red";
           return;
-        } else {
-          titleError.style.display = "none";
         }
+        
+        // Validar que el plan tenga itinerarios
+        if (!plan.itineraries || plan.itineraries.length === 0) {
+          titleError.textContent = "Agregue al menos un día al itinerario";
+          titleError.style.display = "block";
+          titleError.style.borderColor = "red";
+          return;
+        }
+        
+        // Validar que al menos un itinerario tenga lugares
+        const hasPlaces = plan.itineraries.some(itinerary => 
+          itinerary.places && itinerary.places.length > 0
+        );
+        
+        if (!hasPlaces) {
+          titleError.textContent = "Agregue al menos un lugar al itinerario";
+          titleError.style.display = "block";
+          titleError.style.borderColor = "red";
+          return;
+        }
+        
+        titleError.style.display = "none";
 
-        plan.photo = plan.itineraries.at(0).places.at(0).photo || ''
+        // Validar que existan itinerarios y lugares antes de acceder a la foto
+        if (plan.itineraries && plan.itineraries.length > 0 && 
+            plan.itineraries[0].places && plan.itineraries[0].places.length > 0) {
+          plan.photo = plan.itineraries[0].places[0].photo || '';
+        } else {
+          plan.photo = '';
+        }
         
         try {
-          const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
-            .withConverter(ItineraryPlan.itineraryPlanConverter);
-          await setDoc(itineraryRef, plan)
-          for (const itinerary of plan.itineraries) {
-            const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
-            await setDoc(dayRef, itinerary);
+          // Intentar guardar en Firestore primero
+          if (db) {
+            const itineraryRef = doc(db, `users/${user.uid}/itineraries/${plan.title}`)
+              .withConverter(ItineraryPlan.itineraryPlanConverter);
+            await setDoc(itineraryRef, plan)
+            
+            for (const itinerary of plan.itineraries) {
+              const dayRef = doc(itineraryRef, "days", itinerary.name).withConverter(Itinerary.itineraryConverter);
+              await setDoc(dayRef, itinerary);
+            }
+            
+            setSaved(true);
+            alert("✅ Itinerario guardado exitosamente en la nube");
+          } else {
+            // Fallback a localStorage
+            const success = LocalStorageManager.saveItinerary(user.uid, plan);
+            if (success) {
+              setSaved(true);
+              alert("✅ Itinerario guardado localmente (modo offline)");
+            } else {
+              throw new Error("No se pudo guardar localmente");
+            }
           }
-          setSaved(true);
         } catch (error) {
           console.error("❌ Error al guardar el itinerario:", error.message);
+          
+          // Intentar guardar en localStorage como último recurso
+          try {
+            const success = LocalStorageManager.saveItinerary(user.uid, plan);
+            if (success) {
+              setSaved(true);
+              alert("✅ Itinerario guardado localmente (modo offline)");
+            } else {
+              alert("⚠️ Error: No se pudo guardar el itinerario");
+            }
+          } catch (localError) {
+            alert("⚠️ Error al guardar el itinerario: " + error.message);
+          }
         }
       });
     } else {

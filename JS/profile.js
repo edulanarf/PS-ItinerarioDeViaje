@@ -1,6 +1,6 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { auth, db } from "/JS/firebase-config.js";
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { auth, db } from "/JS/firebase-config.js";
 
 const profileContainer = document.getElementById("profile-info");
 
@@ -9,21 +9,18 @@ onAuthStateChanged(auth, async (user) => {
     const existingImage = profileContainer.querySelector("img");
     if (existingImage) return; // Ya se cargó
 
-    const docRef = doc(db, `users/${user.uid}`);
-    const docSnap = await getDoc(docRef);
-
     const profileWrapper = document.createElement("div");
     profileWrapper.id = "profile-wrapper";
     profileWrapper.style.position = "relative";
     profileWrapper.style.cursor = "pointer";
 
     const img = document.createElement("img");
-    img.src = docSnap.data().photoURL || "../mockups/default-avatar.png";
+    img.src = "../mockups/default-avatar.png"; // Usar imagen por defecto
     img.alt = "Perfil";
     img.style.objectFit = "cover";
 
     const username = document.createElement("p");
-    username.textContent = docSnap.data().username || "Usuario";
+    username.textContent = user.displayName || user.email || "Usuario"; // Usar datos del auth
     username.style.fontWeight = "bold";
     username.style.textAlign = "center";
     username.style.fontFamily = "Montserrat, sans-serif";
@@ -74,8 +71,35 @@ onAuthStateChanged(auth, async (user) => {
     profileWrapper.appendChild(dropdownMenu);
     profileContainer.appendChild(profileWrapper);
     profileContainer.appendChild(username);
+
+    // Intentar cargar datos de Firestore de forma opcional
+    try {
+      const docRef = doc(db, `users/${user.uid}`);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.photoURL) {
+          img.src = userData.photoURL;
+        }
+        if (userData.username) {
+          username.textContent = userData.username;
+        }
+      }
+    } catch (error) {
+      // Solo mostrar warning si no es un error de conexión
+      if (error.code !== 'unavailable' && error.code !== 'failed-precondition') {
+        console.warn("No se pudieron cargar los datos de Firestore:", error.message);
+      }
+      // La aplicación continúa funcionando con datos básicos del auth
+    }
   } else {
     console.log("not authenticated!!!!");
     window.location.href = "../HTML/user-login.html";
   }
 });
+
+// Exporta la función para obtener el usuario autenticado actual
+export function getCurrentUser() {
+  return auth.currentUser;
+}
