@@ -100,21 +100,23 @@
 }
 
 .btn-primary {
-    background-color: #008cff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--surface-color);
 }
 
 .btn-primary:hover {
-    background-color: #0073cc;
+    background-color: var(--secondary-color);
 }
 
 .btn-secondary {
-    background-color: #6c757d;
-    color: white;
+    background-color: var(--surface-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
+    background-color: var(--primary-color);
+    color: var(--surface-color);
 }
 
 .btn-danger {
@@ -467,4 +469,9 @@
     font-weight: bold;
     color: #495057;
     font-size: 18px;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-primary);
 } 

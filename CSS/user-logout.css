@@ -1,13 +1,14 @@
 @import "colors.css";
 
-body {
+body, html {
+    background-color: var(--background-color);
+    color: var(--text-primary);
     font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f7fa;
 }
 
 #us {
@@ -36,9 +37,9 @@ h2 {
 }
 
 /* Botón principal (rojo) */
-button {
-    background-color: var(--e63946);
-    color: white;
+.button, #logout-button {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
     border: none;
     padding: 12px;
     width: 100%;
@@ -50,8 +51,8 @@ button {
     margin-bottom: 12px;
 }
 
-button:hover {
-    background-color: var(--d62828);
+.button:hover, #logout-button:hover {
+    background-color: var(--secondary-color);
 }
 
 /* Cancelar */

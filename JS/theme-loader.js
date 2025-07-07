@@ -1,52 +1,29 @@
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { auth, db } from "./firebase-config.js";
 
 /**
- * Cargar y aplicar la configuración visual del usuario
+ * Cargar y aplicar la configuración visual del usuario desde localStorage
  */
 function loadUserVisualSettings() {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const preferencesRef = doc(db, `users/${user.uid}/recommend-itineraries/preferences`);
-        const docSnap = await getDoc(preferencesRef);
-        
-        if (docSnap.exists()) {
-          const preferences = docSnap.data();
-          const visualSettings = preferences.visualSettings || {
-            theme: 'default',
-            font: 'montserrat',
-            darkMode: false
-          };
-          
-          applyVisualSettings(visualSettings);
-        } else {
-          // Configuración por defecto si no existe
-          applyVisualSettings({
-            theme: 'default',
-            font: 'montserrat',
-            darkMode: false
-          });
-        }
-      } catch (error) {
-        console.error('Error al cargar configuración visual:', error);
-        // Aplicar configuración por defecto en caso de error
-        applyVisualSettings({
-          theme: 'default',
-          font: 'montserrat',
-          darkMode: false
-        });
+  // Intentar cargar de localStorage
+  const localPrefs = localStorage.getItem('preferences');
+  let visualSettings = {
+    theme: 'default',
+    font: 'montserrat',
+    darkMode: false
+  };
+  if (localPrefs) {
+    try {
+      const preferences = JSON.parse(localPrefs);
+      if (preferences.visualSettings) {
+        visualSettings = {
+          ...visualSettings,
+          ...preferences.visualSettings
+        };
       }
-    } else {
-      // Usuario no autenticado - aplicar configuración por defecto
-      applyVisualSettings({
-        theme: 'default',
-        font: 'montserrat',
-        darkMode: false
-      });
+    } catch (e) {
+      console.warn('Preferencias visuales locales corruptas, usando por defecto');
     }
-  });
+  }
+  applyVisualSettings(visualSettings);
 }
 
 /**

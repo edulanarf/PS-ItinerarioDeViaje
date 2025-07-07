@@ -1,11 +1,14 @@
 @import "colors.css";
 
+body, html {
+    background-color: var(--background-color);
+    color: var(--text-primary);
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f7fa;
-    color: var(--carbon);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,7 +46,9 @@ main {
 /* Inputs */
 #login-email,
 #login-password {
-    border: 1px solid #ccc; /* Agrega esta línea */
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border-color: var(--border-color);
     border-radius: 4px;
     margin: 15px;
     padding-left: 20px;
@@ -57,7 +62,7 @@ main {
 #login-email:focus,
 #login-password:focus {
     outline: none;
-    border: 1px solid #09f; /* o el color que desees al enfocar */
+    border-color: var(--primary-color);
 }
 input::placeholder {
     font-family: 'Montserrat', sans-serif;
@@ -69,7 +74,7 @@ input::placeholder {
 /* Botón login */
 #login-button {
     margin: 15px;
-    background-color: var(--google-blue);
+    background-color: var(--primary-color);
     cursor: pointer;
     border: none;
     padding: 10px 30px;
@@ -77,12 +82,12 @@ input::placeholder {
     border-radius: 30px;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
-    color: white;
+    color: var(--surface-color);
     transition: background-color 0.3s ease;
 }
 
 #login-button:hover {
-    background-color: #1a66cc;
+    background-color: var(--secondary-color);
 }
 
 /* Google login */
@@ -140,4 +145,23 @@ input::placeholder {
     width: 90%;
     max-width: 300px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"], input[type="password"] {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: var(--primary-color);
+}
+
+.button {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+}
+
+.button:hover {
+    background-color: var(--secondary-color);
 }

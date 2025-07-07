@@ -1,7 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import {
     doc,
-    getDoc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 import { auth, db } from "./firebase-config.js";
@@ -81,11 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadPreferences(user) {
   return new Promise((resolve, reject) => {
-    let preferencesRef = doc(db, `users/${user.uid}/recommend-itineraries/preferences`);
-    getDoc(preferencesRef).then(docSnap => {
-      if (docSnap.exists()) {
-        const loadedPreferences = docSnap.data();
-        // Fusionar con valores por defecto para asegurar que todas las propiedades existan
+    // Intentar cargar de localStorage
+    const localPrefs = localStorage.getItem('preferences');
+    if (localPrefs) {
+      try {
+        const loadedPreferences = JSON.parse(localPrefs);
         preferences = {
           ...preferences,
           ...loadedPreferences,
@@ -94,24 +93,14 @@ function loadPreferences(user) {
             ...(loadedPreferences.visualSettings || {})
           }
         };
+        resolve(preferences);
+        return;
+      } catch (e) {
+        console.warn('Preferencias locales corruptas, usando por defecto');
       }
-      // Si no existe, usar los valores por defecto ya inicializados
-      resolve(preferences);
-    }).catch(error => {
-      console.error('Error loading preferences from Firebase:', error);
-      
-      // Manejar errores específicos
-      if (error.code === 'failed-precondition') {
-        console.warn('Firebase client is offline, using default preferences');
-      } else if (error.code === 'unavailable') {
-        console.warn('Firebase service unavailable, using default preferences');
-      } else {
-        console.error('Unexpected error loading preferences:', error);
-      }
-      
-      // En caso de error, usar valores por defecto
-      resolve(preferences);
-    });
+    }
+    // Si no hay en localStorage, usar por defecto
+    resolve(preferences);
   });
 }
 
@@ -385,34 +374,19 @@ function toggleDarkMode(enabled) {
 }
 
 /**
- * Guardar configuración visual en Firebase
+ * Guardar configuración visual en localStorage
  */
 function saveVisualSettings() {
-  if (!currentUser) {
-    console.warn('No user authenticated');
-    return;
-  }
-  
   if (!preferences) {
     console.warn('Preferences not loaded yet');
     return;
   }
-  
-  const preferencesRef = doc(db, `users/${currentUser.uid}/recommend-itineraries/preferences`);
-  setDoc(preferencesRef, preferences, { merge: true }).then(() => {
-    console.log('Configuración visual guardada');
-  }).catch(error => {
-    console.error('Error al guardar configuración visual:', error);
-    
-    // Manejar errores específicos
-    if (error.code === 'failed-precondition') {
-      console.warn('Firebase client is offline, configuration will be saved when connection is restored');
-    } else if (error.code === 'unavailable') {
-      console.warn('Firebase service unavailable, configuration will be saved when service is available');
-    } else {
-      console.error('Unexpected error saving visual settings:', error);
-    }
-  });
+  try {
+    localStorage.setItem('preferences', JSON.stringify(preferences));
+    console.log('Configuración visual guardada localmente');
+  } catch (e) {
+    console.error('Error al guardar configuración visual local:', e);
+  }
 }
 
 /**

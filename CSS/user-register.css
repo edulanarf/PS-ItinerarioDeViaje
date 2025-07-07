@@ -1,14 +1,15 @@
 @import "colors.css";
 
 /* Fondo y alineación */
-body {
+body, html {
     font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f7fa;
+    background-color: var(--background-color);
+    color: var(--text-primary);
 }
 
 /* Formulario principal */
@@ -22,7 +23,9 @@ body {
 #register-email,
 #register-username,
 #register-password {
-    border: 1px solid #ccc;
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     margin: 15px;
     padding-left: 20px;
@@ -38,7 +41,7 @@ body {
 #register-username:focus,
 #register-password:focus {
     outline: none;
-    border: 1px solid #09f; ;
+    border-color: var(--primary-color);
 }
 
 /* Mensajes de error */
@@ -98,7 +101,7 @@ input:invalid {
 /* Botón de registro */
 #register-button {
     margin: 15px;
-    background-color: var(--google-blue);
+    background-color: var(--primary-color);
     cursor: pointer;
     border: none;
     padding: 12px 30px;
@@ -107,10 +110,10 @@ input:invalid {
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     transition: background-color 0.3s ease;
-    color: white;
+    color: var(--surface-color);
     font-weight: bold;
 }
 
 #register-button:hover {
-    background-color: #1a66cc;
+    background-color: var(--secondary-color);
 }
