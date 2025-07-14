@@ -1,0 +1,82 @@
+/* Fondo y texto global para modo oscuro real */
+html[data-dark-forced],
+html[data-dark-forced] body {
+  background-color: #181a1b !important;
+  color: #f1f1f1 !important;
+}
+
+html[data-dark-forced] .page-container {
+  background-color: #23272a !important;
+  color: #f1f1f1 !important;
+}
+
+html[data-dark-forced] {
+  --fondo-marron: #181a1b !important;
+  --marron-beige: #23272a !important;
+  --texto-negro: #f1f1f1 !important;
+}
+
+/* Fuerza modo oscuro real en toda la app */
+
+html[data-dark-forced] body,
+html[data-dark-forced] .container,
+html[data-dark-forced] .card,
+html[data-dark-forced] .modal-content,
+html[data-dark-forced] .edit-preferences-container,
+html[data-dark-forced] .template-item,
+html[data-dark-forced] .route-container,
+html[data-dark-forced] .weather-container,
+html[data-dark-forced] .success-message,
+html[data-dark-forced] .error-message {
+  background-color: #181a1b !important;
+  color: #f1f1f1 !important;
+  border-color: #23272a !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7) !important;
+}
+
+html[data-dark-forced] h1,
+html[data-dark-forced] h2,
+html[data-dark-forced] h3,
+html[data-dark-forced] h4,
+html[data-dark-forced] h5,
+html[data-dark-forced] h6,
+html[data-dark-forced] label,
+html[data-dark-forced] .nav-button,
+html[data-dark-forced] a,
+html[data-dark-forced] li,
+html[data-dark-forced] p,
+html[data-dark-forced] span {
+  color: #f1f1f1 !important;
+}
+
+html[data-dark-forced] input,
+html[data-dark-forced] textarea,
+html[data-dark-forced] select {
+  background-color: #23272a !important;
+  color: #f1f1f1 !important;
+  border-color: #23272a !important;
+}
+
+html[data-dark-forced] button,
+html[data-dark-forced] .btn {
+  background-color: #23272a !important;
+  color: #f1f1f1 !important;
+  border-color: #23272a !important;
+}
+
+html[data-dark-forced] .nav-button:hover,
+html[data-dark-forced] button:hover,
+html[data-dark-forced] .btn:hover {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+html[data-dark-forced] .success-message {
+  background-color: #14532d !important;
+  color: #d1fae5 !important;
+}
+
+html[data-dark-forced] .error-message {
+  background-color: #7f1d1d !important;
+  color: #fecaca !important;
+} 

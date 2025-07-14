@@ -79,8 +79,21 @@ function changeFont(font) {
 function toggleDarkMode(enabled) {
   if (enabled) {
     document.documentElement.setAttribute('data-dark', 'true');
+    document.documentElement.setAttribute('data-dark-forced', '');
+    // Cargar CSS de modo oscuro forzado si no está cargado
+    if (!document.getElementById('dark-mode-forced-css')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/CSS/dark-mode-forced.css';
+      link.id = 'dark-mode-forced-css';
+      document.head.appendChild(link);
+    }
   } else {
     document.documentElement.removeAttribute('data-dark');
+    document.documentElement.removeAttribute('data-dark-forced');
+    // Quitar CSS de modo oscuro forzado si está cargado
+    const link = document.getElementById('dark-mode-forced-css');
+    if (link) link.remove();
   }
   console.log('Modo oscuro:', enabled ? 'activado' : 'desactivado');
 }
